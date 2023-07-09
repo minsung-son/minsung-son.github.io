@@ -1,0 +1,68 @@
+.project-header {
+  margin-top: 109px;
+  padding-left: 30px;
+  padding-right: 15px;
+  box-sizing: border-box;
+}
+
+.project-title {
+	margin-top: -5px;
+	margin-bottom: -10px;
+	text-align: left;
+	font-family: linotype-sabon;
+}
+
+.project-body {
+	margin-top: -20px;
+}
+
+.project-image {
+  width: 100%;
+  height: auto; /* Set height to auto to maintain aspect ratio */
+  max-width: 100%; /* Ensure images don't exceed their original width */
+  display: block; /* Remove any inline spacing */
+}
+
+.description {
+	/* column-count: 2;
+	column-gap: 30px; */
+	text-align: justify;
+	margin-right: 15px;
+}
+
+#main-subheading {
+	text-align: left;
+	margin-top: 20px;
+}
+
+#project-subheading {
+	margin-top: 50px;
+	margin-bottom: -10px;
+}
+
+.related-project {
+	margin-bottom: 5px; 
+	cursor: pointer;
+}
+
+.related-project:hover {
+	text-decoration: underline;
+}
+
+@media only screen and (min-width: 1000px) {
+	.project-header {
+		margin-top: 0px;
+		position: fixed;
+		top: 109px; /* Adjust the top position as needed */
+		left: 0;
+		width: 50%; /* Adjust the width as needed */
+		background-color: #ffffff;
+		z-index: 1; /* Ensure the fixed item is on top of other content */
+	}
+	.project-body {
+  		margin-top: 109px;
+  		margin-left: 50%; /* Adjust the margin-left to align the content to the right */
+  		width: 50%; /* Adjust the width as needed */
+  		box-sizing: border-box;
+	}
+}
