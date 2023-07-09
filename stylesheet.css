@@ -96,6 +96,12 @@ td {
 	flex-flow: row nowrap;
 }
 
+@media only screen and (max-width: 900px) {
+    .flexcontainer {
+      flex-direction: column;
+    }
+}
+
 #title {
 	cursor: pointer;
 }
