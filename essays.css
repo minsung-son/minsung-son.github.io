@@ -1,0 +1,37 @@
+td {
+	font-family: linotype-sabon, sandoll-jebi2;
+	font-size: 13pt;
+	font-weight: 500;
+}
+
+.description {
+	font-family: linotype-sabon, sandoll-jebi2;
+	color: grey;
+	font-size: 11pt;
+	font-weight: 500;
+	padding-right: 15px;
+}
+
+details > summary::-webkit-details-marker {
+	display: none;
+}
+
+.priority-1, priority-2 {
+	padding-right: 15px;
+}
+
+.priority-1:hover {
+	cursor: pointer;
+}
+
+@media only screen and (max-width: 1150px) and (min-width: 800px) {
+		.priority-3 {
+			display: none;
+	}
+}
+
+@media only screen and (max-width: 800px) {
+		.priority-3, .priority-2 {
+			display: none;
+	}
+}
