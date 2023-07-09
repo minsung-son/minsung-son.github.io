@@ -3,3 +3,9 @@
 		grid-template-columns: 100%;
 	}
 }
+
+@media only screen and (max-width: 1050px) {
+	.grid {
+		grid-template-columns: 100%;
+	}
+}
