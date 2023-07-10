@@ -98,7 +98,7 @@ td {
 
 @media only screen and (max-width: 900px) {
     .flexcontainer {
-      flex-direction: row wrap;
+      flex-flow: row wrap;
     }
 }
 
