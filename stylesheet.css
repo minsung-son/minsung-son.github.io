@@ -90,6 +90,12 @@ td {
 	background-color: white;
 	z-index: 9999;
 }
+
+@media only screen and (max-width: 900px) {
+	#padding {
+		padding-top: 10px;
+	}
+}
 	
 .flexcontainer {
 	display: flex;
@@ -99,6 +105,7 @@ td {
 @media only screen and (max-width: 900px) {
     .flexcontainer {
       flex-flow: row wrap;
+      line-height: 120%;
     }
 }
 

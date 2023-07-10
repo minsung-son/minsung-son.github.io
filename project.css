@@ -1,8 +1,8 @@
 .project-header {
-  margin-top: 109px;
-  padding-left: 30px;
-  padding-right: 15px;
-  box-sizing: border-box;
+  	margin-top: 109px;
+  	padding-left: 30px;
+  	padding-right: 15px;
+  	box-sizing: border-box;
 }
 
 .project-title {
@@ -17,10 +17,17 @@
 }
 
 .project-image {
-  width: 100%;
-  height: auto; /* Set height to auto to maintain aspect ratio */
-  max-width: 100%; /* Ensure images don't exceed their original width */
-  display: block; /* Remove any inline spacing */
+  	width: 100%;
+  	height: auto; /* Set height to auto to maintain aspect ratio */
+  	max-width: 100%; /* Ensure images don't exceed their original width */
+  	display: block; /* Remove any inline spacing */
+}
+
+.project-details-mobile {
+	padding-left: 30px;
+  	padding-right: 15px;
+  	box-sizing: border-box;
+	display: none;
 }
 
 .description {
@@ -64,6 +71,18 @@
   		margin-left: 50%; /* Adjust the margin-left to align the content to the right */
   		width: 50%; /* Adjust the width as needed */
   		box-sizing: border-box;
+	}
+}
+
+@media only screen and (max-width: 1000px) {
+	.project-details {
+		display: none;
+	}
+	.project-details-mobile {
+		display: block;
+	}
+	.project-body {
+		margin-top: 25px;
 	}
 }
 

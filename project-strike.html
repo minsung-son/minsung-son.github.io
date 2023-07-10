@@ -24,7 +24,7 @@
 		<!--Header-->
 		<header>
 			<div id="fixedheader">
-				<div style="padding: 30px;">
+				<div id="padding" style="padding: 30px;">
 					<div id="title" onclick="location.href='index.html';"><h1 style="margin-top: 0;">Minsung Son</h1></div>
 					<div class="flexcontainer">
 						<div class="menuitem" onclick="location.href='bio.html';">Bio</div>
@@ -40,11 +40,17 @@
 		<div class="project-header">
 			<h2 class="project-title">Scenes from the Picket Line</h2>
 			<h1 class="subheading" id="main-subheading"><span onclick="location.href='architecture.html';">Photography</span> / 2023.02</h1>
-			<h1 class="subheading" id="project-subheading">Location</h1>
-			<p class="description">Cambridge, U.K.</p>
-			<h1 class="subheading" id="project-subheading" style="margin-top: 30px;">Media</h1>
-			<p class="description" style="margin-bottom: 50px;">Digital</p>
+			<div class="project-details">
+			<!--COPY AND PASTE TO .project-details-mobile AS WELL! -->
+				<h1 class="subheading" id="project-subheading">Location</h1>
+				<p class="description">Cambridge, U.K.</p>
+				<h1 class="subheading" id="project-subheading" style="margin-top: 30px;">Media</h1>
+				<p class="description" style="margin-bottom: 50px;">Digital</p>
+			<!--COPY AND PASTE TO .project-details-mobile AS WELL! -->
+			</div>
 		</div>
+		<div class="project-details">
+		</div>	
 		<div class="project-body">
 			<img class="project-image" src="./images/strike.jpg">
 			<img class="project-image" src="./images/strike_2.jpg">
@@ -56,7 +62,13 @@
 			<img class="project-image" src="./images/strike_8.jpg">
 			<img class="project-image" src="./images/strike_9.jpg">
 			<img class="project-image" src="./images/strike_10.jpg">
-		</div>		
+		</div>
+		<div class="project-details-mobile">
+				<h1 class="subheading" id="project-subheading">Location</h1>
+				<p class="description">Cambridge, U.K.</p>
+				<h1 class="subheading" id="project-subheading" style="margin-top: 30px;">Media</h1>
+				<p class="description" style="margin-bottom: 50px;">Digital</p>
+		</div>	
 		
 		<footer>
 			<p id="footer">C | Minsung Son 2023. All rights reserved. <a href="mailto:minsungson.mono@gmail.com">minsungson.mono@gmail.com</a></p>
