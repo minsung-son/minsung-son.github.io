@@ -95,6 +95,7 @@ td {
 .flexcontainer {
 		display: flex;
 		flex-flow: row nowrap;
+		row-gap: 5px;
 }
 
 #title {
@@ -151,6 +152,7 @@ td {
 		grid-template-columns: 100%;
 	}
 	#fixedheader {
+		margin-top: -10px;
 		}
 }	
 	
