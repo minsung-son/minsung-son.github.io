@@ -89,24 +89,23 @@ td {
 	margin: 0px;
 	background-color: white;
 	z-index: 9999;
-}
-
-@media only screen and (max-width: 900px) {
-	#padding {
-		padding-top: 10px;
-	}
-}
-	
+}	
 .flexcontainer {
-	display: flex;
-	flex-flow: row nowrap;
+		display: flex;
+		flex-flow: row nowrap;
 }
 
 @media only screen and (max-width: 900px) {
     .flexcontainer {
-      flex-flow: row wrap;
-      line-height: 120%;
+      	flex-flow: row wrap;
+      	line-height: 120%;
     }
+    .category {
+    	display: none;
+    }
+    #padding {
+		padding-top: 0px;
+	}
 }
 
 #title {
@@ -166,7 +165,7 @@ td {
 	padding: 0;
 }
 
-@media only screen and (max-width: 800px) {
+@media only screen and (max-width: 900px) {
 	.grid {
 		grid-template-columns: 100%;
 	}
