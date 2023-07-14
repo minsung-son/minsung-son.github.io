@@ -182,6 +182,7 @@ td {
 @media only screen and (max-width: 900px) {
 	.grid {
 		grid-template-columns: 100%;
+		margin-top: 194px;
 	}
 }
 
