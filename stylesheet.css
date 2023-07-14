@@ -151,7 +151,7 @@ td {
 		display: none;
 	}
 	#category-grid {
-		margin-top: 194px;
+		margin-top: 109px;
 	}
 }
 	
@@ -182,7 +182,6 @@ td {
 @media only screen and (max-width: 900px) {
 	.grid {
 		grid-template-columns: 100%;
-		margin-top: 194px;
 	}
 }
 
