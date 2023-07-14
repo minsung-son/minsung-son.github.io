@@ -2,6 +2,16 @@
 	text-align: justify;
 }
 
+#content {
+	margin-top: 109px;
+}
+
+@media only screen and (max-width: 900px) {
+	#content {
+		margin-top: 139px;
+	}
+}
+
 @media only screen and (max-width: 1050px) {
 	.grid {
 		grid-template-columns: 100%;
