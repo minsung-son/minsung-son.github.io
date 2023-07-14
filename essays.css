@@ -24,6 +24,16 @@ details > summary::-webkit-details-marker {
 	cursor: pointer;
 }
 
+#table {
+	margin-top: 109px;
+}
+
+@media only screen and (max-width: 900px) {
+	#table {
+		margin-top: 139px;
+	}
+}
+
 @media only screen and (max-width: 1150px) and (min-width: 800px) {
 		.priority-3 {
 			display: none;
