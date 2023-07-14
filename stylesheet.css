@@ -146,12 +146,21 @@ td {
 	margin-top: 179px;
 }
 
-@media only screen and (max-width: 900px) {
+@media only screen and (max-width: 900px) and (min-width: 501px) {
 	.category {
 		display: none;
 	}
 	#category-grid {
 		margin-top: 109px;
+	}
+}
+
+@media only screen and (max-width: 500px){
+	.category {
+		display: none;
+	}
+	#category-grid {
+		margin-top: 139px;
 	}
 }
 	
