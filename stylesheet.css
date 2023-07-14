@@ -1,5 +1,4 @@
 html, body, h1, h2, h3, h4, h5, h6, div, p, img {
-    <!-- No drag -->
     -webkit-touch-callout: none;
     user-select: none;
     -moz-user-select: none;
@@ -145,6 +144,15 @@ td {
 
 #category-grid {
 	margin-top: 179px;
+}
+
+@media only screen and (max-width: 900px) {
+	.category {
+		display: none;
+	}
+	#category-grid {
+		margin-top: 109px;
+	}
 }
 	
 /* Grid */
