@@ -38,6 +38,7 @@ h1 {
 	font-weight: 400;
 	text-transform: uppercase;
 	font-size: 12pt;
+	cursor: pointer;
 }
 
 h2 {
