@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Lost in Translation</title>
+		<link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+		<link rel="icon" type="image/jpg" href="./images/favicon.jpg">
+		<link rel="stylesheet" href="stylesheet.css">
+		<link rel="stylesheet" href="project.css">
+		<!--Adobe Fonts-->
+		<script>
+		(function(d) {
+			var config = {
+				kitId: 'qcw5fdq',
+				scriptTimeout: 3000,
+				async: true
+			},
+			h=d.documentElement,t=setTimeout(function(){h.className=h.className.replace(/\bwf-loading\b/g,"")+" wf-inactive";},config.scriptTimeout),tk=d.createElement("script"),f=false,s=d.getElementsByTagName("script")[0],a;h.className+=" wf-loading";tk.src='https://use.typekit.net/'+config.kitId+'.js';tk.async=true;tk.onload=tk.onreadystatechange=function(){a=this.readyState;if(f||a&&a!="complete"&&a!="loaded")return;f=true;clearTimeout(t);try{Typekit.load(config)}catch(e){}};s.parentNode.insertBefore(tk,s)
+		})(document);
+		</script>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+	</head>
+	<body>
+		<!--Header-->
+		<header>
+			<div id="fixedheader">
+				<div id="padding" style="padding: 30px;">
+					<div id="title" onclick="location.href='index.html';"><h1 style="margin-top: 0;">Minsung Son</h1></div>
+					<div class="flexcontainer">
+						<div class="menuitem" onclick="location.href='bio.html';">Bio</div>
+						<div class="menuitem" onclick="location.href='arch.html';">Architecture</div>
+						<div class="menuitem-selected" onclick="location.href='photos.html';">Photos</div>
+						<div class="menuitem" onclick="location.href='videos.html';">Videos</div>
+						<div class="menuitem" onclick="location.href='essays.html';">Essays</div>
+					</div>
+				</div>
+			</div>
+		</header>
+		
+		<div class="project-header">
+			<h2 class="project-title">Lost in Translation</h2>
+			<h1 class="subheading" id="main-subheading"><span onclick="location.href='architecture.html';">Photography</span> / 2024.08</h1>
+			<div class="project-details">
+				<h1 class="subheading" id="project-subheading">Location</h1>
+				<p class="description">Tokyo, Japan</p>
+				<h1 class="subheading" id="project-subheading" style="margin-top: 30px;">Media</h1>
+				<p class="description" style="margin-bottom: 50px;">Film</p>
+			</div>
+		</div>
+		<div class="project-body">
+			<img class="project-image" src="./images/japan_1.jpg">
+			<img class="project-image" src="./images/japan_2.jpg">
+			<img class="project-image" src="./images/japan_3.jpg">
+			<img class="project-image" src="./images/japan_4.jpg">
+			<img class="project-image" src="./images/japan_5.jpg">
+			<img class="project-image" src="./images/japan_6.jpg">
+			<img class="project-image" src="./images/japan_7.jpg">
+			<img class="project-image" src="./images/japan_8.jpg">
+		</div>
+		<div class="project-details-mobile">
+		<!--SHOULD BE SAME TO project-details! -->
+			<h1 class="subheading" id="project-subheading">Location</h1>
+			<p class="description">Tokyo, Japan</p>
+			<h1 class="subheading" id="project-subheading" style="margin-top: 30px;">Media</h1>
+			<p class="description" style="margin-bottom: 50px;">Film</p>
+		<!--SHOULD BE SAME TO project-details! -->
+		</div>
+		
+		<footer>
+			<p id="footer">C | Minsung Son 2023. All rights reserved. <a href="mailto:minsungson.mono@gmail.com">minsungson.mono@gmail.com</a></p>
+		</footer>
+	</body>
+</html>
