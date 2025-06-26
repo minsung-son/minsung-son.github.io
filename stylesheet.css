@@ -34,9 +34,9 @@ a:hover {
 	}
 
 h1 {
-	font-family: "SuperstudioLLWebTrial-Regular";
+	font-family: "linotype-sabon";
 	font-weight: 400;
-	text-transform: uppercase;
+	text-transform: default;
 	font-size: 12pt;
 	cursor: pointer;
 }
@@ -114,8 +114,10 @@ td {
 	
 .menuitem {
 	margin-right: 15px;
-	font-family: "SuperstudioLLWebTrial-Regular";
-	text-transform: uppercase;
+	font-family: "franklin-gothic-urw", sans-serif;
+	font-weight: 300;
+	font-style: normal;
+	text-transform: default;
 	font-size: 12pt;
 	color: grey;
 }
