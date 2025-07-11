@@ -48,7 +48,7 @@ h2 {
 }
 
 h3 {
-	font-family: linotype-sabon;
+	font-family: "linotype-sabon";
 	font-weight: 400;
 	font-size: 17pt;
 }
@@ -111,6 +111,12 @@ td {
 #title {
 	cursor: pointer;
 }
+
+.sub {
+	color: grey;
+	font-family: "franklin-gothic-urw", sans-serif;
+	font-weight: 300;
+}
 	
 .menuitem {
 	margin-right: 15px;
@@ -165,7 +171,7 @@ td {
 		display: none;
 	}
 	#category-grid {
-		margin-top: 139px;
+		margin-top: 109px;
 	}
 }
 	
@@ -262,4 +268,8 @@ p {
 
 .image-container:hover::before {
   opacity: 1;
+}
+
+.highlight {
+  color: grey; /* or any other color you want */
 }
