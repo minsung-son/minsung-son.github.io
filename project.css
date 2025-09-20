@@ -6,14 +6,17 @@
 }
 
 .project-title {
-	margin-top: -5px;
-	margin-bottom: -10px;
+	margin-top: -0px;
+	margin-bottom: -15px;
 	text-align: left;
-	font-family: linotype-sabon, sandoll-jebi2;
+	font-family: "franklin-gothic-urw", sans-serif;
+	font-weight: 400;
+	font-size: 10pt;
 }
 
 .project-body {
 	margin-top: -20px;
+	padding-right: 15px;
 }
 
 .project-image {
@@ -21,6 +24,11 @@
   	height: auto; /* Set height to auto to maintain aspect ratio */
   	max-width: 100%; /* Ensure images don't exceed their original width */
   	display: block; /* Remove any inline spacing */
+  	padding-bottom: 15px;
+}
+
+.project-details {
+	padding-right: 0px;
 }
 
 .project-details-mobile {
@@ -37,14 +45,26 @@
 	margin-right: 15px;
 }
 
-#main-subheading {
+.subheading {
 	text-align: left;
+	font-family: "franklin-gothic-urw", sans-serif;
+	font-weight: 300;
+	font-size: 10pt;}
+
+#main-subheading {
 	margin-top: 20px;
+}
+
+#sub-subheading {
+	margin-top: -7px;
 }
 
 #project-subheading {
 	margin-top: 50px;
-	margin-bottom: -10px;
+	margin-bottom: -5px;
+	font-family: "franklin-gothic-urw", sans-serif;
+	font-weight: 300;
+	font-size: 10pt;
 }
 
 .related-project {
@@ -83,6 +103,10 @@
 	}
 	.project-body {
 		margin-top: 25px;
+		padding-right: 0px;
+	}
+	.project-image {
+		padding-bottom: 0px;
 	}
 }
 
@@ -91,6 +115,13 @@
 		text-align: left;
 	}
 	.project-header {
-		margin-top: 149px;
+		margin-top: 109px;
+	}
+	.project-body {
+		margin-top: 25px;
+		padding-right: 0px;
+	}
+	.project-image {
+		padding-bottom: 0px;
 	}
 }
