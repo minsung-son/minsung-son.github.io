@@ -104,9 +104,12 @@
 	.project-body {
 		margin-top: 25px;
 		padding-right: 0px;
+		margin-right: 15px;
+		margin-left: 15px;
 	}
 	.project-image {
 		padding-bottom: 0px;
+		margin-bottom: 15px;
 	}
 }
 
