@@ -128,7 +128,7 @@ td {
 	
 .menuitem {
 	margin-right: 15px;
-	font-family: "CMU Bright Roman", sans-serif;
+	font-family: "franklin-gothic-urw", sans-serif;
 	font-weight: 300;
 	font-size: 10pt;
 	color: grey;
@@ -136,7 +136,7 @@ td {
 
 .menuitem-selected {
 	margin-right: 15px;
-	font-family: "CMU Bright Roman", sans-serif;
+	font-family: "franklin-gothic-urw", sans-serif;
 	font-weight: 300;
 	font-size: 10pt;
 	color: red;
