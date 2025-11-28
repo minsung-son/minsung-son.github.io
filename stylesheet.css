@@ -12,10 +12,10 @@ html, body, h1, h2, h3, h4, h5, h6, div, p, img {
 }
 
  @font-face {
-    font-family: 'CMU Bright Roman';
+    font-family: "CMU Bright Roman";
     font-style: normal;
     font-weight: normal;
-    src: local('CMU Bright Roman'), url('cmunbmr.woff') format('woff');
+    src: local("CMU Bright Roman"), url("cmunbmr.woff") format("woff");
     }
 
 html, body {
