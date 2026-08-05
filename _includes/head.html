@@ -1,0 +1,39 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% if page.layout == 'category' %}{{ site.title }} - Work{% elsif page.layout == 'about' %}{{ site.title }} - About{% elsif page.layout == 'article' %}{{ page.title }}{% else %}{{ page.title | default: site.title }}{% endif %}</title>
+<link rel="preconnect" href="https://use.typekit.net" crossorigin>
+<!-- Latin fonts: plain CSS kit, loads immediately -->
+<link rel="stylesheet" href="https://use.typekit.net/iqu5sby.css">
+<!-- CJK font (sandoll-myeongjoneo1): JS kit, required for dynamic subsetting -->
+<script>
+  (function(d) {
+    var config = {
+      kitId: 'drp7rse',
+      scriptTimeout: 3000,
+      async: true
+    },
+    h=d.documentElement,t=setTimeout(function(){h.className=h.className.replace(/\bwf-loading\b/g,"")+" wf-inactive";},config.scriptTimeout),tk=d.createElement("script"),f=false,s=d.getElementsByTagName("script")[0],a;h.className+=" wf-loading";tk.src='https://use.typekit.net/'+config.kitId+'.js';tk.async=true;tk.onload=tk.onreadystatechange=function(){a=this.readyState;if(f||a&&a!="complete"&&a!="loaded")return;f=true;clearTimeout(t);try{Typekit.load(config)}catch(e){}};s.parentNode.insertBefore(tk,s)
+  })(document);
+</script>
+<link rel="stylesheet" href="{{ "/tailwind.css" | relative_url }}">
+<script>
+  // LEVEL3 slide flags: only fresh navigations get the entry/exit view transition (main.css)
+  (function () {
+    var html = document.documentElement;
+    if (html.dataset.level !== '3') return;
+    var nav = performance.getEntriesByType('navigation')[0];
+    if (nav && nav.type === 'navigate') html.setAttribute('data-vt-enter', '');
+    window.addEventListener('pagereveal', function (e) {
+      html.removeAttribute('data-vt-exit'); // stale after a bfcache round trip
+      function clear() { html.removeAttribute('data-vt-enter'); }
+      if (e.viewTransition) e.viewTransition.finished.then(clear, clear);
+      else clear();
+    });
+    window.addEventListener('pageswap', function (e) {
+      // Drop the entry flag before bfcache snapshots this page, or a later return replays it
+      html.removeAttribute('data-vt-enter');
+      // White-back the navbar for the old-state capture so it can fade out (vt-navbar-out)
+      if (e.viewTransition) html.setAttribute('data-vt-exit', '');
+    });
+  })();
+</script>

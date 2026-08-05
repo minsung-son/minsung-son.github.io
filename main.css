@@ -1,0 +1,156 @@
+@import "tailwindcss";
+
+/* Jekyll plugins emit Tailwind classes from Ruby strings; scan them explicitly. */
+@source "_plugins";
+
+@theme {
+  --font-sans: ui-sans-serif, system-ui, "sandoll-gothicneo2", sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-sabon: "linotype-sabon", "sandoll-myeongjoneo1", serif;
+  --font-grotesque: "monotype-grotesque", "sandoll-gothicneo2", sans-serif;
+
+  /* Site-wide "dark" text/UI colour (text-ink, bg-ink, border-ink, …) */
+  --color-ink: #000000;
+
+  /* Site-wide "light"/hover text colour */
+  --color-mist: #aeaba3;
+
+  /* Desktop navbar text size; the LEVEL2 list view derives its base from this */
+  --text-nav: 0.9375rem;
+
+  /* LEVEL3 geometry: central column width (w-article-col, …) and hero max height (max-h-hero) */
+  --spacing-article-col: 43.5rem;
+  --spacing-hero: 34rem;
+}
+
+/* The Sandoll faces ship no italic: disable synthesis so Hangul stays upright in italic runs */
+@layer base {
+  html {
+    font-synthesis-style: none;
+  }
+}
+
+/* Fluid root (desktop): one damped curve, 16px at the 1512px reference, linear band 1256–1768px */
+@media (width >= 48rem) {
+  html {
+    font-size: clamp(
+      calc(12.8px + 3.2px * 1256 / 1512),
+      calc(12.8px + 100vw * 3.2 / 1512),
+      calc(12.8px + 3.2px * 1768 / 1512)
+    );
+  }
+}
+
+/* Mobile: LEVEL3 media height cap (hero and non-hero media alike) */
+@media (width < 48rem) {
+  :root {
+    --spacing-hero: 26rem;
+  }
+}
+
+@utility scrollbar-hide {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Custom cursors (hover devices only): prev/next arrows, + enter, × exit */
+@media (hover: hover) and (pointer: fine) {
+  .cursor-next {
+    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='23' height='18' viewBox='0 0 226.39 169.21'%3E%3Cpolygon fill='%23000000' points='0 91.99 197.4 91.99 131.3 158.09 142.02 168.78 226.39 84.41 142 .43 131.32 11.15 197.29 76.84 0 76.84 0 91.99'/%3E%3C/svg%3E") 22 9, e-resize;
+  }
+  .cursor-prev {
+    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='23' height='18' viewBox='0 0 226.39 169.21'%3E%3Cpolygon fill='%23000000' transform='scale(-1,1) translate(-226.39,0)' points='0 91.99 197.4 91.99 131.3 158.09 142.02 168.78 226.39 84.41 142 .43 131.32 11.15 197.29 76.84 0 76.84 0 91.99'/%3E%3C/svg%3E") 0 9, w-resize;
+  }
+  /* ≥md only: the enlarged view is disabled on mobile, so a mouse there gets no enter cursor */
+  @media (width >= 48rem) {
+    .cursor-enter {
+      cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 169.63 169.21'%3E%3Cpolygon fill='%23000000' points='170.17 77.11 92.66 77.11 92.66 -.41 77.66 -.41 77.66 77.11 .15 77.11 .15 92.11 77.66 92.11 77.66 169.62 92.66 169.62 92.66 92.11 170.17 92.11 170.17 77.11'/%3E%3C/svg%3E") 9 9, pointer;
+    }
+  }
+  .cursor-exit {
+    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 169.63 169.21'%3E%3Cpolygon fill='%23000000' points='159.16 0 85.3 73.86 11.16 .06 .42 10.85 74.39 84.47 .41 158.45 11.18 169.21 85.04 95.36 159.17 169.15 169.91 158.36 95.94 84.74 169.91 10.76 159.16 0'/%3E%3C/svg%3E") 9 9, pointer;
+  }
+}
+
+/* LEVEL3 entry/exit slide (cross-document View Transitions) */
+@view-transition {
+  navigation: auto;
+}
+
+/* Let input pass through to the live page during the 0.42s transition */
+::view-transition {
+  pointer-events: none;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+/* Traversal (back/forward) into LEVEL3: instant swap, no ghost of the old page */
+html[data-level="3"]:not([data-vt-enter])::view-transition-old(root) {
+  opacity: 0;
+}
+
+/* Fresh navigation into LEVEL3: keep the origin visible; reveal the new page after the slide */
+html[data-vt-enter]::view-transition-new(root) {
+  animation: vt-hold-hidden 0.42s step-end both;
+}
+@keyframes vt-hold-hidden {
+  from { opacity: 0; }
+  to   { opacity: 0; }
+}
+
+/* Panel is named only while a transition can capture it — unnamed traversals stay instant */
+html[data-vt-enter] .vt-panel,
+html[data-vt-exit] .vt-panel {
+  view-transition-name: content-area;
+  contain: layout;
+}
+
+/* LEVEL3 navbar: own snapshot group, fades in over the origin during the entry slide */
+#l3-header {
+  view-transition-name: l3-header;
+}
+@keyframes vt-navbar-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+html[data-vt-enter]::view-transition-new(l3-header) {
+  animation: vt-navbar-in 0.42s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+/* LEVEL3 exit: the navbar snapshot fades out over the destination during the slide-down */
+@keyframes vt-navbar-out {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+::view-transition-old(l3-header) {
+  animation: vt-navbar-out 0.42s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+/* Instant traversals into LEVEL3 keep no navbar fade */
+html:not([data-vt-enter])::view-transition-new(l3-header) {
+  animation: none;
+}
+
+::view-transition-group(content-area) {
+  z-index: 1;
+  animation-duration: 0.42s;
+  animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+@keyframes vt-panel-out {
+  from { transform: translateY(0); }
+  to   { transform: translateY(100%); }
+}
+::view-transition-old(content-area) {
+  animation-name: vt-panel-out;
+}
+@keyframes vt-panel-in {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
+}
+html[data-vt-enter]::view-transition-new(content-area) {
+  animation-name: vt-panel-in;
+}

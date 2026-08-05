@@ -1,0 +1,4 @@
+{% comment %} Email / Instagram footer line; `class` sets the positioning (absolute on home, fixed on About). {% endcomment %}
+<footer class="{{ include.class }} bottom-[2.25rem] left-0 right-0 text-center font-sabon italic text-[0.9375rem] text-ink z-30 pointer-events-none max-md:hidden">
+  <a href="mailto:{{ site.email }}" class="pointer-events-auto transition hover:text-mist">{{ site.email }}</a> / <a href="https://instagram.com/{{ site.instagram }}" target="_blank" rel="noopener" class="pointer-events-auto transition hover:text-mist">@{{ site.instagram }}</a>
+</footer>

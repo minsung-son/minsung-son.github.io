@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+  {% include head.html %}
+</head>
+<body class="h-svh flex flex-col overflow-hidden bg-white">
+
+  <!-- Static page, LEVEL2-like: overlay navbar over a full-screen scrolling content area.
+       No .vt-panel and no data-level="3": arriving from LEVEL3 the article panel slides down
+       over this page, and no entry/exit animation plays in any other direction. -->
+  {% include header-nav.html level=3 active_about=true loading_bar=true %}
+
+  <div class="flex-1 md:absolute md:inset-0 overflow-y-auto overflow-x-hidden scrollbar-hide bg-white px-[2.5rem] pb-[1.875rem] max-md:px-5" id="content-area">
+
+    <!-- Mobile: content fades out as it scrolls under the navbar -->
+    <div class="md:hidden sticky top-0 z-10 h-16 -mb-16 -mx-6 bg-[linear-gradient(to_bottom,rgba(255,255,255,1)_0%,rgba(255,255,255,0)_100%)] pointer-events-none"></div>
+
+    <!-- Section rows (label + text) built by JS from #content-source: fixed-width group centred
+         horizontally; when the window shrinks, side space collapses first, then the text column -->
+    <div id="about-sections" class="flex flex-col min-h-full w-full max-w-[37.1875rem] mx-auto pt-[12rem] pb-[6rem] max-md:pt-16">
+
+      <!-- Hidden content source -->
+      <div id="content-source" class="hidden" aria-hidden="true">
+        {{ content }}
+      </div>
+
+    </div>
+  </div><!-- /#content-area -->
+
+  <!-- Bottom fade gradient + socials, mirroring LEVEL1 (fixed: the content area reaches the
+       viewport bottom, so this matches home's absolute overlay) -->
+  <div class="fixed bottom-0 left-0 right-0 py-24 bg-[linear-gradient(to_bottom,rgba(255,255,255,0)_0%,rgba(255,255,255,1)_100%)] pointer-events-none z-20 max-md:hidden"></div>
+  {% include footer-social.html class="fixed" %}
+
+  <script>
+    // Build label/content rows from the markdown's ## sections: a fixed-width label plus a
+    // flexible text column; the centred #about-sections wrapper caps the group's overall width
+    (function () {
+      var source   = document.getElementById('content-source');
+      var sections = document.getElementById('about-sections');
+      var children = Array.from(source.children);
+      var i = 0;
+
+      while (i < children.length) {
+        var node = children[i];
+
+        if (node.tagName !== 'H2') { i++; continue; }
+
+        var row = document.createElement('div');
+        row.className = 'flex max-md:flex-col';
+
+        var label = document.createElement('div');
+        // Mobile: inline section header styled like a LEVEL3 text heading; desktop keeps the
+        // fixed-width side label
+        label.className = 'w-[6.5625rem] shrink-0 font-sabon italic text-[0.8125rem] leading-[1.46] pb-13 text-ink max-md:w-full max-md:text-base max-md:leading-relaxed max-md:pb-3';
+        label.textContent = node.textContent;
+        row.appendChild(label);
+
+        var contentCell = document.createElement('div');
+        // Only the Biography section keeps paragraph gaps; list-like sections stack tight
+        contentCell.className = 'flex-1 min-w-0 flex flex-col pb-13 max-md:w-full max-md:pb-10'
+          + (node.textContent === 'Biography' ? ' gap-4' : '');
+        i++;
+        while (i < children.length && children[i].tagName !== 'H2') {
+          var p = document.createElement('div');
+          p.className = 'font-grotesque text-[0.8125rem] max-md:text-[0.85rem] text-ink leading-[1.5]';
+          p.innerHTML = children[i].innerHTML;
+          contentCell.appendChild(p);
+          i++;
+        }
+        row.appendChild(contentCell);
+
+        sections.appendChild(row);
+      }
+    })();
+  </script>
+
+</body>
+</html>

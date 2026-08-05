@@ -1,0 +1,14 @@
+<script>
+  // Publish the rendered header height as --header-h (LEVEL3 only: the mobile
+  // article sheet starts that far down so it can scroll up over the navbar)
+  (function () {
+    function updateHeaderH() {
+      document.documentElement.style.setProperty(
+        '--header-h',
+        document.querySelector('header').getBoundingClientRect().height + 'px'
+      );
+    }
+    updateHeaderH();
+    window.addEventListener('resize', updateHeaderH);
+  })();
+</script>

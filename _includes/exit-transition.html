@@ -1,0 +1,15 @@
+<script>
+  // Exit navigation on ×; prefer history.back() so the origin returns from bfcache intact
+  function bindExitTransition(closeId) {
+    var closeLink = document.getElementById(closeId);
+    if (!closeLink) return;
+    closeLink.addEventListener('click', function (e) {
+      e.preventDefault();
+      if (document.referrer && document.referrer.indexOf(window.location.host) !== -1) {
+        history.back();
+      } else {
+        window.location.href = this.href;
+      }
+    });
+  }
+</script>

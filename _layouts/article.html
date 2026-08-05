@@ -1,0 +1,527 @@
+<!doctype html>
+<html lang="en" data-level="3">
+<head>
+  {% include head.html %}
+</head>
+<body class="h-svh flex flex-col overflow-hidden bg-white">
+
+  {% assign category_url = '/category/' | append: page.category | append: '/' | relative_url %}
+
+  {% include header-nav.html level=3 article=true %}
+  {% include header-measure.html %}
+
+  <!-- Full-window scroller; the white sheet starts below the navbar and scrolls up OVER it.
+       The scroller keeps normal pointer events — pointer-events:none on a scroll container
+       kills Safari's wheel/touch scrolling even over re-enabled children. Navbar clickability
+       through the transparent strip comes from the z-40 toggle in the hover-zone script below. -->
+  <div class="vt-panel absolute inset-0 overflow-y-auto overflow-x-hidden scrollbar-hide" id="content-area">
+  <div class="min-h-[calc(100%-var(--header-h,3.1875rem))] mt-[var(--header-h,3.1875rem)] md:min-h-[calc(100%-4.4375rem)] md:mt-[4.4375rem] bg-white border-t border-[#f0efed] shadow-[0_-0.25rem_0.75rem_rgba(0,0,0,0.04)] transition-transform duration-300 ease-out pt-[1.5rem] px-[2.5rem] pb-[1.875rem] max-md:px-5 max-md:pt-0" id="article-sheet">
+
+    <!-- × close (desktop): sticky zero-height rail — rides the sheet's top edge until it
+         reaches the top of the window, then pins to the viewport corner -->
+    <div class="sticky top-[1.5rem] z-50 h-0 max-md:hidden">
+      <a id="article-close" href="{{ category_url }}" class="absolute top-[1rem] right-0 text-ink hover:opacity-70">
+        {% include icon-close.html px=16 %}
+      </a>
+    </div>
+
+    <!-- Scroll-fade article title, same sticky-rail trick: pins at the navbar site-title spot,
+         invisible until the in-sheet title + subtitle scroll out of view -->
+    <div class="sticky top-[2.1875rem] z-50 h-0 max-md:hidden">
+      <span id="nav-article-title" class="absolute top-0 left-0 font-sabon italic text-[0.9375rem] text-ink opacity-0 pointer-events-none transition-[opacity] duration-[250ms] ease-[ease]">{{ page.title }}</span>
+    </div>
+
+    <!-- Mobile only: article title/subtitle + close (X) -->
+    <div class="hidden max-md:block">
+      <div class="flex items-start justify-between gap-8 pt-5 pb-3">
+        <div class="min-w-0">
+          <h1 id="mobile-article-title" class="font-sabon italic text-[1.4rem] text-ink leading-[1.7rem]">{{ page.title }}</h1>
+          {% if page.subtitle %}
+          <h2 class="font-sabon italic text-[1.4rem] text-ink leading-[1.7rem]">{{ page.subtitle }}</h2>
+          {% endif %}
+        </div>
+        <a id="mobile-article-close" href="{{ category_url }}" class="shrink-0 mt-1 text-ink hover:opacity-70">
+          {% include icon-close.html px=12 %}
+        </a>
+      </div>
+    </div>
+
+    <!-- Title (desktop only): full sheet width, left edge -->
+    <h1 id="article-title" class="w-full mt-[0.5rem] font-sabon italic text-[1.66rem] text-ink leading-snug max-md:hidden">{{ page.title }}</h1>
+    {% if page.subtitle %}
+    <h2 id="article-subtitle" class="w-full font-sabon italic text-[1.66rem] text-ink leading-snug mt-[-0.375rem] max-md:hidden">{{ page.subtitle }}</h2>
+    {% endif %}
+
+    <!-- Hero: the article's first media block (moved here by the flatten script below), arranged
+         per front-matter hero_layout: 1 = sheet's left edge, 2 = column's left edge, 3 = centred.
+         Mobile ignores hero_layout: always left-aligned media + caption. -->
+    <div id="article-hero" data-layout="{{ page.hero_layout | default: 1 }}" class="flex flex-col gap-[0.9rem] items-start md:data-[layout=3]:items-center data-[layout=2]:md:pl-[calc((100%-var(--spacing-article-col))/2)] w-full mt-[5.5rem] max-md:mt-[3.5rem] empty:hidden"></div>
+
+    <!-- Central column, fixed width (--spacing-article-col), centred in the sheet; the flatten
+         script appends metadata, text, media, and captions as direct children -->
+    <div id="article-column" class="w-article-col max-w-full mx-auto flex flex-col gap-[3.5rem] max-md:gap-[2.5rem] pb-[5rem]">
+
+      <!-- Metadata: 2-column table (label | value), full column width -->
+      <div class="w-full mt-[3.5rem] max-md:mt-12 max-md:mb-4 border-b border-mist/40">
+        {% include article-meta.html article_id=page.article_id %}
+      </div>
+
+      <!-- Hidden content source — JS flattens this into #article-hero / #article-column -->
+      <div id="content-source" class="hidden" aria-hidden="true">
+        {{ content }}
+      </div>
+
+    </div>
+
+  </div><!-- /#article-sheet -->
+  </div><!-- /#content-area -->
+
+  <!-- Mobile only: compact title + close pinned to the viewport top over a white fade, shown once
+       the title block scrolls out of view. Lives at root level, NOT inside the header: the
+       header's view-transition-name makes it a stacking context that would trap this z-40. -->
+  <div class="hidden max-md:block">
+    <div id="mobile-scroll-row2" class="hidden fixed top-0 left-0 right-0 z-40 opacity-0 transition-opacity duration-200 items-center justify-between gap-4 px-5 pt-4 pb-3 before:content-[''] before:absolute before:inset-x-0 before:top-0 before:h-24 before:-z-10 before:pointer-events-none before:bg-[linear-gradient(to_bottom,rgba(255,255,255,1)_0%,rgba(255,255,255,0)_100%)] pointer-events-none">
+      <span class="font-sabon italic text-base text-ink truncate min-w-0">{{ page.title }}</span>
+      <a id="mobile-scroll-close" href="{{ category_url }}" class="shrink-0 text-ink hover:opacity-70 pointer-events-auto">
+        {% include icon-close.html px=12 %}
+      </a>
+    </div>
+  </div>
+
+  <!-- Enlarged view: full-screen project-wide slideshow over a 90% white veil; three equal
+       click columns (prev / exit / next) with the slideshow hover cursors -->
+  <div id="lightbox" class="fixed inset-0 z-[60] hidden">
+    <div class="absolute inset-0 bg-white/90"></div>
+    <img id="lightbox-img" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-auto w-auto max-h-[70vh] max-w-[70vw] block" src="" alt="">
+    <div class="absolute inset-0 flex">
+      <div class="cursor-prev flex-1" onclick="lightboxNav(-1)"></div>
+      <div class="cursor-exit flex-1" onclick="closeLightbox()"></div>
+      <div class="cursor-next flex-1" onclick="lightboxNav(1)"></div>
+    </div>
+    <!-- Title + running count in the navbar site-title spot: same offsets and type as the header -->
+    <div class="absolute top-[2.1875rem] left-[2.5rem] flex items-baseline gap-[1.25rem] font-sabon italic text-nav text-ink pointer-events-none">
+      <span>{{ page.title }}</span>
+      <span id="lightbox-count"></span>
+    </div>
+  </div>
+
+  {% include exit-transition.html %}
+
+  <script>
+    // × exits: bind the slide-down exit, and flag exits landing on LEVEL2 (× back to a category
+    // page, or Work) so a full-reload return restores view mode, grid order, and scroll —
+    // bfcache returns keep them natively and clear the flag on pageshow instead
+    (function () {
+      function flag() { sessionStorage.setItem('level2-return', '1'); }
+      var sameHost = document.referrer && document.referrer.indexOf(window.location.host) !== -1;
+      var closeGoesToCategory = sameHost ? document.referrer.indexOf('/category/') !== -1 : true;
+      ['article-close', 'mobile-article-close', 'mobile-scroll-close'].forEach(function (id) {
+        bindExitTransition(id);
+        var el = document.getElementById(id);
+        if (el) el.addEventListener('click', function () { if (closeGoesToCategory) flag(); });
+      });
+      var work = document.getElementById('nav-work-link');
+      if (work) work.addEventListener('click', flag);
+    })();
+
+    // Enlarged view: flat sequence of every image in the article, with a running count
+    var lightboxImages = [];
+    var lightboxIndex  = 0;
+
+    function updateLightbox() {
+      document.getElementById('lightbox-img').src = lightboxImages[lightboxIndex];
+      document.getElementById('lightbox-count').textContent =
+        (lightboxIndex + 1) + '/' + lightboxImages.length;
+    }
+
+    function openLightbox(index) {
+      // No enlarged view on mobile — media taps only drive the slideshows
+      if (!window.matchMedia('(min-width: 48rem)').matches) return;
+      lightboxIndex = index;
+      updateLightbox();
+      document.getElementById('lightbox').classList.remove('hidden');
+    }
+
+    function closeLightbox() {
+      document.getElementById('lightbox').classList.add('hidden');
+    }
+
+    function lightboxNav(dir) {
+      var n = lightboxImages.length;
+      lightboxIndex = ((lightboxIndex + dir) % n + n) % n;
+      updateLightbox();
+    }
+
+    // Arrow keys drive the enlarged-view slideshow while it is open; otherwise the in-article
+    // slideshow whose frame centre sits closest to the viewport midline
+    document.addEventListener('keydown', function (e) {
+      if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+      var dir = e.key === 'ArrowLeft' ? -1 : 1;
+      if (!document.getElementById('lightbox').classList.contains('hidden')) {
+        e.preventDefault();
+        lightboxNav(dir);
+        return;
+      }
+      var mid = window.innerHeight / 2;
+      var best = null, bestDist = Infinity;
+      document.querySelectorAll('.article-img-wrap').forEach(function (wrap) {
+        if (!wrap.id || !wrap.querySelector('.ss-slide')) return;
+        var r = wrap.getBoundingClientRect();
+        var d = Math.abs((r.top + r.bottom) / 2 - mid);
+        if (d < bestDist) { bestDist = d; best = wrap; }
+      });
+      if (best) { e.preventDefault(); ssNav(best.id, dir); }
+    });
+
+    function ssNav(id, dir) {
+      var slides = Array.from(document.querySelectorAll('#' + id + ' .ss-slide'));
+      var curr   = slides.findIndex(function (s) { return !s.classList.contains('hidden'); });
+      slides[curr].classList.add('hidden');
+      var next = (curr + dir + slides.length) % slides.length;
+      slides[next].classList.remove('hidden');
+      var counter = document.querySelector('#' + id + ' .ss-counter');
+      if (counter) counter.textContent = (next + 1) + '/' + slides.length;
+      var mirror = document.querySelector('[data-ss-counter-for="' + id + '"]');
+      if (mirror) mirror.textContent = (next + 1) + '/' + slides.length;
+      ssPositionCounter(document.getElementById(id));
+    }
+
+    // The counter sits beside the visible slide, not the reserved frame: the slide's
+    // object-contain right edge is written to --ss-img-right on the wrap, which the counter's
+    // left-[var(--ss-img-right,100%)] reads. Slide dimensions come from the build-time
+    // width/height attributes, so no image load is needed.
+    function ssPositionCounter(wrap) {
+      if (!wrap) return;
+      var frame = wrap.querySelector('.ss-frame');
+      var slide = wrap.querySelector('.ss-slide:not(.hidden)');
+      if (!frame || !slide) return;
+      var fw = frame.clientWidth, fh = frame.clientHeight;
+      var w  = parseFloat(slide.getAttribute('width'))  || slide.naturalWidth;
+      var h  = parseFloat(slide.getAttribute('height')) || slide.naturalHeight;
+      if (!fw || !fh || !w || !h) return;
+      var rw = Math.min(fw, fh * w / h);
+      var x  = parseFloat(getComputedStyle(slide).objectPosition) / 100 || 0;
+      wrap.style.setProperty('--ss-img-right', ((fw - rw) * x + rw) + 'px');
+    }
+
+    // Flatten #content-source into the hero and the central column
+    (function () {
+      var source     = document.getElementById('content-source');
+      var column     = document.getElementById('article-column');
+      var hero       = document.getElementById('article-hero');
+      var heroLayout = hero.dataset.layout || '1';
+      var children   = Array.from(source.children);
+      var heroTaken  = false;
+      var i = 0;
+
+      // A media wrap with actual media in it (skips plugin warning boxes)
+      function isHeroCandidate(node) {
+        return node.classList &&
+          (node.classList.contains('article-img-wrap') || node.classList.contains('article-video-wrap')) &&
+          !!node.querySelector('img, video, iframe');
+      }
+
+      // Caption below a media block; `extra` sets width/alignment for its context, and in
+      // #article-column pulls the caption back to 0.9rem below its media (gap 3.5 - 2.6).
+      // Mobile: a slideshow's counter (mirror span, kept in sync by ssNav) rides the caption
+      // line — after the caption text, or alone in the caption's place when there is none.
+      function placeCaption(parent, captionText, extra, wrap) {
+        var counter = wrap ? wrap.querySelector('.ss-counter') : null;
+        if (captionText === null && !counter) return;
+        var caption = document.createElement('div');
+        caption.className = 'font-grotesque text-xs text-ink leading-[1.6] ' + extra
+          + (captionText === null ? ' md:hidden' : '');
+        if (captionText !== null) caption.textContent = captionText;
+        if (counter) {
+          var mirror = document.createElement('span');
+          mirror.className = 'md:hidden font-sabon italic whitespace-nowrap';
+          mirror.dataset.ssCounterFor = wrap.id;
+          mirror.textContent = counter.textContent;
+          if (captionText !== null) mirror.classList.add('ml-2');
+          caption.appendChild(mirror);
+        }
+        parent.appendChild(caption);
+      }
+
+      // Single image: click into the lightbox (cursor-only hover, no veil)
+      function wireSingleLightbox(wrap, img) {
+        var idx = lightboxImages.length;
+        wrap.onclick = function () { openLightbox(idx); };
+        if (img) lightboxImages.push(img.src);
+      }
+
+      // Slideshow: register slides with the lightbox, open at the visible one. Mobile has no
+      // enlarged view: the middle enter zone is hidden and prev/next split the area in half.
+      function wireSlideshowLightbox(wrap) {
+        var slideEls = Array.from(wrap.querySelectorAll('.ss-slide'));
+        var startIdx = lightboxImages.length;
+        slideEls.forEach(function (s) { lightboxImages.push(s.src); });
+        var enterZone = wrap.querySelector('.cursor-enter');
+        if (enterZone) {
+          enterZone.classList.add('max-md:hidden');
+          enterZone.onclick = function () {
+            var curr = slideEls.findIndex(function (s) { return !s.classList.contains('hidden'); });
+            openLightbox(startIdx + Math.max(0, curr));
+          };
+        }
+      }
+
+      // Counter beside a slideshow rides --ss-img-right, which can put it over the click zones —
+      // hence pointer-events-none. Mobile hides it: the caption mirror (placeCaption) shows there.
+      function counterBeside(counter) {
+        counter.classList.remove('mt-1.5');
+        counter.classList.add(
+          'absolute', 'left-[var(--ss-img-right,100%)]', 'top-1/2', '-translate-y-1/2', 'ml-8',
+          'whitespace-nowrap', 'pointer-events-none', 'max-md:hidden'
+        );
+      }
+
+      // Shared slideshow prep, hero and column alike: left-aligned slides on mobile, lightbox
+      // wiring, and the desktop beside-the-slide counter
+      function prepSlideshow(wrap) {
+        wrap.querySelectorAll('.ss-slide').forEach(function (s) { s.classList.add('max-md:object-left'); });
+        wireSlideshowLightbox(wrap);
+        var counter = wrap.querySelector('.ss-counter');
+        if (counter) counterBeside(counter);
+      }
+
+      // Hero: the first media block. --spacing-hero is a MAX height — media renders at it when
+      // there's room and scales down aspect-intact below it. Desktop placement comes from
+      // data-layout; mobile always left-aligns. Same invisible hover thirds as every slideshow.
+      function heroize(wrap) {
+        var captionText = wrap.dataset.caption || null;
+
+        if (wrap.classList.contains('article-video-wrap')) {
+          var video = wrap.querySelector('video');
+          if (video) {
+            // Local mp4: intrinsic dimensions, same recipe as a hero image
+            video.classList.add('h-auto', 'w-auto', 'block', 'max-w-full', 'max-h-hero');
+            wrap.classList.add('max-w-full');
+          } else {
+            // Vimeo iframe: no intrinsic size — width derived from the hero height via the
+            // plugin-emitted aspect ratio (--v-ar), scaled down aspect-intact by the 100% term
+            wrap.classList.add('w-full', 'max-w-[min(calc(var(--spacing-hero)*var(--v-ar,1.7778)),100%)]');
+          }
+          hero.appendChild(wrap);
+
+        } else if (!wrap.querySelector('.ss-slide')) {
+          var img = wrap.querySelector('img');
+          if (img) img.classList.add('h-auto', 'w-auto', 'block', 'max-w-full', 'max-h-hero');
+          wrap.classList.add('relative', 'max-w-full', 'cursor-enter');
+          wireSingleLightbox(wrap, img);
+          hero.appendChild(wrap);
+
+        } else {
+          // Slideshow: the wrap reserves the frame — the widest slide at the max hero height
+          // (--ss-max-ar, emitted at build time); aspect-locked so the frame scales down whole.
+          // The width MUST live on the wrap: as a flex item its % clamp resolves, whereas on the
+          // frame inside the shrink-wrapped wrap it would be circular and collapse to 0x0.
+          var sizer = wrap.querySelector('img[aria-hidden]');
+          var frame = wrap.querySelector('.ss-frame');
+          if (sizer) sizer.classList.add('hidden');
+          if (frame) frame.classList.add('aspect-[var(--ss-max-ar,1.5)]');
+
+          // Desktop slides share the frame height: left-aligned in layouts 1/2, centred in 3
+          if (heroLayout !== '3') {
+            wrap.querySelectorAll('.ss-slide').forEach(function (s) { s.classList.add('md:object-left'); });
+          }
+
+          prepSlideshow(wrap);
+          wrap.classList.add('relative', 'max-w-full',
+            'w-[min(calc(var(--spacing-hero)*var(--ss-max-ar,1.5)),100%)]');
+          hero.appendChild(wrap);
+        }
+
+        // Caption: left-aligned like non-hero captions on mobile and desktop layouts 1/2
+        // (wider cap); layout 3 desktop centres under the hero with centred text
+        placeCaption(hero, captionText, 'self-start w-full text-left max-md:max-w-[80%]'
+          + (heroLayout === '3'
+              ? ' max-w-[25rem] md:self-center md:text-center'
+              : ' max-w-[36rem]'), wrap);
+      }
+
+      while (i < children.length) {
+        var node = children[i];
+
+        if (!heroTaken && isHeroCandidate(node)) {
+          heroTaken = true;
+          heroize(node);
+          i++;
+          continue;
+        }
+
+        if (node.classList && node.classList.contains('article-img-wrap')) {
+          var wrap        = node;
+          var isSlideshow = !!wrap.querySelector('.ss-slide');
+          var captionText = wrap.dataset.caption || null;
+
+          if (!isSlideshow) {
+            // Mobile: capped to the mobile media height and left-aligned like all non-hero media
+            var img = wrap.querySelector('img');
+            if (img) img.classList.add('h-auto', 'w-auto', 'md:max-h-article-col', 'max-md:max-h-hero', 'max-w-full', 'block');
+            wrap.classList.add('relative', 'self-center', 'max-md:self-start', 'max-w-full', 'cursor-enter');
+            wireSingleLightbox(wrap, img);
+          } else {
+            // Frame keeps the full column width so the click zones are column-width thirds
+            // (halves on mobile); slides letterbox inside it — centred on desktop, left-aligned
+            // on mobile. The sizer's height cap keeps tall frames within the column square.
+            var sizer = wrap.querySelector('img[aria-hidden]');
+            if (sizer) sizer.classList.add('md:max-h-article-col', 'max-md:max-h-hero');
+
+            // Mobile: the tap zones cover only the widest slide, not the full frame —
+            // left-anchored, width resolved from the frame height via --ss-max-ar
+            var zones = wrap.querySelector('.cursor-prev');
+            if (zones && zones.parentElement) {
+              zones.parentElement.classList.add('max-md:right-auto', 'max-md:w-auto', 'max-md:max-w-full', 'max-md:aspect-[var(--ss-max-ar,1.5)]');
+            }
+            prepSlideshow(wrap);
+            wrap.classList.add('relative', 'self-center', 'w-full');
+          }
+
+          column.appendChild(wrap);
+          placeCaption(column, captionText, 'mt-[-2.6rem] max-md:mt-[-1.6rem] w-full max-w-[25rem] max-md:max-w-[80%]', wrap);
+          i++;
+
+        } else if (node.classList && node.classList.contains('article-video-wrap')) {
+          // Video: sized and placed like a single image, but no lightbox and no hover overlay
+          // (it would sit over the playback controls)
+          var vwrap      = node;
+          var vidCaption = vwrap.dataset.caption || null;
+          var video      = vwrap.querySelector('video');
+
+          if (video) {
+            // Local mp4: intrinsic dimensions, same recipe as <img>
+            video.classList.add('h-auto', 'w-auto', 'md:max-h-article-col', 'max-md:max-h-hero', 'max-w-full', 'block');
+            vwrap.classList.add('self-center', 'max-md:self-start', 'max-w-full');
+          } else {
+            // Vimeo iframe: cap the width via --v-ar so neither dimension exceeds the column square
+            vwrap.classList.add('self-center', 'max-md:self-start', 'w-full', 'max-w-[min(var(--spacing-article-col),calc(var(--spacing-article-col)*var(--v-ar,1.7778)),100%)]');
+          }
+
+          column.appendChild(vwrap);
+          placeCaption(column, vidCaption, 'mt-[-2.6rem] max-md:mt-[-1.6rem] w-full max-w-[25rem] max-md:max-w-[80%]');
+          i++;
+
+        } else {
+          // Normal text: paragraphs and ## headings, one direct child each, full column width —
+          // headings at the column's left edge, body paragraphs indented against them
+          var clone = node.cloneNode(true);
+          clone.classList.add('w-full', 'text-ink');
+          if (clone.tagName === 'H2') {
+            // Pull the following paragraph to 1rem below its heading (gap 3.5 - 2.5)
+            clone.classList.add('font-sabon', 'text-base', 'italic', 'leading-tight', 'md:w-[28rem]', 'max-w-full', 'mb-[-2.5rem]', 'max-md:mb-[-1.75rem]');
+          } else if (clone.tagName === 'P') {
+            // Body text: sans-serif at the About page's body size; pl + pr trim the column to
+            // the About block's 37.1875rem measure (a size step up on mobile)
+            clone.classList.add('font-grotesque', 'text-[0.8125rem]', 'max-md:text-[0.85rem]', 'leading-[1.5]', 'pl-[3.25rem]', 'pr-[3.0625rem]', 'max-md:pl-0', 'max-md:pr-0');
+            // Consecutive paragraphs sit 1.25rem apart (gap 3.5 - 2.25)
+            if (column.lastElementChild && column.lastElementChild.tagName === 'P') {
+              clone.classList.add('mt-[-2.25rem]', 'max-md:mt-[-1.25rem]');
+            }
+          }
+          column.appendChild(clone);
+          i++;
+        }
+      }
+
+      // Counters track the visible slide's edge: measure once everything is in the layout, and
+      // re-measure whenever the frames rescale with the window
+      function positionAllCounters() {
+        document.querySelectorAll('.article-img-wrap').forEach(function (w) {
+          ssPositionCounter(w);
+        });
+      }
+      positionAllCounters();
+      window.addEventListener('resize', positionAllCounters);
+    })();
+
+    // Overlay title fade on scroll: watch the last line of the title block (subtitle when
+    // present), so the overlay appears only once both are gone
+    (function () {
+      var target   = document.getElementById('article-subtitle') || document.getElementById('article-title');
+      var navTitle = document.getElementById('nav-article-title');
+      if (!target || !navTitle) return;
+
+      var observer = new IntersectionObserver(function (entries) {
+        navTitle.classList.toggle('opacity-0', entries[0].isIntersecting);
+      }, {
+        root:      document.getElementById('content-area'),
+        threshold: 0
+      });
+
+      observer.observe(target);
+    })();
+
+    // Nudge the sheet down while hovering the navbar, but only at the initial scroll position.
+    // The same at-top tracking lifts the navbar (z-40) above the scroller's transparent strip
+    // while the sheet is at rest, which is what keeps the nav clickable there.
+    (function () {
+      var scroller = document.getElementById('content-area');
+      var sheet    = document.getElementById('article-sheet');
+      var header   = document.getElementById('l3-header');
+      if (!scroller || !sheet || !header) return;
+
+      var hovering = false;
+
+      function update() {
+        var atTop = scroller.scrollTop === 0;
+        header.classList.toggle('z-40', atTop);
+        sheet.classList.toggle('translate-y-[0.375rem]', hovering && atTop);
+      }
+
+      header.addEventListener('mouseenter', function () { hovering = true;  update(); });
+      header.addEventListener('mouseleave', function () { hovering = false; update(); });
+      scroller.addEventListener('scroll', update, { passive: true });
+      update();
+    })();
+
+    // Mobile: show the compact fixed title once the in-page title block scrolls out of view —
+    // by then the sheet has scrolled over the navbar, so the overlay fades in over content only
+    (function () {
+      var mobileH1  = document.getElementById('mobile-article-title');
+      var scrollRow = document.getElementById('mobile-scroll-row2');
+      if (!mobileH1 || !scrollRow) return;
+
+      var hideTimer = null;
+      var showTimer = null;
+
+      function showScrollRow() {
+        scrollRow.classList.remove('hidden');
+        scrollRow.classList.add('flex');
+        scrollRow.getBoundingClientRect(); // force reflow
+        scrollRow.classList.remove('opacity-0');
+      }
+
+      function hideScrollRow() {
+        scrollRow.classList.add('opacity-0');
+        hideTimer = setTimeout(function () {
+          scrollRow.classList.add('hidden');
+          scrollRow.classList.remove('flex');
+          hideTimer = null;
+        }, 200);
+      }
+
+      var observer = new IntersectionObserver(function (entries) {
+        if (entries[0].isIntersecting) {
+          if (showTimer) { clearTimeout(showTimer); showTimer = null; }
+          if (hideTimer) { clearTimeout(hideTimer); hideTimer = null; }
+          hideScrollRow();
+        } else if (!showTimer) {
+          if (hideTimer) { clearTimeout(hideTimer); hideTimer = null; }
+          showTimer = setTimeout(function () {
+            showTimer = null;
+            showScrollRow();
+          }, 60);
+        }
+      }, {
+        root:      document.getElementById('content-area'),
+        threshold: 0
+      });
+
+      observer.observe(mobileH1);
+    })();
+  </script>
+
+{% include slide-transition.html %}
+</body>
+</html>

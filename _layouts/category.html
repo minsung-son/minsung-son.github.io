@@ -1,0 +1,656 @@
+<!doctype html>
+<html lang="en">
+<head>
+  {% include head.html %}
+</head>
+<body class="h-svh flex flex-col overflow-hidden bg-white">
+
+  {% capture header_row2 %}
+    <!-- Row 2 (mobile only): current category + arrow; the whole row toggles the dropdown
+         (arrow clicks bubble to the row, and stay live via pointer-events-auto while the open
+         row is pointer-events-none so the overlaying menu items remain clickable). Absolute
+         below Row 1 so content scrolls under it; a white fade at 2x row height stands in for
+         an opaque background. -->
+    <div class="hidden max-md:block absolute top-full inset-x-0 before:content-[''] before:absolute before:inset-x-0 before:top-0 before:h-24 before:-z-10 before:pointer-events-none before:bg-[linear-gradient(to_bottom,rgba(255,255,255,1)_0%,rgba(255,255,255,0)_100%)]">
+      <div id="mobile-cat-row2" onclick="toggleMobileCatMenu()" class="relative z-30 flex items-center justify-between px-5 py-3 pointer-events-auto cursor-pointer">
+        <span id="mobile-cat-label" class="font-sabon italic text-base text-ink [.teaser-dark_&]:!text-white truncate [transition:opacity_500ms_ease,color_200ms_ease]"></span>
+        <button id="mobile-cat-toggle" type="button" aria-label="Categories" aria-expanded="false"
+                class="shrink-0 text-ink hover:text-mist [.teaser-dark_&]:!text-white transition-colors duration-200 bg-transparent border-0 p-0 cursor-pointer pointer-events-auto">
+          {% include icon-arrow.html class="h-[0.75rem] w-auto transition-transform duration-500" %}
+        </button>
+      </div>
+      <!-- White fade on a pseudo so a list-row teaser can fade it independently of the menu's own fade -->
+      <div id="mobile-cat-menu" class="hidden opacity-0 transition-opacity duration-500 absolute inset-x-0 top-0 z-20 flex-col items-start gap-0 px-5 pt-3 pb-24 pointer-events-none before:content-[''] before:absolute before:inset-0 before:-z-10 before:pointer-events-none before:bg-[linear-gradient(to_bottom,rgba(255,255,255,1)_0%,rgba(255,255,255,0.92)_55%,rgba(255,255,255,0)_100%)] before:transition-opacity before:duration-200 [.teaser-active_&]:before:opacity-0">
+        <!-- Close hit-strip over the initial Row-2 band; the relative (positioned) items
+             hit-test above it, so item clicks still select while everything else closes -->
+        <div onclick="toggleMobileCatMenu()" class="absolute inset-x-0 top-0 h-12 pointer-events-auto cursor-pointer"></div>
+        {% assign menu_cats = "all,architecture,photography,films,writing,other" | split: "," %}
+        {% for cat in menu_cats %}
+        {% if cat == "all" %}{% assign cat_label = "All work" %}{% else %}{% assign cat_label = cat | capitalize %}{% endif %}
+        <button type="button" data-cat="{{ cat }}" onclick="setCategory('{{ cat }}'); toggleMobileCatMenu();" class="relative font-sabon italic text-base text-ink hover:text-mist [.teaser-dark_&]:!text-white transition-colors duration-200 text-left bg-transparent border-0 p-0 cursor-pointer pointer-events-auto">{{ cat_label }}</button>
+        {% endfor %}
+      </div>
+    </div>
+  {% endcapture %}
+  {% include header-nav.html level=2 row2=header_row2 %}
+
+  <!-- Full-window at md; children's top paddings carry the extra header height -->
+  <div class="flex-1 relative md:absolute md:inset-0 overflow-hidden flex px-[2.5rem] max-md:px-0" id="content-area">
+
+    <aside class="w-8 mr-22 shrink-0 pt-[10.3125rem] flex flex-col gap-[0.4rem] max-md:hidden">
+      {% assign nav_categories = "architecture,photography,films,writing,other" | split: "," %}
+      {% for cat in nav_categories %}
+        {% assign cat_label = cat | capitalize %}
+        <button data-cat="{{ cat }}"
+                onclick="setCategory('{{ cat }}')"
+                class="cat-nav-btn group relative flex items-center leading-none font-grotesque text-[0.78125rem] text-ink transition-colors duration-200 [.teaser-dark_&]:!text-white text-left bg-transparent border-0 p-0 cursor-pointer">
+          <span class="absolute left-0 top-1/2 -mt-[0.09375rem] w-[0.1875rem] h-[0.1875rem] bg-current opacity-0 pointer-events-none group-hover:opacity-100 group-[.is-active]:opacity-100"></span>
+          <span class="transition-transform duration-[180ms] ease-[ease] group-hover:translate-x-[0.625rem] group-[.is-active]:translate-x-[0.625rem]">{{ cat_label }}</span>
+          <span class="cat-close hidden hover:opacity-70 ml-4 relative -top-px cursor-pointer" onclick="event.stopPropagation(); setCategory('all')">
+            <!-- 2026-07-30 designer batch (thicker X than the shared icon-close.html art) -->
+            <svg width="0.5rem" height="0.5rem" viewBox="0 0 169.63 169.21" xmlns="http://www.w3.org/2000/svg" class="inline-block align-middle"><polygon fill="currentColor" points="169.46 15.7 153.93 .12 84.83 69.05 15.91 -.04 .33 15.49 69.26 84.59 .16 153.51 15.7 169.09 84.79 100.16 153.72 169.26 169.3 153.72 100.37 84.62 169.46 15.7"/></svg>
+          </span>
+        </button>
+      {% endfor %}
+    </aside>
+
+    <main class="relative flex-1 min-w-0 overflow-y-auto scrollbar-hide z-[1]" id="main-content">
+
+      {% assign all_articles = site.articles | sort: "year" | reverse %}
+
+      <!-- Grid view -->
+      <div id="view-grid" class="max-md:px-0.5">
+        <div id="grid-container" class="grid grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 gap-x-0.5 gap-y-[2.5rem] max-md:gap-y-[3rem] md:pl-16 pt-[10.3125rem] max-md:pt-[7rem] pb-16 max-md:pb-32">
+          {% for article in all_articles %}
+            {% unless article.hidden %}
+            {% if article.external_url %}{% assign link_url = article.external_url %}{% else %}{% assign link_url = article.url | relative_url %}{% endif %}
+            {% for img_file in article.images %}
+              <a href="{{ link_url }}" data-category="{{ article.category }}"
+                 data-index="{{ article.article_id | prepend: '000' | slice: -3, 3 }}"
+                 data-title="{{ article.title }}"
+                 class="grid-item @container relative aspect-[2/3] block overflow-hidden pointer-events-none">
+                <!-- Ratio clamp in cqw of the cell — Safari can't resolve % heights against the
+                     aspect-ratio cell: 5:4 (widest) = 80cqw, 2:3 (tallest) = 150cqw = full cell.
+                     Cell is pointer-transparent; only the image itself is hoverable/clickable -->
+                <img src="{{ article.url | relative_url }}{{ img_file }}" alt="{{ article.title }}" loading="lazy"
+                     class="w-full h-auto min-h-[80cqw] max-h-[150cqw] object-cover block pointer-events-auto">
+              </a>
+            {% endfor %}
+            {% endunless %}
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- List view: #list-grid carries ONE base font-size (navbar-derived on desktop, fixed on
+           mobile) and everything inside is em, so the whole list scales on the site's fluid root -->
+      <style>
+        #view-list {
+          --list-scale: 1;
+          --list-row-pad: 1.375;
+          --list-th-text: 0.9em;          /* desktop sort headers */
+          --list-row-text: 1.15em;        /* row cells (desktop) */
+          --list-base-mobile: 0.8rem;     /* mobile base font-size */
+          --list-row-text-mobile: 1.15em; /* row cells (mobile) */
+          --col-index: 0.68fr;
+          --col-title: 8.6fr;
+          --col-year:  2.5fr;
+          --col-pub:   4.48fr;
+        }
+        /* Mobile rows: tighter vertical padding (py = 0.9em * pad) */
+        @media (width < 48rem) {
+          #view-list { --list-row-pad: 1; --list-row-text: var(--list-row-text-mobile); }
+        }
+      </style>
+      <div id="view-list" class="hidden pt-[10.125rem] max-md:pt-[7rem] md:pl-16 pb-16 max-md:pb-32 max-md:px-5">
+        <!-- Columns: Index / Title / Year / Category-metadata; sort headers are desktop-only -->
+        <div id="list-grid" class="grid max-w-full grid-cols-[minmax(max-content,var(--col-index))_minmax(0,var(--col-title))_minmax(max-content,var(--col-year))_minmax(0,var(--col-pub))] max-md:grid-cols-[minmax(0,1fr)_max-content] text-[length:var(--list-base-mobile)]/[1.4] md:text-[calc(var(--text-nav)/1.15*var(--list-scale))]/[1.4]">
+          <div class="grid grid-cols-subgrid col-span-4 max-md:hidden">
+            <div data-col="0" onclick="sortList(0)" class="sort-th font-grotesque text-ink transition-colors duration-200 [.teaser-dark_&]:!text-white text-[length:var(--list-th-text)] pb-[0.7em] pr-[0.56em] text-left font-normal cursor-pointer select-none whitespace-nowrap overflow-hidden text-ellipsis max-md:hidden"><span class="sort-ind">{% include icon-arrow.html class="inline-block h-[0.8em] w-auto ml-[0.5rem]" %}</span></div>
+            <div data-col="1" onclick="sortList(1)" class="sort-th font-grotesque text-ink transition-colors duration-200 [.teaser-dark_&]:!text-white text-[length:var(--list-th-text)] pb-[0.7em] pr-[0.56em] text-left font-normal cursor-pointer select-none whitespace-nowrap overflow-hidden text-ellipsis max-md:pr-4"><span class="sort-label">Project</span><span class="sort-ind ml-[0.25em]">{% include icon-arrow.html class="inline-block h-[0.8em] w-auto" %}</span></div>
+            <div data-col="2" onclick="sortList(2)" class="sort-th font-grotesque text-ink transition-colors duration-200 [.teaser-dark_&]:!text-white text-[length:var(--list-th-text)] pb-[0.7em] pr-[0.56em] text-left font-normal cursor-pointer select-none whitespace-nowrap overflow-hidden text-ellipsis max-md:pr-0"><span class="sort-label">Year</span><span class="sort-ind ml-[0.25em]">{% include icon-arrow.html class="inline-block h-[0.8em] w-auto" %}</span></div>
+            <div data-col="3" onclick="sortList(3)" class="sort-th font-grotesque text-ink transition-colors duration-200 [.teaser-dark_&]:!text-white text-[length:var(--list-th-text)] pb-[0.7em] pr-[0.56em] text-left font-normal cursor-pointer select-none min-w-0 whitespace-nowrap overflow-hidden text-ellipsis max-md:hidden"><span id="col4-label" class="sort-label">Category</span><span class="sort-ind ml-[0.25em]">{% include icon-arrow.html class="inline-block h-[0.8em] w-auto" %}</span></div>
+          </div>
+          {% for article in all_articles %}
+            {% unless article.hidden %}
+            {% if article.external_url %}{% assign link_url = article.external_url %}{% else %}{% assign link_url = article.url | relative_url %}{% endif %}
+            <div data-category="{{ article.category }}"
+                {% if article.teaser %}data-teaser="{{ article.url | relative_url }}{{ article.teaser }}"{% endif %}
+                class="grid grid-cols-subgrid col-span-4 max-md:col-span-2 list-row group cursor-pointer pointer-events-none max-md:pointer-events-auto py-[calc(0.9em*var(--list-row-pad))] border-t border-stone-100 transition-colors duration-200 [.teaser-active_&]:border-black/40 [.teaser-dark_&]:!border-white/40"
+                onclick="goTo('{{ link_url }}')">
+              <div data-val="{{ article.article_id }}" class="font-sabon italic text-[length:var(--list-row-text)] text-ink group-[.is-hover]:text-mist [.teaser-dark_&]:!text-white transition-colors duration-200 pr-[0.43em] tabular-nums pointer-events-auto whitespace-nowrap overflow-hidden text-ellipsis max-md:hidden">{{ article.article_id | prepend: "000" | slice: -3, 3 }}</div>
+              <div data-val="{{ article.title | downcase }}" class="font-sabon italic text-[length:var(--list-row-text)] text-ink group-[.is-hover]:text-mist [.teaser-dark_&]:!text-white transition-colors duration-200 pr-[0.43em] pointer-events-auto min-w-0 overflow-hidden text-ellipsis whitespace-nowrap max-md:pr-4">{{ article.title }}</div>
+              <div data-val="{{ article.year }}" class="font-sabon italic text-[length:var(--list-row-text)] text-ink group-[.is-hover]:text-mist [.teaser-dark_&]:!text-white transition-colors duration-200 pr-[0.43em] tabular-nums pointer-events-auto whitespace-nowrap overflow-hidden text-ellipsis max-md:pr-0">{{ article.year }}</div>
+              {% case article.category %}
+                {% when 'architecture' %}{% assign col4_meta = article.typology %}
+                {% when 'photography' %}{% assign col4_meta = article.location %}
+                {% when 'films' %}{% assign col4_meta = article.type %}
+                {% when 'writing' %}{% assign col4_meta = article.publication %}
+                {% else %}{% assign col4_meta = article.category | capitalize %}
+              {% endcase %}
+              <div data-val="{{ article.category }}" data-meta="{{ col4_meta }}" class="font-sabon italic text-[length:var(--list-row-text)] text-ink group-[.is-hover]:text-mist [.teaser-dark_&]:!text-white transition-colors duration-200 pr-[0.43em] pointer-events-auto min-w-0 whitespace-nowrap overflow-hidden text-ellipsis max-md:hidden">{{ article.category | capitalize }}</div>
+            </div>
+            {% endunless %}
+          {% endfor %}
+        </div>
+      </div>
+
+    </main>
+
+    <footer class="absolute bottom-[3.125rem] max-md:bottom-[1rem] left-0 right-0 flex items-center justify-center z-30 pointer-events-none">
+      <div class="flex items-center gap-5 bg-[#f5f5f5]/95 rounded-md py-[0.6875rem] px-[1.1875rem] shadow-[0_0.0625rem_0.375rem_rgba(0,0,0,0.08)] pointer-events-auto">
+        <!-- Toggle buttons keep the pre-2026-07 ink (#57524f) pending a designer decision -->
+        <button id="btn-grid" onclick="setView('grid')" class="text-[#57524f] [&.is-active]:text-[#d7d7d7] hover:text-[#d7d7d7] transition cursor-pointer flex items-center justify-center">
+          <svg width="1.3125rem" height="1.9375rem" viewBox="0 0 126.79 169.21" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
+            <rect width="33.37" height="46.51" rx="3.56" ry="3.56"/>
+            <rect x="46.71" width="33.37" height="46.51" rx="3.56" ry="3.56"/>
+            <rect x="93.42" width="33.37" height="46.51" rx="3.56" ry="3.56"/>
+            <rect y="61.35" width="33.37" height="46.51" rx="3.56" ry="3.56"/>
+            <rect x="46.71" y="61.35" width="33.37" height="46.51" rx="3.56" ry="3.56"/>
+            <rect x="93.42" y="61.35" width="33.37" height="46.51" rx="3.56" ry="3.56"/>
+            <rect y="122.7" width="33.37" height="46.51" rx="3.56" ry="3.56"/>
+            <rect x="46.71" y="122.7" width="33.37" height="46.51" rx="3.56" ry="3.56"/>
+            <rect x="93.42" y="122.7" width="33.37" height="46.51" rx="3.56" ry="3.56"/>
+          </svg>
+        </button>
+        <button id="btn-list" onclick="setView('list')" class="text-[#57524f] [&.is-active]:text-[#d7d7d7] hover:text-[#d7d7d7] transition cursor-pointer flex items-center justify-center">
+          <svg width="1.3125rem" height="1.9375rem" viewBox="0 0 126.79 169.21" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
+            <rect x=".41" y="0" width="125.97" height="17.61" rx="3.63" ry="3.63"/>
+            <rect x=".41" y="50.54" width="125.97" height="17.61" rx="3.63" ry="3.63"/>
+            <rect x=".41" y="101.07" width="125.97" height="17.61" rx="3.63" ry="3.63"/>
+            <rect x=".41" y="151.61" width="125.97" height="17.61" rx="3.63" ry="3.63"/>
+          </svg>
+        </button>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- Full-screen teaser background for list-view hover: -z-10 paints above the body's white but
+       below content; two stacked layers so switching directly between teasers crossfades -->
+  <div id="teaser-float" class="fixed inset-0 -z-10 pointer-events-none opacity-0 [.teaser-active_&]:opacity-100 transition-opacity duration-200">
+    <img id="teaser-img-a" class="absolute inset-0 w-full h-full object-cover opacity-100 transition-opacity duration-200" src="" alt="">
+    <img id="teaser-img-b" class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-200" src="" alt="">
+  </div>
+
+  <!-- Floating index+title label for grid-view hover; white under mix-blend-difference inverts
+       whatever is behind it. absolute + pageX/pageY, not fixed + clientX/clientY: Safari
+       misplaces fixed elements against mouse coordinates when the page is zoomed -->
+  <div id="grid-hover-label" class="absolute pointer-events-none z-50 hidden flex items-baseline gap-2 font-sabon italic text-[0.9375rem] text-white mix-blend-difference whitespace-nowrap">
+    <span id="grid-hover-index"></span>
+    <span id="grid-hover-title"></span>
+  </div>
+
+<!-- Mobile: while Row 2 is expanded, this invisible layer sits above the content but below
+     the header and the view switcher, so any stray tap just collapses the menu -->
+<div id="mobile-cat-backdrop" onclick="toggleMobileCatMenu()" class="hidden md:hidden fixed inset-0 z-20"></div>
+
+{% include mobile-menu-toggle.html %}
+<script>
+  var initialCategory = '{{ page.category_slug }}';
+
+  var catLabels = {
+    all: 'All work',
+    architecture: 'Architecture',
+    photography: 'Photography',
+    films: 'Films',
+    writing: 'Writing',
+    other: 'Other'
+  };
+
+  var col4Labels = {
+    all: 'Category',
+    architecture: 'Typology',
+    photography: 'Location',
+    films: 'Type',
+    writing: 'Published on',
+    other: 'Category'
+  };
+
+  var catBase = '{{ "/category/" | relative_url }}';
+
+  var currentCat = initialCategory;
+  var gridInitialized = false;
+  var currentView = null;
+  var gridFadeGen = 0;
+
+  var toggleMobileCatMenu = makeMobileMenuToggle('mobile-cat');
+
+  // Stop any in-progress grid fade-in and snap every cell to visible
+  function cancelGridFadeIn() {
+    gridFadeGen++;
+    document.querySelectorAll('#view-grid .grid-item').forEach(function (item) {
+      item.style.transition = 'none';
+      item.style.opacity    = '1';
+      item.style.willChange = '';
+    });
+  }
+
+  function setCategory(cat) {
+    currentCat = cat;
+    cancelGridFadeIn();
+
+    // Sidebar active state
+    document.querySelectorAll('.cat-nav-btn').forEach(function(btn) {
+      var isActive = btn.dataset.cat === cat;
+      btn.classList.toggle('is-active', isActive);
+      btn.querySelector('.cat-close').classList.toggle('hidden', !isActive);
+    });
+
+    // Nav labels
+    document.getElementById('nav-index').textContent = '';
+    document.getElementById('nav-title').textContent = catLabels[cat] || cat;
+    document.getElementById('mobile-cat-label').textContent = catLabels[cat] || cat;
+
+    // Mobile menu: current category stays mist (hover:text-mist is then a visual no-op)
+    document.querySelectorAll('#mobile-cat-menu button').forEach(function(btn) {
+      var isActive = btn.dataset.cat === cat;
+      btn.classList.toggle('text-mist', isActive);
+      btn.classList.toggle('text-ink', !isActive);
+    });
+
+    // Grid: dim non-matching cells in place (no reordering)
+    document.querySelectorAll('.grid-item').forEach(function(item) {
+      var matches = cat === 'all' || item.dataset.category === cat;
+      var img = item.querySelector('img');
+      img.classList.toggle('pointer-events-none', !matches);
+      img.classList.toggle('grayscale', !matches);
+      img.classList.toggle('opacity-10', !matches);
+    });
+
+    // List: filter rows + repoint column 4 (category under "All", per-category metadata otherwise)
+    if (window.clearListHover) clearListHover();
+    document.getElementById('col4-label').textContent = col4Labels[cat] || 'Category';
+    document.querySelectorAll('.list-row').forEach(function(row) {
+      var matches = cat === 'all' || row.dataset.category === cat;
+      row.classList.toggle('hidden', !matches);
+      var cell = row.children[3];
+      var text = cat === 'all'
+        ? (catLabels[row.dataset.category] || row.dataset.category)
+        : (cell.dataset.meta || '');
+      cell.textContent = text;
+      cell.dataset.val = text.toLowerCase();
+    });
+
+    history.replaceState(null, '', catBase + cat + '/');
+  }
+
+  var FADE_MS = 500; // per-cell/row fade duration
+  var STEP_MS = 45;  // stagger between adjacent fade-in starts
+
+  function triggerListFadeIn() {
+    if (restoringState) return; // round-trip restore: rows appear in place
+    var rows = Array.from(document.querySelectorAll('#view-list .list-row:not(.hidden)'));
+    if (!rows.length) return;
+    rows.forEach(function(row) {
+      row.style.transition = 'none';
+      row.style.opacity    = '0';
+    });
+    rows[0].getBoundingClientRect(); // force reflow
+    rows.forEach(function(row, i) {
+      row.style.transition      = 'opacity ' + FADE_MS + 'ms ease';
+      row.style.transitionDelay = (i * STEP_MS) + 'ms';
+      row.style.opacity         = '1';
+    });
+    setTimeout(function() {
+      rows.forEach(function(row) {
+        row.style.transition      = '';
+        row.style.transitionDelay = '';
+      });
+    }, (rows.length - 1) * STEP_MS + FADE_MS + 50);
+  }
+
+  function triggerGridFadeIn() {
+    var items = Array.from(document.querySelectorAll('#view-grid .grid-item'));
+    if (!items.length) return;
+    var gen = ++gridFadeGen;
+
+    // Reset so the animation always replays from scratch
+    items.forEach(function(item) {
+      item.style.transition = 'none';
+      item.style.opacity    = '0';
+    });
+
+    // Rendered positions, sorted into row-major reading order: top→bottom, then left→right
+    var ordered = items.map(function(item) {
+      var r = item.getBoundingClientRect();
+      return { item: item, top: Math.round(r.top), left: Math.round(r.left) };
+    }).sort(function(a, b) { return a.top - b.top || a.left - b.left; });
+
+    // Domino chain: each cell fades once its image has loaded AND the previous cell started at
+    // least STEP_MS ago, so the reading order always holds; lazy-loaded below-viewport cells
+    // stall the chain until scrolling fetches them
+    var chain = Promise.resolve();
+    ordered.forEach(function(p, i) {
+      chain = chain.then(function() {
+        var waits = [];
+        if (i > 0) waits.push(new Promise(function(res) { setTimeout(res, STEP_MS); }));
+        var img = p.item.querySelector('img');
+        // Wait for load then decode — Safari defers decoding to the first paint, which would
+        // otherwise land mid-fade and flicker
+        if (img) waits.push(new Promise(function(res) {
+          if (img.complete) { res(); return; }
+          img.addEventListener('load',  res, { once: true });
+          img.addEventListener('error', res, { once: true });
+        }).then(function() {
+          return img.decode ? img.decode().catch(function() {}) : undefined;
+        }));
+        return Promise.all(waits);
+      }).then(function() {
+        if (gen !== gridFadeGen) return;
+        // Per-fade compositing layer: Safari otherwise re-rasterizes the cell every frame while
+        // still-loading neighbours invalidate those paints (flicker on cold loads)
+        p.item.style.willChange = 'opacity';
+        p.item.style.transition = 'opacity ' + FADE_MS + 'ms ease';
+        p.item.style.opacity    = '1';
+        p.item.addEventListener('transitionend', function() {
+          p.item.style.willChange = '';
+        }, { once: true });
+      });
+    });
+  }
+
+  function setView(mode) {
+    var catToggle = document.getElementById('mobile-cat-toggle');
+    if (catToggle.getAttribute('aria-expanded') === 'true') toggleMobileCatMenu();
+
+    var gridEl = document.getElementById('view-grid');
+    var listEl = document.getElementById('view-list');
+    var btnGrid = document.getElementById('btn-grid');
+    var btnList = document.getElementById('btn-list');
+
+    if (currentView && currentView !== mode) document.getElementById('main-content').scrollTop = 0;
+
+    if (mode === 'grid') {
+      if (window.clearListHover) clearListHover();
+      gridEl.classList.remove('hidden');
+      listEl.classList.add('hidden');
+      btnGrid.classList.add('is-active');
+      btnList.classList.remove('is-active');
+      if (gridInitialized && currentView !== 'grid') {
+        triggerGridFadeIn();
+      }
+    } else {
+      gridEl.classList.add('hidden');
+      listEl.classList.remove('hidden');
+      btnGrid.classList.remove('is-active');
+      btnList.classList.add('is-active');
+      triggerListFadeIn();
+    }
+
+    currentView = mode;
+  }
+
+  // List column sorting
+  var sortCol = 0, sortDir = -1;
+
+  function sortList(col) {
+    sortDir = sortCol === col ? -sortDir : 1;
+    sortCol = col;
+
+    var grid = document.getElementById('list-grid');
+    var rows = Array.from(grid.querySelectorAll('.list-row'));
+    rows.sort(function(a, b) {
+      var aVal = a.children[col].dataset.val || '';
+      var bVal = b.children[col].dataset.val || '';
+      return sortDir * (col === 0 || col === 2
+        ? parseInt(aVal, 10) - parseInt(bVal, 10)
+        : aVal.localeCompare(bVal));
+    });
+    rows.forEach(function(row) { grid.appendChild(row); });
+
+    updateSortIndicators();
+  }
+
+  function updateSortIndicators() {
+    document.querySelectorAll('.sort-th').forEach(function(th) {
+      var active = parseInt(th.dataset.col) === sortCol;
+      var ind = th.querySelector('.sort-ind');
+      // Arrow art points down (desc); flip for asc, hide when inactive
+      ind.classList.toggle('hidden', !active);
+      ind.querySelector('svg').classList.toggle('rotate-180', sortDir === 1);
+      // Active column shows the arrow only
+      var label = th.querySelector('.sort-label');
+      if (label) label.classList.toggle('hidden', active);
+    });
+  }
+
+  // LEVEL3 round-trip state: entering an article (goTo) saves category, view mode, and grid
+  // order; a bfcache return restores everything natively, so the restore below only kicks in on
+  // full-reload returns (the article set level2-return, or the load is a back/forward traversal)
+  function gridItemKey(item) {
+    var img = item.querySelector('img');
+    return img ? img.getAttribute('src') : '';
+  }
+
+  window.saveLevel2State = function () {
+    var order = Array.from(document.querySelectorAll('#grid-container .grid-item')).map(gridItemKey);
+    sessionStorage.setItem('level2-state', JSON.stringify({ cat: currentCat, view: currentView, order: order }));
+  };
+
+  var rtState = (function () {
+    var returning = !!sessionStorage.getItem('level2-return');
+    sessionStorage.removeItem('level2-return');
+    // Browser-back never sets the flag; an evicted-bfcache return arrives as a traversal reload
+    if (!returning) {
+      var nav = performance.getEntriesByType('navigation')[0];
+      returning = !!nav && nav.type === 'back_forward';
+    }
+    if (!returning) return null;
+    try {
+      var s = JSON.parse(sessionStorage.getItem('level2-state') || 'null');
+      return (s && s.cat === initialCategory) ? s : null;
+    } catch (e) { return null; }
+  })();
+
+  // While truthy, entry fade-ins are suppressed so a restored scroll position isn't looking at
+  // cells still waiting on their stagger delay
+  var restoringState = !!rtState;
+
+  // bfcache returns keep everything natively — drop the unused reload flag
+  window.addEventListener('pageshow', function () {
+    sessionStorage.removeItem('level2-return');
+  });
+
+  // Grid order: random shuffle on a fresh visit; on a LEVEL3 round trip reapply the saved order
+  (function orderGrid() {
+    var container = document.getElementById('grid-container');
+    var items = Array.from(container.querySelectorAll('.grid-item'));
+
+    if (rtState && rtState.order) {
+      var byKey = {};
+      items.forEach(function (item) { byKey[gridItemKey(item)] = item; });
+      var saved = rtState.order.map(function (k) { return byKey[k]; });
+      if (saved.length === items.length && saved.indexOf(undefined) === -1) {
+        saved.forEach(function (item) { container.appendChild(item); });
+        return;
+      }
+    }
+
+    for (var i = items.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = items[i]; items[i] = items[j]; items[j] = tmp;
+    }
+    items.forEach(function(item) { container.appendChild(item); });
+  })();
+
+  setView('grid');
+  setCategory(initialCategory);
+  if (rtState && rtState.view && rtState.view !== currentView) setView(rtState.view);
+  updateSortIndicators();
+  if (!restoringState) triggerGridFadeIn(); // round-trip restore: cells appear in place
+  gridInitialized = true;
+  restoringState = false;
+
+  // Restore scroll position on return from LEVEL3
+  (function () {
+    var id  = sessionStorage.getItem('scroll-id');
+    var top = sessionStorage.getItem('scroll-top');
+    if (!id || top === null) return;
+    var el = document.getElementById(id);
+    if (!el) return;
+    sessionStorage.removeItem('scroll-id');
+    sessionStorage.removeItem('scroll-top');
+    el.scrollTop = parseInt(top, 10);
+  })();
+
+  // Hover previews (desktop only)
+  if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+
+    // List-view hover (sticky highlight): rows are pointer-events-none with pointer-events-auto
+    // cells, so the hit area is the text band; the active row keeps its highlight across the
+    // dead zones and only clears on entering another row or leaving the grid. The teaser src is
+    // left in place on deactivate so the fade-out shows it.
+    (function() {
+      var imgs = [
+        document.getElementById('teaser-img-a'),
+        document.getElementById('teaser-img-b')
+      ];
+      var listGrid   = document.getElementById('list-grid');
+      var activeRow  = null;
+      var currentSrc = '';  // teaser currently on the front layer
+      var front      = 0;   // index into imgs of the visible layer
+      var teaserDark = {};  // src -> is the image dark on average? (cached)
+
+      // Average luminance over a 32x32 downsample; below mid-grey flips to white text (teaser-dark)
+      function classifyTeaser(src, cb) {
+        if (src in teaserDark) { cb(teaserDark[src]); return; }
+        var probe = new Image();
+        probe.onload = function() {
+          var s = 32, c = document.createElement('canvas');
+          c.width = s; c.height = s;
+          var ctx = c.getContext('2d');
+          ctx.drawImage(probe, 0, 0, s, s);
+          var d = ctx.getImageData(0, 0, s, s).data;
+          var sum = 0;
+          for (var i = 0; i < d.length; i += 4) {
+            sum += 0.2126 * d[i] + 0.7152 * d[i + 1] + 0.0722 * d[i + 2];
+          }
+          teaserDark[src] = sum / (d.length / 4) < 128;
+          cb(teaserDark[src]);
+        };
+        probe.onerror = function() { teaserDark[src] = false; cb(false); };
+        probe.src = src;
+      }
+
+      // Direct teaser switches crossfade the two layers; entering/leaving fades the container
+      function showTeaser(src) {
+        var wasVisible = document.body.classList.contains('teaser-active');
+        if (src !== currentSrc) {
+          currentSrc = src;
+          if (wasVisible) {
+            var back = 1 - front;
+            imgs[back].src = src;
+            imgs[back].classList.replace('opacity-0', 'opacity-100');
+            imgs[front].classList.replace('opacity-100', 'opacity-0');
+            front = back;
+          } else {
+            imgs[front].src = src;
+          }
+        }
+        document.body.classList.add('teaser-active');
+        classifyTeaser(src, function(dark) {
+          if (currentSrc === src && document.body.classList.contains('teaser-active')) {
+            document.body.classList.toggle('teaser-dark', dark);
+          }
+        });
+      }
+
+      function hideTeaser() {
+        document.body.classList.remove('teaser-active');
+        document.body.classList.remove('teaser-dark');
+      }
+
+      function activate(row) {
+        if (row === activeRow) return;
+        if (activeRow) activeRow.classList.remove('is-hover');
+        activeRow = row;
+        row.classList.add('is-hover');
+        var src = row.dataset.teaser;
+        if (src) showTeaser(src); else hideTeaser();
+      }
+
+      function deactivate() {
+        if (activeRow) { activeRow.classList.remove('is-hover'); activeRow = null; }
+        hideTeaser();
+      }
+      window.clearListHover = deactivate;
+
+      listGrid.addEventListener('mouseover', function(e) {
+        var row = e.target.closest ? e.target.closest('.list-row') : null;
+        if (row && !row.classList.contains('hidden')) activate(row);
+      });
+      listGrid.addEventListener('mouseleave', deactivate);
+    })();
+
+    // Grid hover → floating label; under "All work" the navbar's right slot previews the
+    // hovered project's category, otherwise it stays on the selected category
+    (function () {
+      var labelEl    = document.getElementById('grid-hover-label');
+      var labelIndex = document.getElementById('grid-hover-index');
+      var labelTitle = document.getElementById('grid-hover-title');
+      var navTitle   = document.getElementById('nav-title');
+
+      function restoreNavTitle() {
+        navTitle.textContent = catLabels[currentCat] || currentCat;
+      }
+
+      // Once a grid item is clicked the label stays hidden while the exit transition plays;
+      // pageshow unfreezes for bfcache returns
+      var frozen = false;
+      document.addEventListener('click', function (e) {
+        if (e.target.closest && e.target.closest('a.grid-item')) {
+          frozen = true;
+          labelEl.classList.add('hidden');
+        }
+      }, true);
+      window.addEventListener('pageshow', function () { frozen = false; restoreNavTitle(); });
+
+      // Delegated mousemove instead of mouseenter/mouseleave: leave events can lag a frame on
+      // fast pointer moves (notably Safari), making the label linger past the image bounds
+      var activeItem = null;
+      var mainContent = document.getElementById('main-content');
+
+      mainContent.addEventListener('mousemove', function (e) {
+        if (frozen) return;
+        var img = e.target.closest ? e.target.closest('.grid-item img') : null;
+        if (!img || img.classList.contains('grayscale')) {
+          if (activeItem) { activeItem = null; labelEl.classList.add('hidden'); restoreNavTitle(); }
+          return;
+        }
+        var item = img.closest('.grid-item');
+        if (item !== activeItem) {
+          activeItem = item;
+          labelIndex.textContent = item.dataset.index || '';
+          labelTitle.textContent = item.dataset.title || '';
+          labelEl.classList.remove('hidden');
+          if (currentCat === 'all') {
+            navTitle.textContent = catLabels[item.dataset.category] || item.dataset.category;
+          }
+        }
+        // 1.5rem cursor offset, resolved to px so it tracks the fluid root
+        var remPx = parseFloat(getComputedStyle(document.documentElement).fontSize);
+        labelEl.style.left = (e.pageX + 1.5 * remPx) + 'px';
+        labelEl.style.top  = e.pageY + 'px';
+      });
+
+      mainContent.addEventListener('mouseleave', function () {
+        activeItem = null;
+        if (!frozen) { labelEl.classList.add('hidden'); restoreNavTitle(); }
+      });
+    })();
+
+  }
+
+  // Article transition
+  document.querySelectorAll('a.grid-item').forEach(function (link) {
+    link.addEventListener('click', function (e) {
+      e.preventDefault();
+      goTo(this.href);
+    });
+  });
+
+</script>
+
+{% include slide-transition.html %}
+</body>
+</html>

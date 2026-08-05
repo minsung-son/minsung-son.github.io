@@ -1,0 +1,74 @@
+<script>
+  // Mobile Row-2 dropdown toggle factory: fades the menu (gradient BG + items), cross-fades
+  // the Row-2 label, rotates the arrow. `hidden` comes off before the fade and back on after
+  // it, so the transition actually runs. Ids follow {prefix}-label/-toggle/-menu, plus an
+  // optional {prefix}-row2 whole-row hit area disabled while open so the overlaying menu
+  // items stay clickable. Opening runs on the list view's FADE_MS/STEP_MS rhythm (items fade
+  // in top-to-bottom staggered); closing snaps everything to a fixed 200ms, items riding the
+  // container fade.
+  function makeMobileMenuToggle(prefix) {
+    var open = false;
+    var hideTimer = null;
+    var staggerTimer = null;
+    var CLOSE_MS = 200;
+    return function () {
+      open = !open;
+      var menu = document.getElementById(prefix + '-menu');
+      var row = document.getElementById(prefix + '-row2');
+      var label = document.getElementById(prefix + '-label');
+      var toggle = document.getElementById(prefix + '-toggle');
+      var arrow = toggle.querySelector('svg');
+      var items = menu.querySelectorAll('button');
+      var fade = window.FADE_MS || 500;
+      var step = window.STEP_MS || 45;
+      clearTimeout(hideTimer);
+      clearTimeout(staggerTimer);
+      // The classes' 500ms durations pace the open; the close overrides them inline
+      menu.style.transitionDuration = open ? '' : CLOSE_MS + 'ms';
+      label.style.transitionDuration = open ? '' : CLOSE_MS + 'ms';
+      arrow.style.transitionDuration = open ? '' : CLOSE_MS + 'ms';
+      if (open) {
+        menu.classList.remove('hidden');
+        menu.classList.add('flex');
+        items.forEach(function (btn) {
+          btn.style.transition = 'none';
+          btn.style.opacity = '0';
+        });
+        menu.getBoundingClientRect(); // reflow so the fades start from opacity 0
+        menu.classList.remove('opacity-0');
+        items.forEach(function (btn, i) {
+          btn.style.transition = 'opacity ' + fade + 'ms ease';
+          btn.style.transitionDelay = (i * step) + 'ms';
+          btn.style.opacity = '1';
+        });
+        // Inline styles off once done so the class transition-colors (hover fade) takes over
+        staggerTimer = setTimeout(function () {
+          items.forEach(function (btn) {
+            btn.style.transition = '';
+            btn.style.transitionDelay = '';
+            btn.style.opacity = '';
+          });
+        }, (items.length - 1) * step + fade + 50);
+      } else {
+        // Inline styles off first so the items ride the container fade instead of their delays
+        items.forEach(function (btn) {
+          btn.style.transition = '';
+          btn.style.transitionDelay = '';
+          btn.style.opacity = '';
+        });
+        menu.classList.add('opacity-0');
+        hideTimer = setTimeout(function () {
+          menu.classList.add('hidden');
+          menu.classList.remove('flex');
+        }, CLOSE_MS);
+      }
+      if (row) row.classList.toggle('pointer-events-none', open);
+      // Optional {prefix}-backdrop: shown while open so stray taps only collapse the menu
+      var backdrop = document.getElementById(prefix + '-backdrop');
+      if (backdrop) backdrop.classList.toggle('hidden', !open);
+      label.classList.toggle('opacity-0', open);
+      toggle.setAttribute('aria-expanded', String(open));
+      arrow.classList.toggle('rotate-180', open);
+    };
+  }
+</script>

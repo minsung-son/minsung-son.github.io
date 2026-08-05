@@ -1,0 +1,92 @@
+{% comment %}
+  Shared top navbar: <header> shell, loading bar, Row 1, optional mobile Row 2.
+  Params:
+  - level=1|2|3 — right slot: 1 = slide title + counter, 2 = selected category, 3 = empty.
+  - article=true — LEVEL3 shell: id="l3-header" (own view-transition group, white-backed
+    only while data-vt-enter/-exit is set), no permanent z-index (the sheet paints over it;
+    article.html toggles z-40 while the sheet is at rest), no gradient.
+  - row2 — pre-captured mobile Row-2 markup, rendered after Row 1.
+  - active_about, loading_bar — set by the About page.
+{% endcomment %}
+<header {% if include.article %}id="l3-header" {% endif %}class="relative flex-none md:absolute md:inset-x-0 md:top-0 pt-[2.1875rem] px-[2.5rem] pb-[0.6875rem] max-md:px-0 max-md:pt-0 max-md:pb-0 {% if include.article %}[[data-vt-enter]_&]:bg-white [[data-vt-exit]_&]:bg-white{% elsif include.level == 2 %}z-30{% else %}max-md:bg-white z-30 md:before:content-[''] md:before:absolute md:before:inset-0 md:before:-z-10 md:before:pointer-events-none md:before:bg-[linear-gradient(to_bottom,rgba(255,255,255,1)_0%,rgba(255,255,255,0)_100%)] md:before:transition-opacity md:before:duration-200 [.teaser-active_&]:md:before:opacity-0{% endif %}">
+
+{% if include.level != 3 or include.loading_bar %}
+<!-- Loading bar: LEVEL1 always; LEVEL2/About only when the origin page flagged the navigation -->
+<div id="loading-bar" class="absolute top-0 left-0 w-0 h-[0.125rem] bg-ink z-50 hidden transition-[width] duration-[3000ms] ease-out"></div>
+<script>
+  (function () {
+    var loadingBar = document.getElementById('loading-bar');
+    {% if include.level == 1 %}
+    var show = true;
+    {% else %}
+    var show = !!sessionStorage.getItem('show-loading-bar');
+    sessionStorage.removeItem('show-loading-bar');
+    {% endif %}
+    if (!show) return;
+    loadingBar.classList.remove('hidden');
+    loadingBar.getBoundingClientRect(); // force reflow
+    requestAnimationFrame(function () {
+      loadingBar.style.width = '90%'; // fake progress
+    });
+    window.addEventListener('load', function () {
+      loadingBar.style.transitionDuration = '200ms';
+      loadingBar.style.width = '100%';
+      setTimeout(function () { loadingBar.classList.add('hidden'); }, 220);
+    });
+  })();
+</script>
+{% if include.level == 2 or include.loading_bar %}
+<script>
+  // Work ↔ About switches flag the navigation so the destination shows its loading bar.
+  // Delegated on document since the nav links render after this script.
+  (function () {
+    {% if include.level == 2 %}
+    var sel = '#nav-about-link, .js-about-link';
+    {% else %}
+    var sel = '#nav-work-link';
+    {% endif %}
+    document.addEventListener('click', function (e) {
+      if (e.target.closest && e.target.closest(sel)) {
+        sessionStorage.setItem('show-loading-bar', '1');
+      }
+    });
+  })();
+</script>
+{% endif %}
+{% endif %}
+
+<nav class="relative flex items-start h-[1.5625rem] max-md:h-auto max-md:items-center max-md:px-5 max-md:pt-4 max-md:pb-2.5 max-md:border-b {% if include.level == 2 %}max-md:bg-white max-md:transition-colors max-md:duration-200 [.teaser-active_&]:max-md:bg-transparent {% endif %}{% if include.article %}max-md:border-transparent{% else %}border-[#f0efed] max-md:transition-colors max-md:duration-200 [.teaser-active_&]:max-md:border-black/40 [.teaser-dark_&]:max-md:!border-white/40{% endif %}">
+  {% comment %} title w-24 + Work ml-22 matches the LEVEL2 aside w-8 + mr-22 + grid pl-16, so Work's left edge lines up with the grid {% endcomment %}
+  <a href="{{ '/' | relative_url }}" class="font-sabon italic text-nav max-md:text-base text-ink transition duration-200 hover:text-mist [.teaser-dark_&]:!text-white md:w-24 md:shrink-0 max-md:whitespace-nowrap max-md:shrink-0">{{ site.title }}</a>
+
+  {% comment %} Mobile: Work/About right-cluster on Row 1; the current section is greyed out (mist) — Work on LEVEL2/3, About on the About page, neither on LEVEL1. Desktop colours unchanged. {% endcomment %}
+  {% if include.level == 2 %}
+  <button id="nav-work-link" type="button" onclick="setCategory('all')" class="font-sabon italic text-nav max-md:text-base text-mist transition duration-200 [.teaser-dark_&]:!text-white bg-transparent border-0 p-0 cursor-pointer ml-22 max-md:ml-auto">Work</button>
+  {% else %}
+  <a id="nav-work-link" href="{{ '/category/all/' | relative_url }}" class="font-sabon italic text-nav max-md:text-base text-ink transition hover:text-mist ml-22 max-md:ml-auto{% if include.article %} max-md:text-mist{% endif %}">Work</a>
+  {% endif %}
+  <a id="nav-about-link" href="{{ '/about/' | relative_url }}" class="js-about-link font-sabon italic text-nav max-md:text-base transition duration-200 [.teaser-dark_&]:!text-white ml-[1rem] max-md:ml-4 {% if include.active_about %}text-mist{% else %}text-ink hover:text-mist{% endif %}">About</a>
+
+  {% if include.level == 1 %}
+  <span class="cursor-enter transition hover:text-mist text-nav text-ink flex items-baseline gap-[1.25rem] ml-auto max-md:hidden" onclick="goToCurrentArticle()">
+    <span id="nav-title" class="font-sabon italic"></span>
+    <span id="nav-counter" class="font-sabon italic"></span>
+  </span>
+  {% elsif include.level == 2 %}
+  <span class="text-nav text-ink transition-colors duration-200 [.teaser-dark_&]:!text-white flex items-baseline gap-2 ml-auto max-md:hidden">
+    <span id="nav-index" class="font-sabon italic"></span>
+    <span id="nav-title" class="font-sabon italic"></span>
+  </span>
+  {% elsif include.article %}
+  <!-- LEVEL3: project ID + title in the LEVEL2 right-slot spot; the sheet covers it on scroll -->
+  {% if page.article_id and page.article_id != 0 %}
+  <span class="text-nav text-ink flex items-baseline gap-2 ml-auto max-md:hidden">
+    <span class="font-sabon italic">{{ page.article_id | prepend: "000" | slice: -3, 3 }}</span>
+    <span class="font-sabon italic">{{ page.title }}</span>
+  </span>
+  {% endif %}
+  {% endif %}
+</nav>
+
+{{ include.row2 }}
+</header>

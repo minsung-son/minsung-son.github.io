@@ -1,0 +1,25 @@
+<script>
+  // Shared entry navigation (→ LEVEL3 or About); the slide itself is a CSS view transition (main.css)
+  function goTo(url) {
+    var scrollEl = document.getElementById('post-feed') || document.getElementById('main-content');
+    if (scrollEl) {
+      sessionStorage.setItem('scroll-id',  scrollEl.id);
+      sessionStorage.setItem('scroll-top', String(scrollEl.scrollTop));
+    }
+    if (window.saveLevel2State) window.saveLevel2State(); // category.html only
+    // Play the list-hover teaser's 200ms fade-out first, so the slide starts from the clean list
+    if (document.body.classList.contains('teaser-active') && window.clearListHover) {
+      clearListHover();
+      setTimeout(function () { window.location.href = url; }, 200);
+      return;
+    }
+    window.location.href = url;
+  }
+
+  document.querySelectorAll('#nav-about-link, .js-about-link').forEach(function (aboutLink) {
+    aboutLink.addEventListener('click', function (e) {
+      e.preventDefault();
+      goTo(this.href);
+    });
+  });
+</script>

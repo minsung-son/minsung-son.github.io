@@ -1,0 +1,35 @@
+title: Minsung Son
+email: ms2738@cantab.ac.uk
+instagram: miinsungson
+baseurl: ""
+url: "https://minsung-son.github.io"
+
+collections:
+  articles:
+    output: true
+    permalink: /articles/:path/
+
+defaults:
+  - scope:
+      path: ""
+      type: articles
+    values:
+      layout: article
+  - scope:
+      path: "about"
+    values:
+      layout: about
+
+exclude:
+  - node_modules/
+  - package.json
+  - package-lock.json
+  - main.css
+  - Gemfile
+  - Gemfile.lock
+  - ARTICLE_MANUAL.md
+  - article_templates.zip
+  - article_templates2.zip
+  - article_templates3.zip
+  - 20260725 SVGs-06.svg
+  - 20260727 Website Draft Mobile.pdf

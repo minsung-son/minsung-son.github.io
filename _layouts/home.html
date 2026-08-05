@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+  {% include head.html %}
+</head>
+<body class="h-svh flex flex-col overflow-hidden bg-white">
+
+  {% capture header_row2 %}
+    <!-- Row 2 (mobile only): "1/14 Title" — tap enters the current article -->
+    <div class="hidden max-md:block">
+      <div class="flex items-baseline gap-2 px-5 py-3 cursor-enter" onclick="goToCurrentArticle()">
+        <span id="mobile-counter" class="font-sabon italic text-base text-ink shrink-0 whitespace-nowrap"></span>
+        <span id="mobile-nav-title" class="font-sabon italic text-base text-ink truncate min-w-0"></span>
+      </div>
+    </div>
+  {% endcapture %}
+  {% include header-nav.html level=1 row2=header_row2 %}
+
+  <!-- Full-window at md; navbar is overlaid on top, no header-height compensation -->
+  <div class="flex-1 relative md:absolute md:inset-0 overflow-hidden pt-[1.5rem] md:pt-0 px-[3rem] max-md:px-5 pb-[1.875rem] md:pb-0" id="content-area">
+
+    <main class="relative w-full h-full overflow-hidden" id="post-feed">
+
+      {% assign articles = site.articles | sort: "year" | reverse %}
+      {% for article in articles %}
+        {% unless article.hidden %}
+        {% if article.teaser and article.landing %}
+        {% if article.external_url %}{% assign link_url = article.external_url %}{% else %}{% assign link_url = article.url | relative_url %}{% endif %}
+        <div class="post-entry absolute inset-0 hidden"
+             data-category="{{ article.category }}"
+             data-title="{{ article.title }}"
+             data-url="{{ link_url }}">
+          <!-- Centred in the content area, shifted up a fixed offset (the -0.8rem). Mobile: the
+               header (rows 1+2) is in flow, so a plain 50% centres on the remaining content area. -->
+          <div class="absolute top-[calc(50%-0.8rem)] max-md:top-[calc(50%)] left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 cursor-enter" onclick="event.stopPropagation(); goToCurrentArticle();">
+            <img src="{{ article.url | relative_url }}{{ article.teaser }}" alt="{{ article.title }}" class="max-w-[min(59.0625rem,calc(100vw_-_6rem))] max-md:max-w-[calc(100vw_-_3rem)] max-h-[min(26.5625rem,calc(100svh_-_11.875rem))] w-auto h-auto block">
+          </div>
+        </div>
+        {% endif %}
+        {% endunless %}
+      {% endfor %}
+
+    </main>
+
+    <!-- Two-zone click overlay: left = prev, right = next -->
+    <div class="absolute inset-0 z-10 flex">
+      <div class="cursor-prev flex-1" onclick="slidePrev()"></div>
+      <div class="cursor-next flex-1" onclick="slideNext()"></div>
+    </div>
+
+    {% include footer-social.html class="absolute" %}
+
+  </div>
+
+<script>
+  var allEntries   = Array.from(document.querySelectorAll('.post-entry'));
+  var currentCat   = 'all';
+  var currentIndex = 0;
+  var startOffset  = 0; // random landing post displays as 1/n; numbering rotates from it
+
+  function getFiltered() {
+    return allEntries.filter(function (e) {
+      return currentCat === 'all' || e.dataset.category === currentCat;
+    });
+  }
+
+  function updateNav(entry, total) {
+    var counter = entry ? (((currentIndex - startOffset + total) % total) + 1) + '/' + total : '';
+    var title   = entry ? entry.dataset.title : '';
+    document.getElementById('nav-title').textContent = title;
+    document.getElementById('nav-counter').textContent = counter;
+    document.getElementById('mobile-counter').textContent = counter;
+    document.getElementById('mobile-nav-title').textContent = title;
+  }
+
+  function showIndex(i) {
+    var filtered = getFiltered();
+    allEntries.forEach(function (e) { e.classList.add('hidden'); });
+    if (!filtered.length) { updateNav(null, 0); return; }
+    var n = filtered.length;
+    currentIndex = ((i % n) + n) % n;
+    var entry = filtered[currentIndex];
+    entry.classList.remove('hidden');
+    updateNav(entry, n);
+  }
+
+  function slidePrev() { showIndex(currentIndex - 1); }
+  function slideNext() { showIndex(currentIndex + 1); }
+
+  // Arrow keys mirror the left/right click zones
+  window.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowLeft')  slidePrev();
+    if (e.key === 'ArrowRight') slideNext();
+  });
+
+  function goToCurrentArticle() {
+    var filtered = getFiltered();
+    if (!filtered.length) return;
+    sessionStorage.setItem('slide-index',  String(currentIndex));
+    sessionStorage.setItem('slide-cat',    currentCat);
+    sessionStorage.setItem('slide-offset', String(startOffset));
+    goTo(filtered[currentIndex].dataset.url);
+  }
+
+  window.addEventListener('load', function () {
+    sessionStorage.removeItem('scroll-id');
+    sessionStorage.removeItem('scroll-top');
+
+    var savedIndex  = sessionStorage.getItem('slide-index');
+    var savedCat    = sessionStorage.getItem('slide-cat');
+    var savedOffset = sessionStorage.getItem('slide-offset');
+    if (savedIndex !== null) {
+      sessionStorage.removeItem('slide-index');
+      sessionStorage.removeItem('slide-cat');
+      sessionStorage.removeItem('slide-offset');
+      currentCat  = savedCat || 'all';
+      startOffset = savedOffset !== null ? parseInt(savedOffset, 10) : 0;
+      showIndex(parseInt(savedIndex, 10));
+    } else {
+      startOffset = Math.floor(Math.random() * getFiltered().length);
+      showIndex(startOffset);
+    }
+  });
+
+  // Flag entry from LEVEL1 so category.html and about.html show their own loading bar
+  document.querySelectorAll('#nav-work-link, #nav-about-link').forEach(function (link) {
+    link.addEventListener('click', function () {
+      sessionStorage.setItem('show-loading-bar', '1');
+    });
+  });
+</script>
+
+{% include slide-transition.html %}
+</body>
+</html>
