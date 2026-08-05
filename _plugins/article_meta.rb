@@ -30,19 +30,20 @@ Jekyll::Hooks.register :site, :post_read, priority: :high do |site|
 
     raw_date = doc.data['date']
     article_date = case raw_date
-                   when Time then raw_date.to_date
-                   when Date then raw_date
+                   when Time then raw_date
+                   when Date then Time.utc(raw_date.year, raw_date.month, raw_date.day)
                    when String
                      begin
-                       Date.iso8601(raw_date.strip)
+                       parsed_date = Date.iso8601(raw_date.strip)
+                       Time.utc(parsed_date.year, parsed_date.month, parsed_date.day)
                      rescue ArgumentError
                        nil
                      end
                    end
     if article_date.nil?
-      article_date = File.mtime(doc.path).to_date
+      article_date = File.mtime(doc.path)
       detail = raw_date.nil? || raw_date.to_s.strip.empty? ? 'missing date' : "unreadable date #{raw_date.inspect}"
-      warn.call("#{detail} — using file modified date #{article_date}")
+      warn.call("#{detail} — using file modified date #{article_date.strftime('%Y-%m-%d')}")
     end
     doc.data['date'] = article_date
 

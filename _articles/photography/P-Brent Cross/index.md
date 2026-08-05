@@ -5,7 +5,7 @@
 # Copy-paste is your friend.
 title: Brent Cross, Allies and Morrison
 subtitle: London, UK
-date: 2026-11-08          # YYYY-MM-DD
+date: 2026-07-24          # YYYY-MM-DD
 teaser: 20260623 Brent Crooss-2.webp              # filename of the teaser image, e.g. 1.webp
 hero_layout: 3       # first media block: 1 = left edge, 2 = column edge (landscape); 3 = centred (portrait)
 landing: true       # true to show on the landing page

@@ -5,7 +5,7 @@
 # Copy-paste is your friend.
 title: Serpentine Pavilion 2026, Lanza Atelier
 subtitle: London, UK
-date: 2026-08-29          # YYYY-MM-DD
+date: 2026-06-28          # YYYY-MM-DD
 teaser: 20260620 Serpentine.webp             # filename of the teaser image, e.g. 1.webp
 hero_layout: 3       # first media block: 1 = left edge, 2 = column edge (landscape); 3 = centred (portrait)
 landing: true       # true to show on the landing page
