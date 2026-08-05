@@ -117,6 +117,8 @@ Another paragraph.
 
 Accepted image formats: `jpg / jpeg / png / gif / webp / avif`. Accepted video formats: `mp4 / mov / webm / m4v`.
 
+Caption text can contain italics: wrap the words in single asterisks, for example `Ref. *Conical Intersect*, Gordon Matta-Clark, 1975`.
+
 ### The website is forgiving…
 These mistakes are tolerated and quietly fixed: wrong upper/lower case in a filename, a wrong or missing file extension, `{{ … }}` instead of `{% … %}`.
 

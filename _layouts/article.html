@@ -225,13 +225,28 @@
       // #article-column pulls the caption back to 0.9rem below its media (gap 3.5 - 2.6).
       // Mobile: a slideshow's counter (mirror span, kept in sync by ssNav) rides the caption
       // line — after the caption text, or alone in the caption's place when there is none.
+      // Caption text is not passed through Markdown, so safely support its most useful inline
+      // convention here: text wrapped in single asterisks becomes italic.
+      function appendCaptionText(element, text) {
+        text.split(/(\*[^*\n]+\*)/g).filter(Boolean).forEach(function (part) {
+          if (part.length >= 3 && part[0] === '*' && part[part.length - 1] === '*') {
+            var emphasis = document.createElement('em');
+            emphasis.className = 'italic';
+            emphasis.textContent = part.slice(1, -1);
+            element.appendChild(emphasis);
+          } else {
+            element.appendChild(document.createTextNode(part));
+          }
+        });
+      }
+
       function placeCaption(parent, captionText, extra, wrap) {
         var counter = wrap ? wrap.querySelector('.ss-counter') : null;
         if (captionText === null && !counter) return;
         var caption = document.createElement('div');
         caption.className = 'font-grotesque text-xs text-ink leading-[1.6] ' + extra
           + (captionText === null ? ' md:hidden' : '');
-        if (captionText !== null) caption.textContent = captionText;
+        if (captionText !== null) appendCaptionText(caption, captionText);
         if (counter) {
           var mirror = document.createElement('span');
           mirror.className = 'md:hidden font-sabon italic whitespace-nowrap';
