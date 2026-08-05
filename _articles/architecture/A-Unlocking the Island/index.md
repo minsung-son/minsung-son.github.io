@@ -1,9 +1,9 @@
 ---
 # Sample: a fully filled-out architecture article.
-# title, year and typology are mandatory (typology is the 4th column in the list view).
+# title, date and typology are mandatory (typology is the 4th column in the list view).
 title: Unlocking the Island
 subtitle: Open art storage facility via Deleuze and Matta-Clark
-year: 2024
+date: 2024-09-22
 teaser: DSC01628.webp
 hero_layout: 1
 landing: false

@@ -41,7 +41,7 @@ The top of `index.md` looks like this:
 ---
 title: The House of Stories
 subtitle: A public children's library for a Cambridge college
-year: 2025
+date: 2025-03-14
 teaser: 2.webp
 hero_layout: 1
 landing: true
@@ -57,7 +57,7 @@ location: Cambridge, UK
 |---------------|--------------------------------------------------------------|--------------------------------------------------------------|
 | `title`       | Article title                                                | FATAL                                                        |
 | `subtitle`    | Shown under the title                                        | Simply omitted                                               |
-| `year`        | Sorting + the Year column.                                   | FATAL                                                        |
+| `date`        | Full date (`YYYY-MM-DD`) used for sorting and project IDs. Only the year is displayed. | FATAL                                      |
 | `teaser`      | The image representing the article in the grid view and on the landing page | Falls back to the first image in the folder<br>If no images at all, FATAL |
 | `hero_layout` | `1`, `2`, or `3` (as per draft)                              | Defaults to `1`                                              |
 | `landing`     | `true` = article appears in the home-page teaser rotation (needs a teaser image!) | Treated as `false`                                           |
@@ -150,7 +150,7 @@ On mobile the hero is always centred and this setting only affects desktop.
 2. Rename the folder (again, no `?`, `#`, `%`, `/`).
 3. Compress any images you have with Mass Image Compressor, upload any >10MB videos to Vimeo.
 4. Drop your prepared images/videos into the folder.
-5. Fill in the front matter, at minimum `title`, `year`, `teaser`, `hero_layout`, and the category's 4th-coloumn field.
+5. Fill in the front matter, at minimum `title`, `date`, `teaser`, `hero_layout`, and the category's 4th-column field. Write dates as `YYYY-MM-DD`.
 6. Write the body; first media block is hero.
 7. Push to GitHub using the GitHub Desktop app or terminal.
 8. Wait ~10mins. If not applying, check GitHub build logs and/or consult ChatGPT Codex.

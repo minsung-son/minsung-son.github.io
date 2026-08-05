@@ -3,7 +3,7 @@
 title: The House of Stories
 subtitle: A public children's library for a Cambridge college
 
-year: 2025
+date: 2025-03-14
 category: architecture
 teaser: 20260520 Homerton-2.webp
 hero_layout: 1

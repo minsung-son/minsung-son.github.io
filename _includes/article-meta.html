@@ -5,7 +5,7 @@
   Note: page[key] must use a simple variable — nested lookups like page[parts[0]]
   silently resolve to nil under Liquid's lax parser.
 {% endcomment %}
-{% assign meta_fields = "year:Year,author:Author,co_author:Co-author,supervised_by:Supervised by,publication:Publication,programme:Programme,typology:Typology,completed_as:Completed as,completed_at:Completed at,delivered_at:Delivered at,client:Client,area:Area,location:Location,medium:Medium,type:Type,topic:Topic,duration:Duration,awards:Awards,collaborators:Collaborators" | split: "," %}
+{% assign meta_fields = "date:Year,author:Author,co_author:Co-author,supervised_by:Supervised by,publication:Publication,programme:Programme,typology:Typology,completed_as:Completed as,completed_at:Completed at,delivered_at:Delivered at,client:Client,area:Area,location:Location,medium:Medium,type:Type,topic:Topic,duration:Duration,awards:Awards,collaborators:Collaborators" | split: "," %}
 {% for field in meta_fields %}
 {% assign parts = field | split: ":" %}
 {% assign key = parts[0] %}
@@ -14,7 +14,7 @@
 {% if check != "" %}
 <div class="flex border-t border-mist/40 py-3">
   <div class="w-[7.5rem] shrink-0 font-grotesque text-xs text-ink">{{ parts[1] }}</div>
-  <div class="flex-1 min-w-0 whitespace-nowrap overflow-hidden text-ellipsis font-grotesque text-xs text-ink">{{ value | join: ", " | markdownify | remove: '<p>' | remove: '</p>' | strip_newlines }}</div>
+  <div class="flex-1 min-w-0 whitespace-nowrap overflow-hidden text-ellipsis font-grotesque text-xs text-ink">{% if key == "date" %}{{ value | date: "%Y" }}{% else %}{{ value | join: ", " | markdownify | remove: '<p>' | remove: '</p>' | strip_newlines }}{% endif %}</div>
 </div>
 {% endif %}
 {% endfor %}

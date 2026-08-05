@@ -1,9 +1,9 @@
 ---
 # Sample: a fully filled-out photography article.
-# title, year and location are mandatory (location is the 4th column in the list view).
+# title, date and location are mandatory (location is the 4th column in the list view).
 title: Arumjigi Foundation, M.A.R.U.
 subtitle: Seoul, Korea
-year: 2025
+date: 2025-07-26
 teaser: 20250904 Arumjigi-3.webp
 hero_layout: 3
 landing: true

@@ -1,9 +1,9 @@
 ---
 # Sample: a fully filled-out writing article.
-# title, year and publication are mandatory (publication is the 4th column in the list view).
+# title, date and publication are mandatory (publication is the 4th column in the list view).
 title: A shell and a society of stairs—and then what?
 subtitle: Building study, V&A East, O'Donnell + Tuomey
-year: 2026
+date: 2026-03-02
 teaser: 20260423 V&A.webp
 hero_layout: 1
 landing: false

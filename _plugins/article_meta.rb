@@ -1,8 +1,8 @@
 require 'date'
 
-# Normalises article front matter (images, title, year, category, teaser, landing/hidden —
+# Normalises article front matter (images, title, date, category, teaser, landing/hidden —
 # see ARTICLE_MANUAL.md) so imperfect author input degrades to a logged fallback, never a break.
-# High priority so article_ids.rb sorts the already-normalised years.
+# High priority so article_ids.rb sorts the already-normalised dates.
 Jekyll::Hooks.register :site, :post_read, priority: :high do |site|
   collection = site.collections['articles']
   next if collection.nil?
@@ -28,20 +28,23 @@ Jekyll::Hooks.register :site, :post_read, priority: :high do |site|
     end
     doc.data['title'] = title
 
-    raw_year = doc.data['year']
-    year = case raw_year
-           when Integer then raw_year
-           when Time, Date then raw_year.year
-           when String
-             match = raw_year[/\b(\d{4})\b/, 1]
-             match&.to_i
-           end
-    if year.nil?
-      year = File.mtime(doc.path).year
-      detail = raw_year.nil? || raw_year.to_s.strip.empty? ? 'missing year' : "unreadable year #{raw_year.inspect}"
-      warn.call("#{detail} — using file modified time's year #{year}")
+    raw_date = doc.data['date']
+    article_date = case raw_date
+                   when Time then raw_date.to_date
+                   when Date then raw_date
+                   when String
+                     begin
+                       Date.iso8601(raw_date.strip)
+                     rescue ArgumentError
+                       nil
+                     end
+                   end
+    if article_date.nil?
+      article_date = File.mtime(doc.path).to_date
+      detail = raw_date.nil? || raw_date.to_s.strip.empty? ? 'missing date' : "unreadable date #{raw_date.inspect}"
+      warn.call("#{detail} — using file modified date #{article_date}")
     end
-    doc.data['year'] = year
+    doc.data['date'] = article_date
 
     # Category comes solely from the folder; any `category:` front matter line is ignored
     doc.data['category'] = folder_cat if folder_cat

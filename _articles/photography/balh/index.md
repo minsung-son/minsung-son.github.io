@@ -1,25 +1,24 @@
 ---
-# Only title and date are required, everything else may be left empty.
+# Only title, date and location are required (location is the 4th column in the list view), everything else may be left empty.
 # markdown links allowed, e.g. "[Text](https://example.com)". Obviously not for certain fields like the title, date, etc.
 # Separate multiple items with a comma, e.g. name1, name2, name3
 # Copy-paste is your friend.
-title: Skinners' Hall, 6a architects
-subtitle: London, UK
-date: 2026-01-13         # YYYY-MM-DD
-category: architecture
-teaser: Skinners Hall-9-2.webp             # filename of the teaser image, e.g. 1.webp
-hero_layout: 3
+title: yada yada
+subtitle: London, whatever
+date: 2026-06-21          # YYYY-MM-DD
+teaser: 20260523 Helsinki_compressed.webp             # filename of the teaser image, e.g. 1.webp
+hero_layout: 3       # first media block: 1 = left edge, 2 = column edge (landscape); 3 = centred (portrait)
 landing: true       # true to show on the landing page
 hidden: false        # true to hide from website (but its reserve project number)
 author:              
 co_author:
-publication:
+publication: Citymakers Fringe (Allies and Morrison)
 location: London, UK
-client:
+client: Allies and Morrison
 delivered_at:
 medium:
 awards:              # list — one "  - Award" line per entry
 collaborators:       # list — one "  - Name" line per person
 ---
 
-{% Skinners Hall-9-2.webp, Skinners Hall-11.webp, Skinners Hall-3.webp, Skinners Hall-6.webp, Skinners Hall-5.webp, Skinners Hall-10.webp | Skinners' Hall, City of London — panelled rooms and courtyards photographed between functions. %}
+{% 20260523 Helsinki_compressed.webp %}

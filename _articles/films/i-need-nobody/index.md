@@ -1,7 +1,7 @@
 ---
 title: I Need Nobody
 subtitle: A stop-motion short on the modern lack of community spirit
-year: 2020
+date: 2020-02-11
 teaser: 1.jpg
 hero_layout: 2
 landing: false

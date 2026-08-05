@@ -1,11 +1,11 @@
 ---
-# Only title, year and location are required (location is the 4th column in the list view), everything else may be left empty.
-# markdown links allowed, e.g. "[Text](https://example.com)". Obviously not for certain fields like the title, year, etc.
+# Only title, date and location are required (location is the 4th column in the list view), everything else may be left empty.
+# markdown links allowed, e.g. "[Text](https://example.com)". Obviously not for certain fields like the title, date, etc.
 # Separate multiple items with a comma, e.g. name1, name2, name3
 # Copy-paste is your friend.
 title: Serpentine Pavilion 2026, Lanza Atelier
 subtitle: London, UK
-year: 2026                # YYYY
+date: 2026-08-29          # YYYY-MM-DD
 teaser: 20260620 Serpentine.webp             # filename of the teaser image, e.g. 1.webp
 hero_layout: 3       # first media block: 1 = left edge, 2 = column edge (landscape); 3 = centred (portrait)
 landing: true       # true to show on the landing page
