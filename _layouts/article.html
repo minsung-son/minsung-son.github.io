@@ -244,7 +244,7 @@
         var counter = wrap ? wrap.querySelector('.ss-counter') : null;
         if (captionText === null && !counter) return;
         var caption = document.createElement('div');
-        caption.className = 'font-grotesque text-xs text-ink leading-[1.6] ' + extra
+        caption.className = 'font-grotesque text-xs md:text-[0.825rem] text-ink leading-[1.6] ' + extra
           + (captionText === null ? ' md:hidden' : '');
         if (captionText !== null) appendCaptionText(caption, captionText);
         if (counter) {
@@ -426,9 +426,9 @@
             // Pull the following paragraph to 1rem below its heading (gap 3.5 - 2.5)
             clone.classList.add('font-sabon', 'text-base', 'italic', 'leading-tight', 'md:w-[28rem]', 'max-w-full', 'mb-[-2.5rem]', 'max-md:mb-[-1.75rem]');
           } else if (clone.tagName === 'P') {
-            // Body text: sans-serif at the About page's body size; pl + pr trim the column to
-            // the About block's 37.1875rem measure (a size step up on mobile)
-            clone.classList.add('font-grotesque', 'text-[0.8125rem]', 'max-md:text-[0.85rem]', 'leading-[1.5]', 'pl-[3.25rem]', 'pr-[3.0625rem]', 'max-md:pl-0', 'max-md:pr-0');
+            // Article-only body size; pl + pr retain the existing 37.1875rem text measure
+            // while mobile keeps its existing full-width measure.
+            clone.classList.add('font-grotesque', 'text-[0.85rem]', 'md:text-[0.89375rem]', 'leading-[1.5]', 'pl-[3.25rem]', 'pr-[3.0625rem]', 'max-md:pl-0', 'max-md:pr-0');
             // Consecutive paragraphs sit 1.25rem apart (gap 3.5 - 2.25)
             if (column.lastElementChild && column.lastElementChild.tagName === 'P') {
               clone.classList.add('mt-[-2.25rem]', 'max-md:mt-[-1.25rem]');
