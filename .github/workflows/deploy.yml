@@ -12,9 +12,7 @@ permissions:
 
 concurrency:
   group: pages
-  # Let an active Pages deployment finish before the next one starts. Cancelling it can leave
-  # GitHub's deployment lock active briefly, causing the replacement deployment to fail with 400.
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   build:
