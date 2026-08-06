@@ -423,12 +423,14 @@
           var clone = node.cloneNode(true);
           clone.classList.add('w-full', 'text-ink');
           if (clone.tagName === 'H2') {
-            // Pull the following paragraph to 1rem below its heading (gap 3.5 - 2.5)
-            clone.classList.add('font-sabon', 'text-base', 'italic', 'leading-tight', 'md:w-[28rem]', 'max-w-full', 'mb-[-2.5rem]', 'max-md:mb-[-1.75rem]');
+            // Desktop article-body heading: 18pt-equivalent, retaining its previous 3.25rem
+            // leftward offset from the body edge. Its visible bottom gap is 1.6rem (1rem + 60%).
+            // Mobile retains its original size, alignment, and 0.75rem gap.
+            clone.classList.add('font-sabon', 'text-base', 'md:text-[1.044642857rem]', 'italic', 'leading-tight', 'md:w-[28rem]', 'max-w-full', 'md:ml-[-3.25rem]', 'mb-[-1.9rem]', 'max-md:mb-[-1.75rem]');
           } else if (clone.tagName === 'P') {
-            // Body text: sans-serif at the About page's body size; pl + pr trim the column to
-            // the About block's 37.1875rem measure (a size step up on mobile)
-            clone.classList.add('font-grotesque', 'text-[0.8125rem]', 'max-md:text-[0.85rem]', 'leading-[1.5]', 'pl-[3.25rem]', 'pr-[3.0625rem]', 'max-md:pl-0', 'max-md:pr-0');
+            // Desktop article body: 18% larger with proportional line height, spanning the
+            // metadata section's full width. Mobile retains its original size and measure.
+            clone.classList.add('font-grotesque', 'text-[0.85rem]', 'md:text-[0.95875rem]', 'leading-[1.5]');
             // Consecutive paragraphs sit 1.25rem apart (gap 3.5 - 2.25)
             if (column.lastElementChild && column.lastElementChild.tagName === 'P') {
               clone.classList.add('mt-[-2.25rem]', 'max-md:mt-[-1.25rem]');
