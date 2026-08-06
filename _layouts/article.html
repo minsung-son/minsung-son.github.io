@@ -424,11 +424,11 @@
           clone.classList.add('w-full', 'text-ink');
           if (clone.tagName === 'H2') {
             // Pull the following paragraph to 1rem below its heading (gap 3.5 - 2.5)
-            clone.classList.add('font-sabon', 'text-base', 'italic', 'leading-tight', 'md:w-[28rem]', 'max-w-full', 'mb-[-2.5rem]', 'max-md:mb-[-1.75rem]');
+            clone.classList.add('font-sabon', 'text-base', 'italic', 'leading-tight', 'md:w-[28rem]', 'max-w-full', 'mb-[-2.0rem]', 'max-md:mb-[-1.75rem]');
           } else if (clone.tagName === 'P') {
             // Body text: sans-serif at the About page's body size; pl + pr trim the column to
             // the About block's 37.1875rem measure (a size step up on mobile)
-            clone.classList.add('font-grotesque', 'text-[0.8125rem]', 'max-md:text-[0.85rem]', 'leading-[1.5]', 'pl-[3.25rem]', 'pr-[3.0625rem]', 'max-md:pl-0', 'max-md:pr-0');
+            clone.classList.add('font-grotesque', 'text-[0.85rem]', 'max-md:text-[0.85rem]', 'leading-[1.8]', 'pl-[0rem]', 'pr-[0rem]', 'max-md:pl-0', 'max-md:pr-0');
             // Consecutive paragraphs sit 1.25rem apart (gap 3.5 - 2.25)
             if (column.lastElementChild && column.lastElementChild.tagName === 'P') {
               clone.classList.add('mt-[-2.25rem]', 'max-md:mt-[-1.25rem]');
