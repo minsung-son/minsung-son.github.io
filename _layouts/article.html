@@ -430,7 +430,7 @@
           } else if (clone.tagName === 'P') {
             // Desktop article body: 18% larger with proportional line height, spanning the
             // metadata section's full width. Mobile retains its original size and measure.
-            clone.classList.add('font-grotesque', 'text-[0.85rem]', 'md:text-[0.95875rem]', 'leading-[1.5]', 'md:leading-[1.8]');
+            clone.classList.add('font-grotesque', 'text-[0.85rem]', 'md:text-[0.95875rem]', 'leading-[1.5]');
             // Consecutive paragraphs sit 1.25rem apart (gap 3.5 - 2.25)
             if (column.lastElementChild && column.lastElementChild.tagName === 'P') {
               clone.classList.add('mt-[-2.25rem]', 'max-md:mt-[-1.25rem]');
