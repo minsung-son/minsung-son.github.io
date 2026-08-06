@@ -1,13 +1,10 @@
 <script>
-  // Exit navigation on ×; prefer history.back() so the origin returns from bfcache intact.
-  // Mark the panel before navigation begins so the browser captures it for the slide-down;
-  // setting this only during pageswap is too late in some history/BFCache paths.
+  // Exit navigation on ×; prefer history.back() so the origin returns from bfcache intact
   function bindExitTransition(closeId) {
     var closeLink = document.getElementById(closeId);
     if (!closeLink) return;
     closeLink.addEventListener('click', function (e) {
       e.preventDefault();
-      document.documentElement.setAttribute('data-vt-exit', '');
       if (document.referrer && document.referrer.indexOf(window.location.host) !== -1) {
         history.back();
       } else {
