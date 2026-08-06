@@ -5,11 +5,11 @@ title: A shell and a society of stairs—and then what?
 subtitle: Building study, V&A East, O'Donnell + Tuomey
 date: 2026-03-02
 teaser: 20260423 V&A.webp
-hero_layout: 3
+hero_layout: 1
 landing: false
 hidden: false
 author: Minsung Son
-co_author:
+co_author: "[Taehyun Kim](https://example.com)"
 publication: New Architecture Writers
 type: Building study
 client: 
