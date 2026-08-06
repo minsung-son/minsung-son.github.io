@@ -446,9 +446,32 @@
   // cells still waiting on their stagger delay
   var restoringState = !!rtState;
 
-  // bfcache returns keep everything natively — drop the unused reload flag
+  // Restore the inner grid/list scroller explicitly. Browsers restore the document scroll
+  // reliably from BFCache, but not always a nested overflow scroller such as #main-content.
+  // `pagereveal` runs early enough for the restored position to be captured underneath the
+  // article's slide-down; `pageshow` reinforces it after native history restoration settles.
+  function restoreLevel2Scroll(consume) {
+    var id  = sessionStorage.getItem('scroll-id');
+    var top = sessionStorage.getItem('scroll-top');
+    if (!id || top === null) return false;
+    var el = document.getElementById(id);
+    if (!el) return false;
+    el.scrollTop = parseInt(top, 10);
+    if (consume) {
+      sessionStorage.removeItem('scroll-id');
+      sessionStorage.removeItem('scroll-top');
+    }
+    return true;
+  }
+
+  window.addEventListener('pagereveal', function () {
+    restoreLevel2Scroll(false);
+  });
+
   window.addEventListener('pageshow', function () {
     sessionStorage.removeItem('level2-return');
+    restoreLevel2Scroll(false);
+    requestAnimationFrame(function () { restoreLevel2Scroll(true); });
   });
 
   // Grid order: random shuffle on a fresh visit; on a LEVEL3 round trip reapply the saved order
@@ -481,17 +504,8 @@
   gridInitialized = true;
   restoringState = false;
 
-  // Restore scroll position on return from LEVEL3
-  (function () {
-    var id  = sessionStorage.getItem('scroll-id');
-    var top = sessionStorage.getItem('scroll-top');
-    if (!id || top === null) return;
-    var el = document.getElementById(id);
-    if (!el) return;
-    sessionStorage.removeItem('scroll-id');
-    sessionStorage.removeItem('scroll-top');
-    el.scrollTop = parseInt(top, 10);
-  })();
+  // Full-reload fallback (pagereveal may already have fired while this page was parsing).
+  restoreLevel2Scroll(true);
 
   // Hover previews (desktop only)
   if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
