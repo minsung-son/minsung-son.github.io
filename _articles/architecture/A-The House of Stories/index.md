@@ -25,33 +25,22 @@ collaborators:
 location: Cambridge, UK
 ---
 
-{% 20260520 Homerton-2.webp %}
-
-How can a new public children's library create a bridge between collegiate and civic communities through the nationally renowned Homerton College children’s literature collection?
+{% 20260520 Homerton-2.webp | How can a new public children's library create a bridge between collegiate and civic communities through the nationally renowned Homerton College children’s literature collection? %}
 
 ## Site context
 
-{% SKM_C450i24111513191_6.webp, Aerial Perspective-Layout2.webp | Early-stage and proposed Homerton College masterplan %}
+{% SKM_C450i24111513191_6.webp, Aerial Perspective-Layout2.webp | The library is a key part in the broader masterplan devised for Homerton College Cambridge, seeking to reach out to its local neighbours and share its resources with wider communities. %}
 
-The library is a key part in the broader masterplan devised for Homerton College Cambridge, seeking to reach out to its local neighbours and share its resources with wider communities.
+## Spatial concept
 
-## Concept
-
-{% Alice 2.webp, Alice 3.webp, Alice 6.webp, Alice 7.webp | *Alice in Wonderland* copies with in the Homerton Children's Literature Collection %}
-The spatial concept takes inspiration from Homerton’s collection of *Alice in Wonderland* books in more than 80 different languages.
+{% Alice 2.webp, Alice 3.webp, Alice 6.webp, Alice 7.webp | The spatial concept takes inspiration from Homerton’s collection of *Alice in Wonderland* books in more than 80 different languages. %}
 
 {% Section-Layout2.webp, Untitled-2.webp | The library works with the relocated Porters’ Lodge and a new, celebratory point of entry. %}
 
 ## Experience
 
-{% Sketch Model.webp, Axonometric 1_compressed.webp | Concept model and final anonometric %}
+{% Sketch Model.webp, Axonometric 1_compressed.webp | The first floor reading room creates a magical experience of reading within a monolithic volume. %}
 
-The first floor reading room creates a magical experience of reading within a monolithic volume.
+{% Picture Window.webp, Storytelling Corner 1 Final_compressed.webp, Storytelling Corner 2 Final_compressed.webp | Strategically placed openings frame views, while allowing nuanced natural light into the reading room. Curtains and lighting are proposed as devices that drastically change the atmosphere of the room according to its use throughout the day. %}
 
-{% Picture Window.webp, Storytelling Corner 1 Final_compressed.webp, Storytelling Corner 2 Final_compressed.webp | Main reading room %}
-
-Strategically placed openings frame views, while allowing nuanced natural light into the reading room. Curtains and lighting are proposed as devices that drastically change the atmosphere of the room according to its use throughout the day.
-
-{% Construction Detail.webp | Construction detail 1:20%}
-
-A wide variety of users, modes of reading and reading postures were considered, yielding a collection of varied, characterful reading spaces.
+{% Construction Detail.webp | A wide variety of users, modes of reading and reading postures were considered, yielding a collection of varied, characterful reading spaces. %}
