@@ -25,7 +25,7 @@ collaborators:
 location: Cambridge, UK
 ---
 
-{% 20260520 Homerton-2.webp | How can a new public children's library create a bridge between collegiate and civic communities through the nationally renowned Homerton College children’s literature collection? %}
+{% 20260520 Homerton.webp | How can a new public children's library create a bridge between collegiate and civic communities through the nationally renowned Homerton College children’s literature collection? %}
 
 ## Site context
 
@@ -39,9 +39,9 @@ location: Cambridge, UK
 
 {% Section-Layout2.webp, Untitled-2.webp | The library works with the relocated Porters’ Lodge and a new, celebratory point of entry. The ground floor is thoroughly open, hosting public lectures, workshops, book talks, and events. %}
 
-## Experience
-
 {% Sketch Model.webp, Axonometric 1_compressed.webp | The first floor reading room, by contrast, creates a magical experience of reading within a monolithic volume, similar to the sence of enticement felt when reading a good story. %}
+
+## Experience
 
 {% Picture Window.webp, Storytelling Corner 1 Final_compressed.webp, Storytelling Corner 2 Final_compressed.webp | Strategically placed openings frame views, while allowing nuanced natural light into the reading room. Curtains and lighting are proposed as devices that drastically change the atmosphere of the room according to its use throughout the day. %}
 
