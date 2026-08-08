@@ -33,13 +33,13 @@ location: Cambridge, UK
 
 ## Spatial concept
 
-{% Alice 2.webp, Alice 3.webp, Alice 6.webp, Alice 7.webp | The spatial concept takes inspiration from Homerton’s collection of *Alice in Wonderland* books in more than 80 different languages. %}
+{% Alice 2.webp, Alice 3.webp, Alice 6.webp, Alice 7.webp | The spatial concept takes inspiration from Homerton’s collection of Alice in Wonderland books in more than 80 different languages. Two worlds, one public and another magical, are connected through a portal - the same way Alice is transported into an otherworldly experience through a rabbit hole. %}
 
-{% Section-Layout2.webp, Untitled-2.webp | The library works with the relocated Porters’ Lodge and a new, celebratory point of entry. %}
+{% Section-Layout2.webp, Untitled-2.webp | The library works with the relocated Porters’ Lodge and a new, celebratory point of entry. The ground floor is thoroughly open, hosting public lectures, workshops, book talks, and events. %}
 
 ## Experience
 
-{% Sketch Model.webp, Axonometric 1_compressed.webp | The first floor reading room creates a magical experience of reading within a monolithic volume. %}
+{% Sketch Model.webp, Axonometric 1_compressed.webp | The first floor reading room, by contrast, creates a magical experience of reading within a monolithic volume, similar to the sence of enticement felt when reading a good story. %}
 
 {% Picture Window.webp, Storytelling Corner 1 Final_compressed.webp, Storytelling Corner 2 Final_compressed.webp | Strategically placed openings frame views, while allowing nuanced natural light into the reading room. Curtains and lighting are proposed as devices that drastically change the atmosphere of the room according to its use throughout the day. %}
 
