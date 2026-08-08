@@ -33,7 +33,9 @@ location: Cambridge, UK
 
 ## Spatial concept
 
-{% Alice 2.webp, Alice 3.webp, Alice 6.webp, Alice 7.webp | The spatial concept takes inspiration from Homerton’s collection of Alice in Wonderland books in more than 80 different languages. Two worlds, one public and another magical, are connected through a portal - the same way Alice is transported into an otherworldly experience through a rabbit hole. %}
+{% Alice 2.webp, Alice 3.webp, Alice 6.webp, Alice 7.webp | The spatial concept takes inspiration from Homerton’s collection of Alice in Wonderland books in more than 80 different languages. %}
+
+{% 4.webp| Two worlds, one public and another magical, are connected through a portal - the same way Alice is transported into an otherworldly experience through a rabbit hole. %}
 
 {% Section-Layout2.webp, Untitled-2.webp | The library works with the relocated Porters’ Lodge and a new, celebratory point of entry. The ground floor is thoroughly open, hosting public lectures, workshops, book talks, and events. %}
 
