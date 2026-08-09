@@ -5,7 +5,7 @@ subtitle: A public children's library for a Cambridge college
 
 date: 2025-07-01
 category: architecture
-teaser: 20260520 Homerton-2.webp
+teaser: 20260520 Homerton.webp
 hero_layout: 1
 landing: true
 hidden: false
