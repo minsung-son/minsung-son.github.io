@@ -24,7 +24,11 @@ delivered_at:
 client:
 area:
 awards:
-collaborators: "[Van Gogh House London] (https://vangoghhouse.co.uk), Michael McMillan, Soudade Kaadan, Sasha Galitzine"
+collaborators: 
+- "[Van Gogh House London] (https://vangoghhouse.co.uk)"
+- Michael McMillan
+- Soudade Kadaan
+- Sasha Galitzine
 location: London, UK
 medium:
 type: Event, Interview
