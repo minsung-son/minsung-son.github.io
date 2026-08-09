@@ -24,7 +24,7 @@ delivered_at:
 client:
 area:
 awards:
-collaborators: Michael McMillan, Soudade Kaadan, Sasha Galitzine, Van Gogh House London
+collaborators: "[Van Gogh House London] (https://vangoghhouse.co.uk)", Michael McMillan, Soudade Kaadan, Sasha Galitzine
 location: London, UK
 medium:
 type: Event, Interview
@@ -38,8 +38,8 @@ What do the objects in your home say about you?
 
 In house museums they are preserved as arranged at the moment of their owner’s departure, a domestic time capsule promising access to personalities through their belongings. 
 
-Van Gogh lived in Lambeth in 1873, in a house now dedicated to him (with the blue plaque to prove it) - but he stayed for only a year and, as an unknown, 20-year-old lodger, left nothing behind. The artist’s transient relationship with the building is like many people’s housing situations in London today, and it complicates how we think about the house museum. Are these institutions monuments to the famous dead, sustaining myths of individual genius – or places to question such ideas? Could the house museum help us to think about what it means to be at home today?
+Van Gogh lived in Lambeth in 1873, in a house now dedicated to him (with the blue plaque to prove it)—but he stayed for only a year and, as an unknown, 20-year-old lodger, left nothing behind. The artist’s transient relationship with the building is like many people’s housing situations in London today, and it complicates how we think about the house museum. Are these institutions monuments to the famous dead, sustaining myths of individual genius – or places to question such ideas? Could the house museum help us to think about what it means to be at home today?
 
-The eighth cohort of New Architecture Writers invites you to a house warming where they will discuss these questions with guests who have worked with house museums: Michael McMillan, whose installation of a Caribbean-descended British family’s domestic interior, the Front Room, has been exhibited around the world; director Soudade Kaadan, whose film When the Tiles Spoke is currently on show at Leighton House; and Sasha Galitzine, curator of Gerry’s Pompeii, a canal-side sculpture garden created by Gerard Dalton.
+The eighth cohort of New Architecture Writers invites you to a house warming where they will discuss these questions with guests who have worked with house museums: Michael McMillan, whose installation of a Caribbean-descended British family’s domestic interior, *The Front Room*, has been exhibited around the world; director Soudade Kaadan, whose film *When the Tiles Spoke* is currently on show at Leighton House; and Sasha Galitzine, curator of *Gerry’s Pompeii*, a canal-side sculpture garden created by Gerard Dalton.
 
 — Event introduction, New Architecture Writers 8
