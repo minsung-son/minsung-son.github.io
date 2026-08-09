@@ -25,7 +25,7 @@ client:
 area:
 awards:
 collaborators: 
-- "[Van Gogh House London] (https://vangoghhouse.co.uk)"
+- "[Van Gogh House London](https://vangoghhouse.co.uk)"
 - Michael McMillan
 - Soudade Kadaan
 - Sasha Galitzine
