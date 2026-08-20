@@ -6,14 +6,21 @@
       sessionStorage.setItem('scroll-id',  scrollEl.id);
       sessionStorage.setItem('scroll-top', String(scrollEl.scrollTop));
     }
-    if (window.saveLevel2State) window.saveLevel2State(); // category.html only
+    var waits = [];
+    if (window.saveLevel2State) {
+      var stateReady = window.saveLevel2State(); // category.html only
+      if (stateReady && typeof stateReady.then === 'function') waits.push(stateReady);
+    }
     // Play the list-hover teaser's 200ms fade-out first, so the slide starts from the clean list
     if (document.body.classList.contains('teaser-active') && window.clearListHover) {
       clearListHover();
-      setTimeout(function () { window.location.href = url; }, 200);
-      return;
+      waits.push(new Promise(function (resolve) { setTimeout(resolve, 200); }));
     }
-    window.location.href = url;
+    if (waits.length) {
+      Promise.all(waits).then(function () { window.location.href = url; });
+    } else {
+      window.location.href = url;
+    }
   }
 
   document.querySelectorAll('#nav-about-link, .js-about-link').forEach(function (aboutLink) {
