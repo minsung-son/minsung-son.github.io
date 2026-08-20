@@ -109,15 +109,13 @@
            Tailwind class while still using an older cached stylesheet. -->
       <style>
         #grid-container {
-          grid-row-gap: 0;
-          row-gap: 0;
-        }
-        #grid-container > .grid-item {
-          margin-bottom: 5.5rem;
+          grid-row-gap: 5.5rem;
+          row-gap: 5.5rem;
         }
         @media (max-width: 767.98px) {
-          #grid-container > .grid-item {
-            margin-bottom: 3rem;
+          #grid-container {
+            grid-row-gap: 3rem;
+            row-gap: 3rem;
           }
         }
       </style>
@@ -294,91 +292,6 @@
     cancelGridFadeIn();
     var grid = document.getElementById('grid-container');
     if (grid) grid.getBoundingClientRect();
-  }
-
-  // Safari can discard the individual image paints while this page sits in bfcache. Preserve
-  // the visible grid as one lightweight canvas layer; it remains in exactly the same position
-  // underneath the article and is removed only after the real images are painted again.
-  function captureGridReturnSnapshot() {
-    var previous = document.getElementById('grid-return-snapshot');
-    if (previous) previous.remove();
-    gridSnapshotReleaseStarted = false;
-    if (currentView !== 'grid') return;
-
-    var canvas = document.createElement('canvas');
-    canvas.id = 'grid-return-snapshot';
-    canvas.width = Math.ceil(window.innerWidth);
-    canvas.height = Math.ceil(window.innerHeight);
-    canvas.setAttribute('aria-hidden', 'true');
-    canvas.style.cssText = 'position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:2;';
-
-    var ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    document.querySelectorAll('#grid-container .grid-item img').forEach(function (img) {
-      if (!img.complete || !img.naturalWidth) return;
-      var rect = img.getBoundingClientRect();
-      if (rect.bottom <= 0 || rect.top >= window.innerHeight ||
-          rect.right <= 0 || rect.left >= window.innerWidth) return;
-
-      var itemRect = img.closest('.grid-item').getBoundingClientRect();
-      var scale = Math.max(rect.width / img.naturalWidth, rect.height / img.naturalHeight);
-      var sourceWidth = rect.width / scale;
-      var sourceHeight = rect.height / scale;
-      var sourceX = (img.naturalWidth - sourceWidth) / 2;
-      var sourceY = (img.naturalHeight - sourceHeight) / 2;
-      var computed = getComputedStyle(img);
-
-      ctx.save();
-      ctx.beginPath();
-      ctx.rect(itemRect.left, itemRect.top, itemRect.width, itemRect.height);
-      ctx.clip();
-      ctx.globalAlpha = parseFloat(computed.opacity) || 1;
-      if ('filter' in ctx && computed.filter !== 'none') ctx.filter = computed.filter;
-      ctx.drawImage(img, sourceX, sourceY, sourceWidth, sourceHeight,
-        rect.left, rect.top, rect.width, rect.height);
-      ctx.restore();
-    });
-
-    document.body.appendChild(canvas);
-  }
-
-  var gridSnapshotReleaseStarted = false;
-  function releaseGridReturnSnapshot(event) {
-    var snapshot = document.getElementById('grid-return-snapshot');
-    if (!snapshot || gridSnapshotReleaseStarted) return;
-    gridSnapshotReleaseStarted = true;
-
-    var scroller = document.getElementById('main-content');
-    var viewport = scroller.getBoundingClientRect();
-    var images = Array.from(document.querySelectorAll('#grid-container img')).filter(function (img) {
-      var rect = img.getBoundingClientRect();
-      return rect.bottom >= viewport.top - 2 && rect.top <= viewport.bottom + 2;
-    });
-    var imageReady = Promise.all(images.map(function (img) {
-      img.loading = 'eager';
-      img.decoding = 'sync';
-      var loaded = img.complete ? Promise.resolve() : new Promise(function (resolve) {
-        img.addEventListener('load', resolve, { once: true });
-        img.addEventListener('error', resolve, { once: true });
-      });
-      return loaded.then(function () {
-        return img.decode ? img.decode().catch(function () {}) : undefined;
-      });
-    }));
-    var transitionDone = event && event.viewTransition
-      ? event.viewTransition.finished.catch(function () {})
-      : Promise.resolve();
-    // pageshow can arrive without carrying the ViewTransition object. Keep the snapshot past the
-    // complete 0.42s sheet animation even in that event order.
-    var minimumHold = new Promise(function (resolve) { setTimeout(resolve, 650); });
-
-    Promise.all([imageReady, transitionDone, minimumHold]).then(function () {
-      requestAnimationFrame(function () {
-        requestAnimationFrame(function () { if (snapshot.isConnected) snapshot.remove(); });
-      });
-    });
-    setTimeout(function () { if (snapshot.isConnected) snapshot.remove(); }, 3000);
   }
 
   function setCategory(cat) {
@@ -580,17 +493,8 @@
 
   window.saveLevel2State = function () {
     commitVisibleGrid();
-    captureGridReturnSnapshot();
     var order = Array.from(document.querySelectorAll('#grid-container .grid-item')).map(gridItemKey);
     sessionStorage.setItem('level2-state', JSON.stringify({ cat: currentCat, view: currentView, order: order }));
-
-    // Give Safari two paint opportunities to rasterize the single return snapshot before the
-    // category document is frozen. This is only used from grid view and is normally ~0.03s.
-    if (currentView === 'grid') {
-      return new Promise(function (resolve) {
-        requestAnimationFrame(function () { requestAnimationFrame(resolve); });
-      });
-    }
   };
 
   var rtState = (function () {
@@ -614,17 +518,11 @@
 
   // Safari can restore this document before its suspended fade promises have been discarded.
   // Snap the grid visible before/during the return transition, then drop the reload flag.
-  window.addEventListener('pagereveal', function (event) {
-    if (sessionStorage.getItem('level2-return')) {
-      commitVisibleGrid();
-      releaseGridReturnSnapshot(event);
-    }
+  window.addEventListener('pagereveal', function () {
+    if (sessionStorage.getItem('level2-return')) commitVisibleGrid();
   });
   window.addEventListener('pageshow', function (event) {
-    if (event.persisted || sessionStorage.getItem('level2-return')) {
-      commitVisibleGrid();
-      releaseGridReturnSnapshot(event);
-    }
+    if (event.persisted || sessionStorage.getItem('level2-return')) commitVisibleGrid();
     sessionStorage.removeItem('level2-return');
   });
 
