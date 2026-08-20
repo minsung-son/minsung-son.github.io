@@ -2,52 +2,6 @@
 <html lang="en">
 <head>
   {% include head.html %}
-  <!-- A history return can require a full document restore in Safari (notably during local
-       preview). Remember that case before the body script consumes the return flag. -->
-  <script>
-    (function () {
-      var nav = performance.getEntriesByType('navigation')[0];
-      window.__restoreCategoryPaint = !!sessionStorage.getItem('level2-return') ||
-        (!!nav && nav.type === 'back_forward');
-    })();
-  </script>
-  <!-- Hold Safari's first returned frame until the grid images currently in view are decoded.
-       Without this render block, the article slides down over empty cells and Safari paints the
-       cached images back in several batches. Fresh category visits are not delayed. -->
-  <script type="module" blocking="render">
-    if (window.__restoreCategoryPaint) {
-      const grid = document.getElementById('grid-container');
-      const scroller = document.getElementById('main-content');
-
-      if (grid && scroller) {
-        const viewport = scroller.getBoundingClientRect();
-        const images = Array.from(grid.querySelectorAll('img')).filter((img) => {
-          const rect = img.getBoundingClientRect();
-          return rect.bottom >= viewport.top - 2 && rect.top <= viewport.bottom + 2;
-        });
-
-        const decode = (img) => {
-          img.loading = 'eager';
-          img.decoding = 'sync';
-
-          const loaded = img.complete
-            ? Promise.resolve()
-            : new Promise((resolve) => {
-                img.addEventListener('load', resolve, { once: true });
-                img.addEventListener('error', resolve, { once: true });
-              });
-
-          return loaded.then(() => img.decode ? img.decode().catch(() => {}) : undefined);
-        };
-
-        // Broken or unusually slow files must never leave the page permanently blocked.
-        await Promise.race([
-          Promise.all(images.map(decode)),
-          new Promise((resolve) => setTimeout(resolve, 2500))
-        ]);
-      }
-    }
-  </script>
 </head>
 <body class="h-svh flex flex-col overflow-hidden bg-white">
 
