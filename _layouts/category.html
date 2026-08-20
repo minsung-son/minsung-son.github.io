@@ -60,7 +60,7 @@
 
       <!-- Grid view -->
       <div id="view-grid" class="max-md:px-0.5">
-        <div id="grid-container" class="grid grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 gap-x-0.5 gap-y-[3rem] max-md:gap-y-[3rem] md:pl-16 pt-[10.3125rem] max-md:pt-[7rem] pb-16 max-md:pb-32">
+        <div id="grid-container" class="grid grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 gap-x-0.5 gap-y-[5.5rem] max-md:gap-y-[3rem] md:pl-16 pt-[10.3125rem] max-md:pt-[7rem] pb-16 max-md:pb-32">
           {% for article in all_articles %}
             {% unless article.hidden %}
             {% if article.external_url %}{% assign link_url = article.external_url %}{% else %}{% assign link_url = article.url | relative_url %}{% endif %}
