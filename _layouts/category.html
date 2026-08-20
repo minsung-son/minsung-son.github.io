@@ -59,8 +59,22 @@
       {% assign all_articles = site.articles | sort: "date" | reverse %}
 
       <!-- Grid view -->
+      <!-- Keep the row gap in page-level CSS so Safari cannot retain HTML with a newly generated
+           Tailwind class while still using an older cached stylesheet. -->
+      <style>
+        #grid-container {
+          grid-row-gap: 5.5rem;
+          row-gap: 5.5rem;
+        }
+        @media (max-width: 767.98px) {
+          #grid-container {
+            grid-row-gap: 3rem;
+            row-gap: 3rem;
+          }
+        }
+      </style>
       <div id="view-grid" class="max-md:px-0.5">
-        <div id="grid-container" class="grid grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 gap-x-0.5 gap-y-[5.5rem] max-md:gap-y-[3rem] md:pl-16 pt-[10.3125rem] max-md:pt-[7rem] pb-16 max-md:pb-32">
+        <div id="grid-container" class="grid grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 gap-x-0.5 md:pl-16 pt-[10.3125rem] max-md:pt-[7rem] pb-16 max-md:pb-32">
           {% for article in all_articles %}
             {% unless article.hidden %}
             {% if article.external_url %}{% assign link_url = article.external_url %}{% else %}{% assign link_url = article.url | relative_url %}{% endif %}
