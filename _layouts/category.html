@@ -239,15 +239,6 @@
     });
   }
 
-  // Before leaving for an article, finish the introductory fade and make Safari commit the
-  // fully visible grid. The bfcache/view-transition snapshot can then sit unchanged underneath
-  // the article sheet instead of resuming a half-finished image fade when the sheet closes.
-  function commitVisibleGrid() {
-    cancelGridFadeIn();
-    var grid = document.getElementById('grid-container');
-    if (grid) grid.getBoundingClientRect();
-  }
-
   function setCategory(cat) {
     currentCat = cat;
     cancelGridFadeIn();
@@ -446,7 +437,6 @@
   }
 
   window.saveLevel2State = function () {
-    commitVisibleGrid();
     var order = Array.from(document.querySelectorAll('#grid-container .grid-item')).map(gridItemKey);
     sessionStorage.setItem('level2-state', JSON.stringify({ cat: currentCat, view: currentView, order: order }));
   };
@@ -470,13 +460,8 @@
   // cells still waiting on their stagger delay
   var restoringState = !!rtState;
 
-  // Safari can restore this document before its suspended fade promises have been discarded.
-  // Snap the grid visible before/during the return transition, then drop the reload flag.
-  window.addEventListener('pagereveal', function () {
-    if (sessionStorage.getItem('level2-return')) commitVisibleGrid();
-  });
-  window.addEventListener('pageshow', function (event) {
-    if (event.persisted || sessionStorage.getItem('level2-return')) commitVisibleGrid();
+  // bfcache returns keep everything natively — drop the unused reload flag
+  window.addEventListener('pageshow', function () {
     sessionStorage.removeItem('level2-return');
   });
 
