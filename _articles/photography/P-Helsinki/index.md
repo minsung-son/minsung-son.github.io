@@ -6,7 +6,7 @@ teaser: 20260524 Helsinki 4.webp
 hero_layout: 3
 landing: false
 hidden: false
-author: Minsung Son
+author: 
 co_author: 
 publication: 
 location: Helsinki, Finland

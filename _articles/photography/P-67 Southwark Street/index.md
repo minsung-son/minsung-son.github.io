@@ -6,7 +6,7 @@ teaser: 20260329 67 Southwark 1.webp
 hero_layout: 3
 landing: true
 hidden: false
-author: Minsung Son
+author: 
 co_author: 
 publication: 
 location: London, UK
