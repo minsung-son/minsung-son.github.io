@@ -80,6 +80,7 @@ for f in "${files[@]}"; do
     sips -s format png "$f" --out "$png" >/dev/null
   fi
   "$CWEBP" -quiet -q "$QUALITY" -m 6 -metadata none "$png" -o "$out"
+  xattr -c "$out" 2>/dev/null || true
   in_kb=$(( $(stat -f%z "$f") / 1024 )); out_kb=$(( $(stat -f%z "$out") / 1024 ))
   total_in=$((total_in+in_kb)); total_out=$((total_out+out_kb))
   ow=$(sips -g pixelWidth "$out" | awk '/pixelWidth/{print $2}'); oh=$(sips -g pixelHeight "$out" | awk '/pixelHeight/{print $2}')

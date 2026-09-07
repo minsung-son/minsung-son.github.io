@@ -58,7 +58,7 @@ area:
 location: 
 awards: 
 collaborators: " ;;
-  photography) fields="author: Minsung Son
+  photography) fields="author: 
 co_author: 
 publication: 
 location: 
@@ -67,7 +67,7 @@ delivered_at:
 medium: 
 awards: 
 collaborators: " ;;
-  films) fields="author: Minsung Son
+  films) fields="author: 
 co_author: 
 publication: 
 duration: 
@@ -125,6 +125,7 @@ esac
   [[ ${#imgs[@]} -eq 0 ]] && echo "{% 1.webp %}" && echo
   echo "Write the article text here."
 } > "$DIR/index.md"
+xattr -c "$DIR/index.md" 2>/dev/null || true
 
 echo "Created: $DIR"
 echo "Images:  ${#imgs[@]}  teaser: ${TEASER:-none}  hero_layout: $HERO"
