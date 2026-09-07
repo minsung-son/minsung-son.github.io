@@ -112,10 +112,16 @@ esac
   echo "$fields"
   echo "---"
   echo
-  for img in "${imgs[@]}"; do
-    echo "{% $img %}"
+  if [[ "$CAT" == "photography" && ${#imgs[@]} -gt 1 ]]; then
+    # photography default: all images in one slideshow
+    echo "{% $(IFS=,; echo "${imgs[*]}" | sed 's/,/, /g') %}"
     echo
-  done
+  else
+    for img in "${imgs[@]}"; do
+      echo "{% $img %}"
+      echo
+    done
+  fi
   [[ ${#imgs[@]} -eq 0 ]] && echo "{% 1.webp %}" && echo
   echo "Write the article text here."
 } > "$DIR/index.md"
