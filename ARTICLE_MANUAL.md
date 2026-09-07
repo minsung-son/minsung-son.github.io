@@ -148,6 +148,21 @@ On mobile the hero is always centred and this setting only affects desktop.
 - **Every image in the folder is part of the article's image set** (used by the full-screen enlarged view), even if you never reference it in a media block. Don't leave stray draft images or alternates in the folder.
 
 ## 7. Checklist for a new article
+
+### The fast way (with Claude Code)
+1. Export the photos from Lightroom into `03 Personal/02 Photography/02 Lightroom` (any size; jpg is fine).
+2. In Claude Code, type: `/new-article photography "Barbican"` (category and title). Paste the text and captions when asked.
+3. Claude converts the photos to webp (1920px, quality 60), builds the folder and `index.md`, checks it, pushes, and waits for the GitHub build.
+4. Edited an existing article by hand? Type `/publish`.
+
+Behind the scenes these are plain scripts in `scripts/`, usable without Claude:
+- `scripts/prep-images.sh "<article folder>" --archive`: converts everything in the Lightroom folder to webp and moves the originals to `02 Lightroom/_published/`.
+- `scripts/new-article.sh <category> "<Title>"`: creates the folder and a filled-in `index.md`.
+- `python3 scripts/check-article.py`: checks every article for the mistakes listed in this manual.
+- `scripts/publish.sh "<message>"`: commits, pushes, and reports the build result.
+They need `cwebp`, installed once with `brew install webp`.
+
+### The manual way
 1. Duplicate the closest **template or existing article** for the category
 2. Rename the folder (again, no `?`, `#`, `%`, `/`).
 3. Compress any images you have with Mass Image Compressor, upload any >10MB videos to Vimeo.
