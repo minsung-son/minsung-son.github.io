@@ -2,7 +2,7 @@
 title: Ways of Feeling
 subtitle: Touch, cover, and a second skin
 date: 2026-09-25
-teaser: ms6165_body_ecology_portrait 2.webp
+teaser: 20260922 Ways of Feeling 9.webp
 hero_layout: 3
 landing: false
 hidden: false
@@ -21,4 +21,4 @@ awards:
 collaborators: 
 ---
 
-{% ms6165_body_ecology_portrait 2.webp, ms6165_body_ecology_portrait 3.webp, ms6165_body_ecology_section.webp %}
+{% 20260922 Ways of Feeling 9.webp, 20260922 Ways of Feeling 10.webp, 20260923 Ways of Feeling section.webp %}
