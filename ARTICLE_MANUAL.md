@@ -142,7 +142,7 @@ The **first media block in the body becomes the article's hero**: the large imag
 On mobile the hero is always centred and this setting only affects desktop.
 
 ## 6. Good practices for prepping images
-- **Format:** prefer `.webp` (much smaller than jpg/png at the same quality). Existing articles use webp almost everywhere. Use **Mass Image Compressor** at quality medium (60), max long-side size 1920, and format webp. Target 50-200KB for a single image.
+- **Format:** prefer `.webp` (much smaller than jpg/png at the same quality). Existing articles use webp almost everywhere. `scripts/prep-images.sh` does this automatically (quality 85, max long side 1920). If compressing by hand, use quality ~85: expect roughly 100-600KB per image. Quality 60 looks visibly soft on textured photos.
 - **Size:** export around 1920px on the long edge. Big enough for the full-screen enlarged view, small enough to load fast. NEVER upload straight-from-camera multi-MB images.
 - **Naming:** number files in the order you want (`1.webp`, `2.webp`, …, or a dated prefix like `20250904 Arumjigi-2.webp`). Use simple latin characters and numbers for filenames, no special characters.
 - **Every image in the folder is part of the article's image set** (used by the full-screen enlarged view), even if you never reference it in a media block. Don't leave stray draft images or alternates in the folder.
@@ -152,7 +152,7 @@ On mobile the hero is always centred and this setting only affects desktop.
 ### The fast way (with Claude Code)
 1. Export the photos from Lightroom into `03 Personal/02 Photography/02 Lightroom` (any size; jpg is fine).
 2. In Claude Code, type: `/new-article photography "Barbican"` (category and title). Paste the text and captions when asked.
-3. Claude converts the photos to webp (1920px, quality 60), builds the folder and `index.md`, checks it, pushes, and waits for the GitHub build.
+3. Claude converts the photos to webp (1920px, quality 85), builds the folder and `index.md`, checks it, pushes, and waits for the GitHub build.
 4. Edited an existing article by hand? Type `/publish`.
 
 Behind the scenes these are plain scripts in `scripts/`, usable without Claude:

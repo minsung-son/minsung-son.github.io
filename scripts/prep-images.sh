@@ -8,7 +8,7 @@
 # - Source defaults to the Lightroom export folder (see LR_DIR below).
 # - Takes jpg/jpeg/png/tif/tiff/heic (and webp without a jpg sibling),
 #   skips "*_compressed.webp" files made by Mass Image Compressor.
-# - Resizes to max 1920px on the long edge, encodes webp at quality 60.
+# - Resizes to max 1920px on the long edge, encodes webp at quality 85.
 # - Keeps the original file name (minus "_compressed"), changes extension to .webp.
 # - With --archive, moves the processed originals into
 #   "<source>/_published/<article folder name>/" so the export folder stays clean.
@@ -16,7 +16,7 @@ set -euo pipefail
 
 LR_DIR="/Users/minsungson/Desktop/03 Personal/02 Photography/02 Lightroom"
 MAX_EDGE=1920
-QUALITY=60
+QUALITY=85
 
 DEST="${1:-}"
 SRC="${2:-$LR_DIR}"
@@ -84,7 +84,7 @@ for f in "${files[@]}"; do
   in_kb=$(( $(stat -f%z "$f") / 1024 )); out_kb=$(( $(stat -f%z "$out") / 1024 ))
   total_in=$((total_in+in_kb)); total_out=$((total_out+out_kb))
   ow=$(sips -g pixelWidth "$out" | awk '/pixelWidth/{print $2}'); oh=$(sips -g pixelHeight "$out" | awk '/pixelHeight/{print $2}')
-  flag=""; (( out_kb > 300 )) && flag="  <-- large"
+  flag=""; (( out_kb > 700 )) && flag="  <-- large"
   printf '  %-45s %5dKB -> %4dKB  %dx%d%s\n' "$stem.webp" "$in_kb" "$out_kb" "$ow" "$oh" "$flag"
   rm -f "$png"
 done

@@ -18,7 +18,7 @@ KNOWN_FIELDS = {"title", "subtitle", "date", "teaser", "hero_layout", "landing",
                 "category", "author", "co_author", "supervised_by", "publication", "programme",
                 "typology", "completed_as", "completed_at", "delivered_at", "client", "area",
                 "location", "medium", "type", "topic", "duration", "awards", "collaborators"}
-BIG_IMAGE_KB = 400
+BIG_IMAGE_KB = 800
 
 
 def parse_front_matter(text):
@@ -63,7 +63,7 @@ def check(folder):
         if f.lower().endswith(IMAGE_EXT):
             kb = os.path.getsize(p) // 1024
             if kb > BIG_IMAGE_KB:
-                warns.append(f"'{f}' is {kb}KB (target 50-200KB; re-run prep-images)")
+                warns.append(f"'{f}' is {kb}KB (target 100-600KB; check whether it needs to be that big)")
             if kb > 10 * 1024:
                 errors.append(f"'{f}' is {kb // 1024}MB (NEVER upload raw camera files)")
         if f.lower().endswith(VIDEO_EXT) and os.path.getsize(p) > 10 * 1024 * 1024:
