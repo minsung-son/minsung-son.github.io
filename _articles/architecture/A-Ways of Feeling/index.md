@@ -21,8 +21,4 @@ awards:
 collaborators: 
 ---
 
-{% ms6165_body_ecology_portrait 2.webp %}
-
-{% ms6165_body_ecology_portrait 3.webp %}
-
-{% ms6165_body_ecology_section.webp %}
+{% ms6165_body_ecology_portrait 2.webp, ms6165_body_ecology_portrait 3.webp, ms6165_body_ecology_section.webp %}
