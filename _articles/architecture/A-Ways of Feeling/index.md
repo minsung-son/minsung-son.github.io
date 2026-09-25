@@ -1,6 +1,6 @@
 ---
 title: Ways of Feeling
-subtitle: A wearable skin of paper and cloth
+subtitle: Touch, cover, and a second skin
 date: 2026-09-25
 teaser: ms6165_body_ecology_portrait 2.webp
 hero_layout: 3
