@@ -1,5 +1,5 @@
 ---
-title: Seoul Apartment
+title: Apartment in Seoul
 subtitle: A living room for books
 date: 2025-12-15
 teaser: 20260811 Home 1.webp
