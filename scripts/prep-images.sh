@@ -8,7 +8,9 @@
 # - Source defaults to the Lightroom export folder (see LR_DIR below).
 # - Takes jpg/jpeg/png/tif/tiff/heic (and webp without a jpg sibling),
 #   skips "*_compressed.webp" files made by Mass Image Compressor.
-# - Resizes to max 1920px on the long edge, encodes webp at quality 85.
+# - Resizes to max 1920px on the long edge, then picks the highest webp quality
+#   (from 92 down to 85) that keeps the file under MAX_KB. Very detailed images
+#   may stay above MAX_KB at quality 85; that is accepted rather than going softer.
 # - Keeps the original file name (minus "_compressed"), changes extension to .webp.
 # - With --archive, moves the processed originals into
 #   "<source>/_published/<article folder name>/" so the export folder stays clean.
@@ -16,7 +18,8 @@ set -euo pipefail
 
 LR_DIR="/Users/minsungson/Desktop/03 Personal/02 Photography/02 Lightroom"
 MAX_EDGE=1920
-QUALITY=85
+MAX_KB="${MAX_KB:-300}"
+QUALITY_STEPS=(92 90 88 86 85)
 
 DEST="${1:-}"
 SRC="${2:-$LR_DIR}"
@@ -79,13 +82,18 @@ for f in "${files[@]}"; do
   else
     sips -s format png "$f" --out "$png" >/dev/null
   fi
-  "$CWEBP" -quiet -q "$QUALITY" -m 6 -metadata none "$png" -o "$out"
+  q_used=""
+  for q in "${QUALITY_STEPS[@]}"; do
+    "$CWEBP" -quiet -q "$q" -m 6 -metadata none "$png" -o "$out"
+    q_used=$q
+    (( $(stat -f%z "$out") / 1024 <= MAX_KB )) && break
+  done
   xattr -c "$out" 2>/dev/null || true
   in_kb=$(( $(stat -f%z "$f") / 1024 )); out_kb=$(( $(stat -f%z "$out") / 1024 ))
   total_in=$((total_in+in_kb)); total_out=$((total_out+out_kb))
   ow=$(sips -g pixelWidth "$out" | awk '/pixelWidth/{print $2}'); oh=$(sips -g pixelHeight "$out" | awk '/pixelHeight/{print $2}')
-  flag=""; (( out_kb > 700 )) && flag="  <-- large"
-  printf '  %-45s %5dKB -> %4dKB  %dx%d%s\n' "$stem.webp" "$in_kb" "$out_kb" "$ow" "$oh" "$flag"
+  flag=""; (( out_kb > MAX_KB )) && flag="  <-- above ${MAX_KB}KB even at q$q_used"
+  printf '  %-45s %5dKB -> %4dKB  q%s  %dx%d%s\n' "$stem.webp" "$in_kb" "$out_kb" "$q_used" "$ow" "$oh" "$flag"
   rm -f "$png"
 done
 echo

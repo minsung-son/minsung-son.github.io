@@ -21,4 +21,4 @@ awards:
 collaborators: 
 ---
 
-{% 20260922 Ways of Feeling 17.webp, 20260922 Ways of Feeling 10.webp, 20260923 Ways of Feeling section.webp %}
+{% 20260922 Ways of Feeling 17.webp, 20260922 Ways of Feeling 20.webp, 20260923 Ways of Feeling section.webp %}
