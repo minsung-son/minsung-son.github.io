@@ -30,7 +30,7 @@ r = next((r for r in runs if r['head_sha'] == '$SHA'), None)
 print(f\"{r['status']} {r['conclusion'] or ''} {r['html_url']}\" if r else 'pending')" 2>/dev/null || echo "unknown")
   echo "  [$((i*20))s] $state"
   case "$state" in
-    completed\ success*) echo "Build succeeded. Site updates within a couple of minutes: https://minsung-son.github.io"; exit 0 ;;
+    completed\ success*) echo "Build succeeded. Site updates within a couple of minutes: https://minsungson.com"; exit 0 ;;
     completed\ *) echo "BUILD FAILED. Log: ${state##* }"; exit 1 ;;
   esac
 done
