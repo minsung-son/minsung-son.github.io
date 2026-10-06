@@ -69,7 +69,7 @@
   <a id="nav-about-link" href="{{ '/about/' | relative_url }}" class="js-about-link font-sabon italic text-nav max-md:text-nav-mobile transition duration-200 [.teaser-dark_&]:!text-white ml-[1rem] max-md:ml-4 {% if include.active_about %}text-mist{% else %}text-ink hover:text-mist{% endif %}">About</a>
 
   {% if include.level == 1 %}
-  <span class="cursor-enter transition hover:text-mist text-nav text-ink flex items-baseline gap-[1.25rem] ml-auto max-md:hidden" onclick="goToCurrentArticle()">
+  <span class="cursor-enter transition hover:text-mist text-nav text-ink flex items-baseline gap-2 ml-auto max-md:hidden" onclick="goToCurrentArticle()">
     {% comment %} Counter first, title last: the title then sits at the right edge exactly like "003 Title" on the article page, so it doesn't move when the slide is opened {% endcomment %}
     <span id="nav-counter" class="font-sabon italic"></span>
     <span id="nav-title" class="font-sabon italic"></span>
