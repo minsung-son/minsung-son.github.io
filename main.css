@@ -78,10 +78,8 @@
   }
 }
 
-/* LEVEL3 entry/exit slide (cross-document View Transitions) */
-@view-transition {
-  navigation: auto;
-}
+/* LEVEL3 entry/exit slide (cross-document View Transitions). The @view-transition opt-in itself
+   lives in head.html, emitted per page (every page except home). */
 
 /* Let input pass through to the live page during the 0.42s transition */
 ::view-transition {
