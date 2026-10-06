@@ -3,7 +3,7 @@
 # markdown links allowed, e.g. "[Text](https://example.com)". Obviously not for certain fields like the title, date, etc.
 # Separate multiple items with a comma, e.g. name1, name2, name3
 # Copy-paste is your friend.
-title: Skinners' Hall, 6a architects
+title: Skinners’ Hall, 6a architects
 subtitle: London, UK
 date: 2026-01-13         # YYYY-MM-DD
 category: architecture

@@ -1,7 +1,7 @@
 ---
 # Sample: a fully filled-out architecture article.
 title: The House of Stories
-subtitle: A public children's library for a Cambridge college
+subtitle: A public children’s library for a Cambridge college
 
 date: 2025-07-01
 category: architecture
@@ -35,11 +35,11 @@ location: Cambridge, UK
 
 {% Alice 2.webp, Alice 3.webp, Alice 6.webp, Alice 7.webp | The spatial concept takes inspiration from Homerton’s collection of Alice in Wonderland books in more than 80 different languages. %}
 
-{% 4.webp| Two worlds, one public and another magical, are connected through a portal - the same way Alice is transported into an otherworldly experience through a rabbit hole. %}
+{% 4.webp| Two worlds, one public and another magical, are connected through a portal—the same way Alice is transported into an otherworldly experience through a rabbit hole. %}
 
 {% Section-Layout2.webp, Untitled-2.webp | The library works with the relocated Porters’ Lodge and a new, celebratory point of entry. The ground floor is thoroughly open, hosting public lectures, workshops, book talks, and events. %}
 
-{% Sketch Model.webp, Axonometric 1_compressed.webp | The first floor reading room, by contrast, creates a magical experience of reading within a monolithic volume, similar to the sence of enticement felt when reading a good story. %}
+{% Sketch Model.webp, Axonometric 1_compressed.webp | The first floor reading room, by contrast, creates a magical experience of reading within a monolithic volume, similar to the sense of enticement felt when reading a good story. %}
 
 ## Experience
 
