@@ -141,6 +141,7 @@
                 {% when 'photography' %}{% assign col4_meta = article.location %}
                 {% when 'films' %}{% assign col4_meta = article.type %}
                 {% when 'writing' %}{% assign col4_meta = article.publication %}
+                {% when 'other' %}{% assign col4_meta = article.type %}
                 {% else %}{% assign col4_meta = article.category | capitalize %}
               {% endcase %}
               <div data-val="{{ article.category }}" data-meta="{{ col4_meta }}" class="font-sabon italic text-[length:var(--list-row-text)] text-ink group-[.is-hover]:text-mist [.teaser-dark_&]:!text-white transition-colors duration-200 pr-[0.43em] pointer-events-auto min-w-0 whitespace-nowrap overflow-hidden text-ellipsis max-md:hidden">{{ article.category | capitalize }}</div>
@@ -219,7 +220,7 @@
     photography: 'Location',
     films: 'Type',
     writing: 'Published on',
-    other: 'Category'
+    other: 'Type'
   };
 
   var catBase = '{{ "/category/" | relative_url }}';
@@ -242,8 +243,16 @@
   }
 
   function setCategory(cat) {
+    var changed = cat !== currentCat;
     currentCat = cat;
     cancelGridFadeIn();
+
+    // Moving to another category starts the list from the default sort again
+    if (changed && (sortCol !== 0 || sortDir !== -1)) {
+      sortCol = 0;
+      sortDir = -1;
+      applySort();
+    }
 
     // Sidebar active state
     document.querySelectorAll('.cat-nav-btn').forEach(function(btn) {

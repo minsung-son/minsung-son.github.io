@@ -1,7 +1,7 @@
 ---
 # All metadata available.
 # Only title and year are required, everything else may be left empty.
-# (The list view's 4th column shows "Other" automatically — no extra field needed.)
+# title, date and type are mandatory (type is the 4th column in the list view).
 # markdown links allowed, e.g. "[Text](https://example.com)". Obviously not for certain fields like the title, year, etc.
 # Separate multiple items with a comma, e.g. name1, name2, name3
 # Copy-paste is your friend.

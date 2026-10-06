@@ -79,7 +79,7 @@ The list view shows *Number · Title · Year · [category-specific field]*. Fill
 | photography  | location (e.g. *Seoul, Korea*)                |
 | films        | type (e.g. *Stop-motion short*)               |
 | writing      | publication (e.g. *New Architecture Writers*) |
-| other        | N/A (shows the category name)                 |
+| other        | type (e.g. *Event, Interview*)                |
 
 ### Metadata no-gos
 Watch out for stray colons or unquoted special characters in metadata values. If a value contains special characters or quotes, wrap the whole value in double quotes: `subtitle: "Building study: V&A East"`. If unsure, wrap in double quotes.
