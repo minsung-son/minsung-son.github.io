@@ -2,13 +2,14 @@
   Shared top navbar: <header> shell, loading bar, Row 1, optional mobile Row 2.
   Params:
   - level=1|2|3 — right slot: 1 = slide title + counter, 2 = selected category, 3 = empty.
-  - article=true — LEVEL3 shell: id="l3-header" (own view-transition group, white-backed
-    only while data-vt-enter/-exit is set), no permanent z-index (the sheet paints over it;
+  - article=true — LEVEL3 shell: id="l3-header" (own view-transition group; backed by a
+    white→transparent eased gradient only while data-vt-enter/-exit is set, so the navbar's
+    fade has no hard bottom edge over the grid), no permanent z-index (the sheet paints over it;
     article.html toggles z-40 while the sheet is at rest), no gradient.
   - row2 — pre-captured mobile Row-2 markup, rendered after Row 1.
   - active_about, loading_bar — set by the About page.
 {% endcomment %}
-<header {% if include.article %}id="l3-header" {% endif %}class="relative flex-none md:absolute md:inset-x-0 md:top-0 pt-[2.1875rem] px-[2.5rem] pb-[0.6875rem] max-md:px-0 max-md:pt-0 max-md:pb-0 {% if include.article %}[[data-vt-enter]_&]:bg-white [[data-vt-exit]_&]:bg-white{% elsif include.level == 2 %}z-30 max-md:sticky max-md:top-0{% else %}max-md:bg-white z-30 max-md:sticky max-md:top-0 md:before:content-[''] md:before:absolute md:before:inset-0 md:before:-z-10 md:before:pointer-events-none md:before:bg-[linear-gradient(to_bottom,rgba(255,255,255,1)_0%,rgba(255,255,255,0)_100%)] md:before:transition-opacity md:before:duration-200 [.teaser-active_&]:md:before:opacity-0{% endif %}">
+<header {% if include.article %}id="l3-header" {% endif %}class="relative flex-none md:absolute md:inset-x-0 md:top-0 pt-[2.1875rem] px-[2.5rem] pb-[0.6875rem] max-md:px-0 max-md:pt-0 max-md:pb-0 {% if include.article %}before:content-[''] before:absolute before:inset-x-0 before:top-0 before:h-[10.5rem] before:-z-10 before:pointer-events-none before:opacity-0 [[data-vt-enter]_&]:before:opacity-100 [[data-vt-exit]_&]:before:opacity-100 before:bg-[linear-gradient(to_bottom,#fff_0,#fff_3.5rem,rgba(255,255,255,.96)_4.2rem,rgba(255,255,255,.88)_4.9rem,rgba(255,255,255,.76)_5.6rem,rgba(255,255,255,.62)_6.3rem,rgba(255,255,255,.47)_7rem,rgba(255,255,255,.33)_7.7rem,rgba(255,255,255,.21)_8.4rem,rgba(255,255,255,.11)_9.1rem,rgba(255,255,255,.04)_9.8rem,rgba(255,255,255,0)_10.5rem)]{% elsif include.level == 2 %}z-30 max-md:sticky max-md:top-0{% else %}max-md:bg-white z-30 max-md:sticky max-md:top-0 md:before:content-[''] md:before:absolute md:before:inset-0 md:before:-z-10 md:before:pointer-events-none md:before:bg-[linear-gradient(to_bottom,rgba(255,255,255,1)_0%,rgba(255,255,255,0)_100%)] md:before:transition-opacity md:before:duration-200 [.teaser-active_&]:md:before:opacity-0{% endif %}">
 
 {% if include.level != 3 or include.loading_bar %}
 <!-- Loading bar: LEVEL1 always; LEVEL2/About only when the origin page flagged the navigation -->

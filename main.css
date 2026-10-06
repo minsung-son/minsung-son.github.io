@@ -78,10 +78,8 @@
   }
 }
 
-/* LEVEL3 entry/exit slide (cross-document View Transitions) */
-@view-transition {
-  navigation: auto;
-}
+/* LEVEL3 entry/exit slide (cross-document View Transitions). The @view-transition opt-in itself
+   lives in head.html, emitted per page (every page except home). */
 
 /* Let input pass through to the live page during the 0.42s transition */
 ::view-transition {
@@ -118,6 +116,14 @@ html[data-vt-exit] .vt-panel {
 /* LEVEL3 navbar: own snapshot group, fades in over the origin during the entry slide */
 #l3-header {
   view-transition-name: l3-header;
+}
+/* Entry slide: data-vt-enter outlives the pseudo-tree by one frame (the finished-promise
+   reaction runs after that frame's paint). Keep the live navbar under the sheet meanwhile,
+   matching the snapshot stacking (group(content-area) z-index: 1 over l3-header), so its
+   10.5rem gradient never paints over the sheet. The z-40 toggle in article.html takes effect
+   again as soon as the flag is cleared. */
+html[data-vt-enter] #l3-header {
+  z-index: auto;
 }
 @keyframes vt-navbar-in {
   from { opacity: 0; }

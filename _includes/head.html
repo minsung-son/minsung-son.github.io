@@ -16,13 +16,23 @@
   })(document);
 </script>
 <link rel="stylesheet" href="{{ "/tailwind.css" | relative_url }}">
+{% unless page.layout == 'home' %}
+<!-- Cross-document view transitions (LEVEL2/3 slide, main.css) are opted into per page, not in
+     the shared stylesheet: the home page stays out, so home → Work is a plain navigation with no
+     root-only transition whose 250ms teardown would hitch the grid fade-in. No JS skips anywhere —
+     pageswap/pagereveal listeners on the category page cost it its bfcache return in Safari. -->
+<style>@view-transition { navigation: auto; }</style>
+{% endunless %}
 <script>
   // LEVEL3 slide flags: only fresh navigations get the entry/exit view transition (main.css)
   (function () {
     var html = document.documentElement;
     if (html.dataset.level !== '3') return;
     var nav = performance.getEntriesByType('navigation')[0];
-    if (nav && nav.type === 'navigate') html.setAttribute('data-vt-enter', '');
+    // Only raise the entry flag where pagereveal exists to lower it again; otherwise the
+    // navbar gradient (header-nav.html) would stay painted over the sheet's title and ×
+    var hasReveal = ('onpagereveal' in window) || (typeof PageRevealEvent !== 'undefined');
+    if (hasReveal && nav && nav.type === 'navigate') html.setAttribute('data-vt-enter', '');
     window.addEventListener('pagereveal', function (e) {
       html.removeAttribute('data-vt-exit'); // stale after a bfcache round trip
       function clear() { html.removeAttribute('data-vt-enter'); }
@@ -36,4 +46,5 @@
       if (e.viewTransition) html.setAttribute('data-vt-exit', '');
     });
   })();
+
 </script>
