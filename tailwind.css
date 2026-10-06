@@ -1070,9 +1070,17 @@
     content: var(--tw-content);
     top: 0px;
   }
+  .before\:top-full::before {
+    content: var(--tw-content);
+    top: 100%;
+  }
   .before\:-z-10::before {
     content: var(--tw-content);
     z-index: calc(10 * -1);
+  }
+  .before\:h-6::before {
+    content: var(--tw-content);
+    height: calc(var(--spacing) * 6);
   }
   .before\:h-24::before {
     content: var(--tw-content);
