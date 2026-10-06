@@ -16,13 +16,24 @@
   })(document);
 </script>
 <link rel="stylesheet" href="{{ "/tailwind.css" | relative_url }}">
-{% unless page.layout == 'home' %}
-<!-- Cross-document view transitions (LEVEL2/3 slide, main.css) are opted into per page, not in
-     the shared stylesheet: the home page stays out, so home → Work is a plain navigation with no
-     root-only transition whose 250ms teardown would hitch the grid fade-in. No JS skips anywhere —
-     pageswap/pagereveal listeners on the category page cost it its bfcache return in Safari. -->
+<!-- Cross-document view transitions (LEVEL1/2 ↔ LEVEL3 slide, main.css) -->
 <style>@view-transition { navigation: auto; }</style>
-{% endunless %}
+{% if page.layout == 'home' %}
+<script>
+  // Home → Work/About has no slide to play, so skip the root-only transition on the way out:
+  // left alone, its 250ms teardown lands as a hitch in the grid's fade-in. Decided here on the
+  // outgoing page — skipping in pageswap drops the inbound transition too. Home → article keeps
+  // its slide. (Never decide this on the incoming page: navigation.activation.from is unreliable
+  // on bfcache returns in Safari.)
+  window.addEventListener('pageswap', function (e) {
+    var to = e.activation && e.activation.entry;
+    if (!e.viewTransition || !to) return;
+    try {
+      if (new URL(to.url, location.href).pathname.indexOf('/articles/') !== 0) e.viewTransition.skipTransition();
+    } catch (err) {}
+  });
+</script>
+{% endif %}
 <script>
   // LEVEL3 slide flags: only fresh navigations get the entry/exit view transition (main.css)
   (function () {

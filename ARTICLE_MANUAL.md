@@ -147,6 +147,10 @@ On mobile the hero is always centred and this setting only affects desktop.
 - **Naming:** number files in the order you want (`1.webp`, `2.webp`, …, or a dated prefix like `20250904 Arumjigi-2.webp`). Use simple latin characters and numbers for filenames, no special characters.
 - **Every image in the folder is part of the article's image set** (used by the full-screen enlarged view), even if you never reference it in a media block. Don't leave stray draft images or alternates in the folder.
 
+## 6a. Grid thumbnails (automatic)
+
+The Work grid shows small thumbnails, kept in a `thumbs/` folder inside each article folder (one `thumbs/<name>.webp` per image). `scripts/prep-images.sh` makes them automatically. If you copy images into an article folder by hand, run `scripts/make-thumbs.sh "_articles/<category>/<folder>"` once; without a thumbnail the grid simply shows the full-size file, which loads slower.
+
 ## 7. Checklist for a new article
 
 ### The fast way (with Claude Code)

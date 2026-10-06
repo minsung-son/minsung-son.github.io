@@ -1,12 +1,18 @@
 <script>
-  // Exit navigation on ×; prefer history.back() so the origin returns from bfcache intact
+  // Exit navigation on ×: a fresh navigation back to the page we came from (location.replace,
+  // so the article drops out of history), never history.back(). Safari does not run the
+  // cross-document slide when the origin comes back from the back/forward cache, so the
+  // origin is deliberately reloaded and restored from its saved state (LEVEL2: level2-state +
+  // level2-return in category.html; LEVEL1: slide-index in home.html). The referrer keeps the
+  // category the visitor was browsing (e.g. /category/all/), which the × href does not.
   function bindExitTransition(closeId) {
     var closeLink = document.getElementById(closeId);
     if (!closeLink) return;
     closeLink.addEventListener('click', function (e) {
       e.preventDefault();
-      if (document.referrer && document.referrer.indexOf(window.location.host) !== -1) {
-        history.back();
+      var ref = document.referrer;
+      if (ref && ref.indexOf(window.location.host) !== -1) {
+        window.location.replace(ref);
       } else {
         window.location.href = this.href;
       }

@@ -80,7 +80,7 @@
           {% for article in all_articles %}
             {% unless article.hidden %}
             {% if article.external_url %}{% assign link_url = article.external_url %}{% else %}{% assign link_url = article.url | relative_url %}{% endif %}
-            {% for img_file in article.images %}
+            {% for img_file in article.grid_images %}
               <a href="{{ link_url }}" data-category="{{ article.category }}"
                  data-index="{{ article.article_id | prepend: '000' | slice: -3, 3 }}"
                  data-title="{{ article.title }}"
@@ -442,8 +442,16 @@
   }
 
   window.saveLevel2State = function () {
-    var order = Array.from(document.querySelectorAll('#grid-container .grid-item')).map(gridItemKey);
-    sessionStorage.setItem('level2-state', JSON.stringify({ cat: currentCat, view: currentView, order: order }));
+    var items = Array.from(document.querySelectorAll('#grid-container .grid-item'));
+    var order = items.map(gridItemKey);
+    // Cells on or near the screen: the article page pre-warms these so the grid is already
+    // painted when the exit slide reveals it (the return is a fresh load, see exit-transition.html)
+    var vh = window.innerHeight;
+    var visible = currentView === 'grid' ? items.filter(function (item) {
+      var r = item.getBoundingClientRect();
+      return r.bottom > -vh && r.top < vh * 2;
+    }).map(gridItemKey) : [];
+    sessionStorage.setItem('level2-state', JSON.stringify({ cat: currentCat, view: currentView, order: order, visible: visible }));
   };
 
   var rtState = (function () {

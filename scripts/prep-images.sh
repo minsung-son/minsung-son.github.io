@@ -99,6 +99,9 @@ done
 echo
 echo "Total: ${total_in}KB -> ${total_out}KB"
 
+# Small grid thumbnails for the Work page (thumbs/<name>.webp next to the images)
+"$(dirname "$0")/make-thumbs.sh" "$DEST"
+
 if (( ARCHIVE )); then
   arch="$SRC/_published/$(basename "$DEST")"
   mkdir -p "$arch"

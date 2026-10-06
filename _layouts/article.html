@@ -122,6 +122,23 @@
       });
       var work = document.getElementById('nav-work-link');
       if (work) work.addEventListener('click', flag);
+
+      // Pre-warm the Work grid cells that were on screen (saved by saveLevel2State), so they're
+      // already fetched and decoded when the exit slide reveals the freshly loaded grid
+      window.addEventListener('load', function () {
+        setTimeout(function () {
+          try {
+            var s = JSON.parse(sessionStorage.getItem('level2-state') || 'null');
+            if (!s || !s.visible || !s.visible.length) return;
+            window.__warmGrid = s.visible.slice(0, 24).map(function (src) {
+              var img = new Image();
+              img.src = src;
+              if (img.decode) img.decode().catch(function () {});
+              return img;
+            });
+          } catch (err) {}
+        }, 600);
+      });
     })();
 
     // Enlarged view: flat sequence of every image in the article, with a running count
