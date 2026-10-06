@@ -405,7 +405,12 @@
   function sortList(col) {
     sortDir = sortCol === col ? -sortDir : 1;
     sortCol = col;
+    applySort();
+  }
 
+  // Reorder the rows by the current sortCol/sortDir (also used to restore a saved sort)
+  function applySort() {
+    var col = sortCol;
     var grid = document.getElementById('list-grid');
     var rows = Array.from(grid.querySelectorAll('.list-row'));
     rows.sort(function(a, b) {
@@ -451,7 +456,10 @@
       var r = item.getBoundingClientRect();
       return r.bottom > -vh && r.top < vh * 2;
     }).map(gridItemKey) : [];
-    sessionStorage.setItem('level2-state', JSON.stringify({ cat: currentCat, view: currentView, order: order, visible: visible }));
+    sessionStorage.setItem('level2-state', JSON.stringify({
+      cat: currentCat, view: currentView, order: order, visible: visible,
+      sortCol: sortCol, sortDir: sortDir
+    }));
   };
 
   var rtState = (function () {
@@ -503,6 +511,12 @@
   setView('grid');
   setCategory(initialCategory);
   if (rtState && rtState.view && rtState.view !== currentView) setView(rtState.view);
+  // List sort comes back too (column + direction) on a round-trip restore
+  if (rtState && typeof rtState.sortCol === 'number' && typeof rtState.sortDir === 'number') {
+    sortCol = rtState.sortCol;
+    sortDir = rtState.sortDir;
+    applySort();
+  }
   updateSortIndicators();
   if (!restoringState) triggerGridFadeIn(); // round-trip restore: cells appear in place
   gridInitialized = true;
