@@ -36,4 +36,25 @@
       if (e.viewTransition) html.setAttribute('data-vt-exit', '');
     });
   })();
+
+  // Non-LEVEL3 pages: a navigation that neither leaves nor enters an article has no slide to
+  // play, so skip the root-only transition the @view-transition rule would still run. Left
+  // alone it lasts the UA default 250ms and its end lands as a visible hitch in the grid's
+  // fade-in (Safari re-composites the page when the snapshot tree comes down).
+  (function () {
+    if (document.documentElement.dataset.level === '3') return;
+    function isArticle(url) {
+      try { return new URL(url, location.href).pathname.indexOf('/articles/') === 0; }
+      catch (e) { return false; }
+    }
+    window.addEventListener('pageswap', function (e) {
+      var to = e.activation && e.activation.entry;
+      if (e.viewTransition && to && !isArticle(to.url)) e.viewTransition.skipTransition();
+    });
+    window.addEventListener('pagereveal', function (e) {
+      var from = window.navigation && navigation.activation && navigation.activation.from;
+      // Only skip when the origin is positively known not to be an article (keeps the exit slide)
+      if (e.viewTransition && from && !isArticle(from.url)) e.viewTransition.skipTransition();
+    });
+  })();
 </script>
