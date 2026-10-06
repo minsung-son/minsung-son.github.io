@@ -58,7 +58,7 @@ location: Cambridge, UK
 | `title`       | Article title                                                | FATAL                                                        |
 | `subtitle`    | Shown under the title                                        | Simply omitted                                               |
 | `date`        | Full date (`YYYY-MM-DD`) used for sorting and project IDs. Only the year is displayed. | FATAL                                      |
-| `teaser`      | The image representing the article in the grid view and on the landing page | Falls back to the first image in the folder<br>If no images at all, FATAL |
+| `teaser`      | The image representing the article on the landing page and in the Work grid (the grid also shows every image used in the article's media blocks, and nothing else from the folder) | Falls back to the first image in the folder<br>If no images at all, FATAL |
 | `hero_layout` | `1`, `2`, or `3` (as per draft)                              | Defaults to `1`                                              |
 | `landing`     | `true` = article appears in the home-page teaser rotation (needs a teaser image!) | Treated as `false`                                           |
 | `hidden`      | `true` = article does not appear in the grid, list, or landing page (still occupies a project ID) | Treated as `false`                                           |
@@ -127,7 +127,8 @@ If a file genuinely can't be found, a red warning box appears in its place (and 
 ### But these are hard no-gos
 - **A video can never be inside a slideshow.**
 - **Never type `{%`, `%}`, `{{`, or `}}` inside normal text**. Anything between those braces is treated as a media block and will turn into a warning box.
-- Media blocks reference files **in the same folder only**. You can't point at another article's images or an outside URL (except Vimeo).
+- Media blocks reference files **in the same folder only**.
+- The Work grid shows the teaser plus the images used in media blocks. A file that sits in the folder but isn't used in any block stays out of the grid. You can't point at another article's images or an outside URL (except Vimeo).
 - Put each media block **on its own line**, with blank lines around it.
 
 ## 5. The hero (the first media block)

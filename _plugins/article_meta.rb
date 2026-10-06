@@ -20,12 +20,6 @@ Jekyll::Hooks.register :site, :post_read, priority: :high do |site|
     images = media.grep(ArticleBody::IMAGE_EXT)
                   .sort_by { |f| [f.scan(/\d+/).map(&:to_i), ArticleBody.norm(f)] }
     doc.data['images'] = images
-    # Work grid cells use the small thumbs made by scripts/make-thumbs.sh (thumbs/<stem>.webp)
-    # when present, so the grid loads and animates instantly; the full image is the fallback.
-    doc.data['grid_images'] = images.map do |f|
-      thumb = "thumbs/#{File.basename(f, '.*')}.webp"
-      File.exist?(File.join(dir, thumb)) ? thumb : f
-    end
 
     title = doc.data['title'].to_s.strip
     if title.empty?
@@ -63,6 +57,20 @@ Jekyll::Hooks.register :site, :post_read, priority: :high do |site|
       resolved = images.first
     end
     doc.data['teaser'] = resolved
+
+    # Work grid cells: the teaser plus every image the article actually uses in its media
+    # blocks, in order — never the whole folder, so a photo the author left out of the article
+    # stays out of the grid. Cells use the small thumbs made by scripts/make-thumbs.sh
+    # (thumbs/<stem>.webp) when present; the full image is the fallback.
+    used = doc.content.scan(ArticleBody::BLOCK).flatten.flat_map do |markup|
+      names = markup.sub(/\Aimg\s+/i, '').split('|', 2).first.to_s.split(',').map(&:strip)
+      names.filter_map { |n| ArticleBody.resolve_file(n, images) }
+    end
+    grid = ([resolved] + used).compact.uniq
+    doc.data['grid_images'] = grid.map do |f|
+      thumb = "thumbs/#{File.basename(f, '.*')}.webp"
+      File.exist?(File.join(dir, thumb)) ? thumb : f
+    end
 
     %w[landing hidden].each do |key|
       value = doc.data[key]
