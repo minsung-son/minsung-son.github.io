@@ -11,7 +11,7 @@ co_author:
 supervised_by: 
 programme: 
 typology: Residential
-completed_as: 
+completed_as: Client-side design consultancy
 completed_at: 
 delivered_at: 
 client: Private client
