@@ -45,8 +45,7 @@ landing: true
 hidden: false"
 
 case "$CAT" in
-  architecture) fields="author: 
-co_author: 
+  architecture) fields="co_author: 
 supervised_by: 
 programme: 
 typology: 
@@ -58,8 +57,7 @@ area:
 location: 
 awards: 
 collaborators: " ;;
-  photography) fields="author: 
-co_author: 
+  photography) fields="co_author: 
 publication: 
 location: 
 client: 
@@ -67,8 +65,7 @@ delivered_at:
 medium: 
 awards: 
 collaborators: " ;;
-  films) fields="author: 
-co_author: 
+  films) fields="co_author: 
 publication: 
 duration: 
 type: 
@@ -79,16 +76,14 @@ completed_at:
 delivered_at: 
 awards: 
 collaborators: " ;;
-  writing) fields="author: 
-co_author: 
+  writing) fields="co_author: 
 publication: 
 type: 
 client: 
 topic: 
 awards: 
 collaborators: " ;;
-  other) fields="author: 
-co_author: 
+  other) fields="co_author: 
 publication: 
 programme: 
 supervised_by: 
