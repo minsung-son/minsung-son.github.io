@@ -356,9 +356,6 @@
   .mt-\[5\.5rem\] {
     margin-top: 5.5rem;
   }
-  .mt-\[var\(--header-h\,3\.1875rem\)\] {
-    margin-top: var(--header-h,3.1875rem);
-  }
   .mr-22 {
     margin-right: calc(var(--spacing) * 22);
   }
@@ -478,9 +475,6 @@
   }
   .min-h-\[80cqw\] {
     min-height: 80cqw;
-  }
-  .min-h-\[calc\(100\%-var\(--header-h\,3\.1875rem\)\)\] {
-    min-height: calc(100% - var(--header-h,3.1875rem));
   }
   .min-h-full {
     min-height: 100%;
@@ -645,12 +639,6 @@
   }
   .overflow-hidden {
     overflow: hidden;
-  }
-  .overflow-x-hidden {
-    overflow-x: hidden;
-  }
-  .overflow-y-auto {
-    overflow-y: auto;
   }
   .rounded-md {
     border-radius: var(--radius-md);
@@ -1164,6 +1152,9 @@
     .max-md\:col-span-2 {
       grid-column: span 2 / span 2;
     }
+    .max-md\:mt-0 {
+      margin-top: 0px;
+    }
     .max-md\:mt-12 {
       margin-top: calc(var(--spacing) * 12);
     }
@@ -1202,6 +1193,9 @@
     }
     .max-md\:max-h-hero {
       max-height: var(--spacing-hero);
+    }
+    .max-md\:min-h-\[calc\(100svh-var\(--header-h\,3\.1875rem\)\)\] {
+      min-height: calc(100svh - var(--header-h,3.1875rem));
     }
     .max-md\:w-auto {
       width: auto;
@@ -1580,6 +1574,12 @@ html[data-vt-enter]::view-transition-new(root) {
 html[data-vt-enter] .vt-panel, html[data-vt-exit] .vt-panel {
   view-transition-name: content-area;
   contain: layout;
+}
+@media (width < 48rem) {
+  html[data-vt-enter] .vt-panel {
+    height: 100svh;
+    overflow: clip;
+  }
 }
 #l3-header {
   view-transition-name: l3-header;

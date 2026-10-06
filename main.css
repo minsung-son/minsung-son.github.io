@@ -112,6 +112,16 @@ html[data-vt-exit] .vt-panel {
   view-transition-name: content-area;
   contain: layout;
 }
+/* Mobile: the article panel is in flow and the document scrolls, so it can be page-tall. During
+   the entry slide clip it to one viewport — the page is at the top then, so the snapshot is
+   exactly the first screen and the 100% slide is one viewport. (The exit is frozen by script in
+   article.html.) */
+@media (width < 48rem) {
+  html[data-vt-enter] .vt-panel {
+    height: 100svh;
+    overflow: clip;
+  }
+}
 
 /* LEVEL3 navbar: own snapshot group, fades in over the origin during the entry slide */
 #l3-header {
