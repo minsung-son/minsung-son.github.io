@@ -1584,7 +1584,7 @@ html[data-vt-enter] .vt-panel, html[data-vt-exit] .vt-panel {
 #l3-header {
   view-transition-name: l3-header;
 }
-html[data-vt-enter] #l3-header {
+html[data-vt-enter] #l3-header, html[data-vt-exit] #l3-header {
   z-index: auto;
 }
 @keyframes vt-navbar-in {

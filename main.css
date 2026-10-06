@@ -117,12 +117,14 @@ html[data-vt-exit] .vt-panel {
 #l3-header {
   view-transition-name: l3-header;
 }
-/* Entry slide: data-vt-enter outlives the pseudo-tree by one frame (the finished-promise
-   reaction runs after that frame's paint). Keep the live navbar under the sheet meanwhile,
-   matching the snapshot stacking (group(content-area) z-index: 1 over l3-header), so its
-   10.5rem gradient never paints over the sheet. The z-40 toggle in article.html takes effect
-   again as soon as the flag is cleared. */
-html[data-vt-enter] #l3-header {
+/* While either transition flag is on, keep the live navbar under the sheet, matching the
+   snapshot stacking (group(content-area) z-index: 1 over l3-header), so its 10.5rem gradient
+   never paints over the sheet's title and ×. Entry: data-vt-enter outlives the pseudo-tree by
+   one frame (the finished-promise reaction runs after that frame's paint). Exit: data-vt-exit
+   is set in pageswap, and Chrome can present one more live frame before the old state is
+   captured. The z-40 toggle in article.html takes effect again once the flags are cleared. */
+html[data-vt-enter] #l3-header,
+html[data-vt-exit] #l3-header {
   z-index: auto;
 }
 @keyframes vt-navbar-in {
