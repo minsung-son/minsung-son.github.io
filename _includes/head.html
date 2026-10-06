@@ -29,7 +29,10 @@
     var html = document.documentElement;
     if (html.dataset.level !== '3') return;
     var nav = performance.getEntriesByType('navigation')[0];
-    if (nav && nav.type === 'navigate') html.setAttribute('data-vt-enter', '');
+    // Only raise the entry flag where pagereveal exists to lower it again; otherwise the
+    // navbar gradient (header-nav.html) would stay painted over the sheet's title and ×
+    var hasReveal = ('onpagereveal' in window) || (typeof PageRevealEvent !== 'undefined');
+    if (hasReveal && nav && nav.type === 'navigate') html.setAttribute('data-vt-enter', '');
     window.addEventListener('pagereveal', function (e) {
       html.removeAttribute('data-vt-exit'); // stale after a bfcache round trip
       function clear() { html.removeAttribute('data-vt-enter'); }

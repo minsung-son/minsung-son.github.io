@@ -500,17 +500,19 @@
   gridInitialized = true;
   restoringState = false;
 
-  // Restore scroll position on return from LEVEL3
+  // Restore scroll position on a genuine LEVEL3 round trip; stale keys from any other
+  // departure (e.g. Work → About → Work) are dropped so a fresh visit starts at the top —
+  // otherwise the grid opens scrolled and the lazy-image fade chain stalls above the viewport
   (function () {
     var id  = sessionStorage.getItem('scroll-id');
     var top = sessionStorage.getItem('scroll-top');
-    if (!id || top === null) return;
-    var el = document.getElementById(id);
-    if (!el) return;
     sessionStorage.removeItem('scroll-id');
     sessionStorage.removeItem('scroll-top');
+    if (!rtState || !id || top === null) return;
+    var el = document.getElementById(id);
+    if (!el) return;
     var t = parseInt(top, 10);
-    el.scrollTop = t;                            // desktop scroller
+    el.scrollTop = t;                              // desktop scroller
     if (!el.scrollTop && t) window.scrollTo(0, t); // mobile: the document scrolls
   })();
 
