@@ -6,7 +6,7 @@ teaser: 1.jpg
 hero_layout: 2
 landing: false
 hidden: false
-author: Minsung Son
+author: 
 co_author:
 publication:
 duration: 2 min

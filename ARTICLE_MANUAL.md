@@ -66,7 +66,7 @@ location: Cambridge, UK
 ### Metadata fields (the table at the top of the article)
 Any of these you fill in appear as a labelled row; **empty fields are simply not shown**, so leaving lines blank is completely safe (the templates list them all as a reminder):
 
-`author`, `co_author`, `supervised_by`, `publication`, `programme`, `typology`, `completed_as`, `completed_at`, `delivered_at`, `client`, `area`, `location`, `medium`, `type`, `topic`, `duration`, `awards`, `collaborators`
+`co_author`, `supervised_by`, `publication`, `programme`, `typology`, `completed_as`, `completed_at`, `delivered_at`, `client`, `area`, `location`, `medium`, `type`, `topic`, `duration`, `awards`, `collaborators`
 
 Values can contain **links** in Markdown form. Put them in **quotes**:
   `completed_at: "[University of Cambridge](https://arct.cam.ac.uk)"`
