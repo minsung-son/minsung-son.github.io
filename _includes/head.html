@@ -4,9 +4,13 @@
 <link rel="preconnect" href="https://use.typekit.net" crossorigin>
 <!-- Latin fonts: plain CSS kit, loads immediately -->
 <link rel="stylesheet" href="https://use.typekit.net/iqu5sby.css">
-<!-- CJK font (sandoll-myeongjoneo1): JS kit, required for dynamic subsetting -->
+<!-- CJK font (sandoll-myeongjoneo1): JS kit, required for dynamic subsetting. Loaded only
+     AFTER any cross-document view transition has finished: the kit inserts a stylesheet when it
+     arrives, and Safari rebuilds styles on that, which restarts a running transition from the
+     beginning (the article exit slide stuttered: down, snap back, down again). -->
 <script>
-  (function(d) {
+  function loadTypekit() {
+    (function(d) {
     var config = {
       kitId: 'drp7rse',
       scriptTimeout: 3000,
@@ -14,6 +18,19 @@
     },
     h=d.documentElement,t=setTimeout(function(){h.className=h.className.replace(/\bwf-loading\b/g,"")+" wf-inactive";},config.scriptTimeout),tk=d.createElement("script"),f=false,s=d.getElementsByTagName("script")[0],a;h.className+=" wf-loading";tk.src='https://use.typekit.net/'+config.kitId+'.js';tk.async=true;tk.onload=tk.onreadystatechange=function(){a=this.readyState;if(f||a&&a!="complete"&&a!="loaded")return;f=true;clearTimeout(t);try{Typekit.load(config)}catch(e){}};s.parentNode.insertBefore(tk,s)
   })(document);
+  }
+  (function () {
+    var done = false;
+    function go() { if (done) return; done = true; loadTypekit(); }
+    if ('onpagereveal' in window) {
+      window.addEventListener('pagereveal', function (e) {
+        if (e.viewTransition) e.viewTransition.finished.then(go, go); else go();
+      });
+      setTimeout(go, 1500); // safety net: fonts never wait on a transition that never settles
+    } else {
+      go();
+    }
+  })();
 </script>
 <link rel="stylesheet" href="{{ "/tailwind.css" | relative_url }}">
 <!-- Hold the first paint until the whole page is parsed and its inline scripts have run
