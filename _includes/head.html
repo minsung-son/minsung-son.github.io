@@ -72,6 +72,9 @@
       function clear() { html.removeAttribute('data-vt-enter'); }
       if (e.viewTransition) e.viewTransition.finished.then(clear, clear);
       else clear();
+      // Safety net: the flag also clips the mobile article panel to one viewport (main.css), so
+      // it must never outlive a transition that stalls (e.g. a background tab never finishing it)
+      setTimeout(clear, 1500);
     });
     window.addEventListener('pageswap', function (e) {
       // Drop the entry flag before bfcache snapshots this page, or a later return replays it
