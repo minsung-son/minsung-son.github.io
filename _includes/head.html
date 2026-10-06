@@ -16,6 +16,11 @@
   })(document);
 </script>
 <link rel="stylesheet" href="{{ "/tailwind.css" | relative_url }}">
+<!-- Hold the first paint until the whole page is parsed and its inline scripts have run
+     (#page-end is the last element in every layout). Cross-document view transitions start at
+     the first paint: without this, the slide began over a half-built page and the content
+     popped in mid-slide. Supported in Chrome 124+ and Safari 18.2+; ignored elsewhere. -->
+<link rel="expect" href="#page-end" blocking="render">
 <!-- Cross-document view transitions (LEVEL1/2 ↔ LEVEL3 slide, main.css) -->
 <style>@view-transition { navigation: auto; }</style>
 {% if page.layout == 'home' %}

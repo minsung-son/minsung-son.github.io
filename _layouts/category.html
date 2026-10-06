@@ -88,7 +88,7 @@
                 <!-- Ratio clamp in cqw of the cell — Safari can't resolve % heights against the
                      aspect-ratio cell: 5:4 (widest) = 80cqw, 2:3 (tallest) = 150cqw = full cell.
                      Cell is pointer-transparent; only the image itself is hoverable/clickable -->
-                <img src="{{ article.url | relative_url }}{{ img_file }}" alt="{{ article.title }}" loading="lazy"
+                <img src="{{ article.url | relative_url }}{{ img_file }}" alt="{{ article.title }}" loading="lazy" decoding="async"
                      class="w-full h-auto min-h-[80cqw] max-h-[150cqw] object-cover block pointer-events-auto">
               </a>
             {% endfor %}
@@ -706,5 +706,6 @@
 </script>
 
 {% include slide-transition.html %}
+<div id="page-end" hidden></div>
 </body>
 </html>
