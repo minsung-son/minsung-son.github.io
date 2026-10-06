@@ -57,6 +57,8 @@ Website design by Minsung Son
 
 Development by Hyun Jo Jang
 
+All photographs by Minsung Son unless credited
+
 Set in Sabon LT Pro and Grotesque MT
 
 All rights reserved.
