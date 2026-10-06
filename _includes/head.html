@@ -23,13 +23,14 @@
 <link rel="expect" href="#page-end" blocking="render">
 <!-- Cross-document view transitions (LEVEL1/2 ↔ LEVEL3 slide, main.css) -->
 <style>@view-transition { navigation: auto; }</style>
-{% if page.layout == 'home' %}
+{% unless page.layout == 'article' %}
 <script>
-  // Home → Work/About has no slide to play, so skip the root-only transition on the way out:
-  // left alone, its 250ms teardown lands as a hitch in the grid's fade-in. Decided here on the
-  // outgoing page — skipping in pageswap drops the inbound transition too. Home → article keeps
-  // its slide. (Never decide this on the incoming page: navigation.activation.from is unreliable
-  // on bfcache returns in Safari.)
+  // Leaving a non-article page for another non-article page (home/Work/About in any
+  // combination) has no slide to play, so skip the root-only transition on the way out: left
+  // alone, its 250ms teardown lands as a hitch in the destination's fade-in (grid thumbnails,
+  // About sections). Decided here on the outgoing page — skipping in pageswap drops the inbound
+  // transition too. Any navigation INTO an article keeps its slide. (Never decide this on the
+  // incoming page: navigation.activation.from is unreliable on bfcache returns in Safari.)
   window.addEventListener('pageswap', function (e) {
     var to = e.activation && e.activation.entry;
     if (!e.viewTransition || !to) return;
@@ -38,7 +39,7 @@
     } catch (err) {}
   });
 </script>
-{% endif %}
+{% endunless %}
 <script>
   // LEVEL3 slide flags: only fresh navigations get the entry/exit view transition (main.css)
   (function () {
