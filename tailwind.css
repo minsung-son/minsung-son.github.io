@@ -34,6 +34,7 @@
     --color-ink: #000000;
     --color-mist: #aeaba3;
     --text-nav: 0.9375rem;
+    --text-nav-mobile: 0.92rem;
     --spacing-article-col: 43.5rem;
     --spacing-hero: 34rem;
   }
@@ -869,6 +870,9 @@
   .text-nav {
     font-size: var(--text-nav);
   }
+  .text-nav-mobile {
+    font-size: var(--text-nav-mobile);
+  }
   .leading-\[1\.5\] {
     --tw-leading: 1.5;
     line-height: 1.5;
@@ -1275,6 +1279,9 @@
     }
     .max-md\:text-\[0\.85rem\] {
       font-size: 0.85rem;
+    }
+    .max-md\:text-nav-mobile {
+      font-size: var(--text-nav-mobile);
     }
     .max-md\:leading-relaxed {
       --tw-leading: var(--leading-relaxed);

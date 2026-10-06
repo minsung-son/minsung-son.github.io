@@ -18,6 +18,10 @@
   /* Desktop navbar text size; the LEVEL2 list view derives its base from this */
   --text-nav: 0.9375rem;
 
+  /* Mobile navbar text size (Row 1 + Row 2): matches the mobile list rows,
+     0.8rem base × 1.15 (see --list-base-mobile / --list-row-text-mobile in category.html) */
+  --text-nav-mobile: 0.92rem;
+
   /* LEVEL3 geometry: central column width (w-article-col, …) and hero max height (max-h-hero) */
   --spacing-article-col: 43.5rem;
   --spacing-hero: 34rem;

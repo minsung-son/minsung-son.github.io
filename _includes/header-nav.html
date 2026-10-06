@@ -57,15 +57,15 @@
 
 <nav class="relative flex items-start h-[1.5625rem] max-md:h-auto max-md:items-center max-md:px-5 max-md:pt-4 max-md:pb-2.5 max-md:border-b {% if include.level == 2 %}max-md:bg-white max-md:transition-colors max-md:duration-200 [.teaser-active_&]:max-md:bg-transparent {% endif %}{% if include.article %}max-md:border-transparent{% else %}border-[#f0efed] max-md:transition-colors max-md:duration-200 [.teaser-active_&]:max-md:border-black/40 [.teaser-dark_&]:max-md:!border-white/40{% endif %}">
   {% comment %} title w-24 + Work ml-22 matches the LEVEL2 aside w-8 + mr-22 + grid pl-16, so Work's left edge lines up with the grid {% endcomment %}
-  <a href="{{ '/' | relative_url }}" class="font-sabon italic text-nav max-md:text-base text-ink transition duration-200 hover:text-mist [.teaser-dark_&]:!text-white md:w-24 md:shrink-0 max-md:whitespace-nowrap max-md:shrink-0">{{ site.title }}</a>
+  <a href="{{ '/' | relative_url }}" class="font-sabon italic text-nav max-md:text-nav-mobile text-ink transition duration-200 hover:text-mist [.teaser-dark_&]:!text-white md:w-24 md:shrink-0 max-md:whitespace-nowrap max-md:shrink-0">{{ site.title }}</a>
 
   {% comment %} Mobile: Work/About right-cluster on Row 1; the current section is greyed out (mist) — Work on LEVEL2/3, About on the About page, neither on LEVEL1. Desktop colours unchanged. {% endcomment %}
   {% if include.level == 2 %}
-  <button id="nav-work-link" type="button" onclick="setCategory('all')" class="font-sabon italic text-nav max-md:text-base text-mist transition duration-200 [.teaser-dark_&]:!text-white bg-transparent border-0 p-0 cursor-pointer ml-22 max-md:ml-auto">Work</button>
+  <button id="nav-work-link" type="button" onclick="setCategory('all')" class="font-sabon italic text-nav max-md:text-nav-mobile text-mist transition duration-200 [.teaser-dark_&]:!text-white bg-transparent border-0 p-0 cursor-pointer ml-22 max-md:ml-auto">Work</button>
   {% else %}
-  <a id="nav-work-link" href="{{ '/category/all/' | relative_url }}" class="font-sabon italic text-nav max-md:text-base text-ink transition hover:text-mist ml-22 max-md:ml-auto{% if include.article %} max-md:text-mist{% endif %}">Work</a>
+  <a id="nav-work-link" href="{{ '/category/all/' | relative_url }}" class="font-sabon italic text-nav max-md:text-nav-mobile text-ink transition hover:text-mist ml-22 max-md:ml-auto{% if include.article %} max-md:text-mist{% endif %}">Work</a>
   {% endif %}
-  <a id="nav-about-link" href="{{ '/about/' | relative_url }}" class="js-about-link font-sabon italic text-nav max-md:text-base transition duration-200 [.teaser-dark_&]:!text-white ml-[1rem] max-md:ml-4 {% if include.active_about %}text-mist{% else %}text-ink hover:text-mist{% endif %}">About</a>
+  <a id="nav-about-link" href="{{ '/about/' | relative_url }}" class="js-about-link font-sabon italic text-nav max-md:text-nav-mobile transition duration-200 [.teaser-dark_&]:!text-white ml-[1rem] max-md:ml-4 {% if include.active_about %}text-mist{% else %}text-ink hover:text-mist{% endif %}">About</a>
 
   {% if include.level == 1 %}
   <span class="cursor-enter transition hover:text-mist text-nav text-ink flex items-baseline gap-[1.25rem] ml-auto max-md:hidden" onclick="goToCurrentArticle()">

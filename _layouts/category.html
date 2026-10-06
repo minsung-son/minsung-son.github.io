@@ -13,7 +13,7 @@
          an opaque background. -->
     <div class="hidden max-md:block absolute top-full inset-x-0 before:content-[''] before:absolute before:inset-x-0 before:top-0 before:h-24 before:-z-10 before:pointer-events-none before:bg-[linear-gradient(to_bottom,rgba(255,255,255,1)_0%,rgba(255,255,255,0)_100%)]">
       <div id="mobile-cat-row2" onclick="toggleMobileCatMenu()" class="relative z-30 flex items-center justify-between px-5 py-3 pointer-events-auto cursor-pointer">
-        <span id="mobile-cat-label" class="font-sabon italic text-base text-ink [.teaser-dark_&]:!text-white truncate [transition:opacity_500ms_ease,color_200ms_ease]"></span>
+        <span id="mobile-cat-label" class="font-sabon italic text-nav-mobile text-ink [.teaser-dark_&]:!text-white truncate [transition:opacity_500ms_ease,color_200ms_ease]"></span>
         <button id="mobile-cat-toggle" type="button" aria-label="Categories" aria-expanded="false"
                 class="shrink-0 text-ink hover:text-mist [.teaser-dark_&]:!text-white transition-colors duration-200 bg-transparent border-0 p-0 cursor-pointer pointer-events-auto">
           {% include icon-arrow.html class="h-[0.75rem] w-auto transition-transform duration-500" %}
@@ -27,7 +27,7 @@
         {% assign menu_cats = "all,architecture,photography,films,writing,other" | split: "," %}
         {% for cat in menu_cats %}
         {% if cat == "all" %}{% assign cat_label = "All work" %}{% else %}{% assign cat_label = cat | capitalize %}{% endif %}
-        <button type="button" data-cat="{{ cat }}" onclick="setCategory('{{ cat }}'); toggleMobileCatMenu();" class="relative font-sabon italic text-base text-ink hover:text-mist [.teaser-dark_&]:!text-white transition-colors duration-200 text-left bg-transparent border-0 p-0 cursor-pointer pointer-events-auto">{{ cat_label }}</button>
+        <button type="button" data-cat="{{ cat }}" onclick="setCategory('{{ cat }}'); toggleMobileCatMenu();" class="relative font-sabon italic text-nav-mobile text-ink hover:text-mist [.teaser-dark_&]:!text-white transition-colors duration-200 text-left bg-transparent border-0 p-0 cursor-pointer pointer-events-auto">{{ cat_label }}</button>
         {% endfor %}
       </div>
     </div>

@@ -81,7 +81,7 @@
        header's view-transition-name makes it a stacking context that would trap this z-40. -->
   <div class="hidden max-md:block">
     <div id="mobile-scroll-row2" class="hidden fixed top-0 left-0 right-0 z-40 opacity-0 transition-opacity duration-200 items-center justify-between gap-4 px-5 pt-4 pb-3 before:content-[''] before:absolute before:inset-x-0 before:top-0 before:h-24 before:-z-10 before:pointer-events-none before:bg-[linear-gradient(to_bottom,rgba(255,255,255,1)_0%,rgba(255,255,255,0)_100%)] pointer-events-none">
-      <span class="font-sabon italic text-base text-ink truncate min-w-0">{{ page.title }}</span>
+      <span class="font-sabon italic text-nav-mobile text-ink truncate min-w-0">{{ page.title }}</span>
       <a id="mobile-scroll-close" href="{{ category_url }}" class="shrink-0 text-ink hover:opacity-70 pointer-events-auto">
         {% include icon-close.html px=12 %}
       </a>
