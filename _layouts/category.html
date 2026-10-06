@@ -3,7 +3,7 @@
 <head>
   {% include head.html %}
 </head>
-<body class="h-svh flex flex-col overflow-hidden bg-white">
+<body class="md:h-svh flex flex-col md:overflow-hidden bg-white">
 
   {% capture header_row2 %}
     <!-- Row 2 (mobile only): current category + arrow; the whole row toggles the dropdown
@@ -34,8 +34,10 @@
   {% endcapture %}
   {% include header-nav.html level=2 row2=header_row2 %}
 
-  <!-- Full-window at md; children's top paddings carry the extra header height -->
-  <div class="flex-1 relative md:absolute md:inset-0 overflow-hidden flex px-[2.5rem] max-md:px-0" id="content-area">
+  <!-- Full-window at md; children's top paddings carry the extra header height.
+       Mobile: no inner scroller — the document itself scrolls (so the iOS status-bar tap
+       scrolls to top and the page runs under Safari's bottom bar); the header is sticky -->
+  <div class="flex-1 relative md:absolute md:inset-0 md:overflow-hidden flex px-[2.5rem] max-md:px-0" id="content-area">
 
     <aside class="w-8 mr-22 shrink-0 pt-[10.3125rem] flex flex-col gap-[0.4rem] max-md:hidden">
       {% assign nav_categories = "architecture,photography,films,writing,other" | split: "," %}
@@ -54,7 +56,7 @@
       {% endfor %}
     </aside>
 
-    <main class="relative flex-1 min-w-0 overflow-y-auto scrollbar-hide z-[1]" id="main-content">
+    <main class="relative flex-1 min-w-0 md:overflow-y-auto scrollbar-hide z-[1]" id="main-content">
 
       {% assign all_articles = site.articles | sort: "date" | reverse %}
 
@@ -73,7 +75,7 @@
           }
         }
       </style>
-      <div id="view-grid" class="max-md:px-0.5">
+      <div id="view-grid" class="max-md:px-0.5 max-md:pb-24">
         <div id="grid-container" class="grid grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 gap-x-0.5 md:pl-16 pt-[10.3125rem] max-md:pt-[7rem] pb-16 max-md:pb-32">
           {% for article in all_articles %}
             {% unless article.hidden %}
@@ -150,7 +152,7 @@
 
     </main>
 
-    <footer class="absolute bottom-[3.125rem] max-md:bottom-[1rem] left-0 right-0 flex items-center justify-center z-30 pointer-events-none">
+    <footer class="absolute max-md:fixed bottom-[3.125rem] max-md:bottom-[1rem] left-0 right-0 flex items-center justify-center z-30 pointer-events-none">
       <div class="flex items-center gap-5 bg-[#f5f5f5]/95 rounded-md py-[0.6875rem] px-[1.1875rem] shadow-[0_0.0625rem_0.375rem_rgba(0,0,0,0.08)] pointer-events-auto">
         <!-- Toggle buttons keep the pre-2026-07 ink (#57524f) pending a designer decision -->
         <button id="btn-grid" onclick="setView('grid')" class="text-[#57524f] [&.is-active]:text-[#d7d7d7] hover:text-[#d7d7d7] transition cursor-pointer flex items-center justify-center">
@@ -372,7 +374,10 @@
     var btnGrid = document.getElementById('btn-grid');
     var btnList = document.getElementById('btn-list');
 
-    if (currentView && currentView !== mode) document.getElementById('main-content').scrollTop = 0;
+    if (currentView && currentView !== mode) {
+      document.getElementById('main-content').scrollTop = 0; // desktop scroller
+      window.scrollTo(0, 0);                                    // mobile: the document scrolls
+    }
 
     if (mode === 'grid') {
       if (window.clearListHover) clearListHover();
@@ -504,7 +509,9 @@
     if (!el) return;
     sessionStorage.removeItem('scroll-id');
     sessionStorage.removeItem('scroll-top');
-    el.scrollTop = parseInt(top, 10);
+    var t = parseInt(top, 10);
+    el.scrollTop = t;                            // desktop scroller
+    if (!el.scrollTop && t) window.scrollTo(0, t); // mobile: the document scrolls
   })();
 
   // Hover previews (desktop only)

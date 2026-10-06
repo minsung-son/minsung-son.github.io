@@ -8,7 +8,7 @@
   - row2 — pre-captured mobile Row-2 markup, rendered after Row 1.
   - active_about, loading_bar — set by the About page.
 {% endcomment %}
-<header {% if include.article %}id="l3-header" {% endif %}class="relative flex-none md:absolute md:inset-x-0 md:top-0 pt-[2.1875rem] px-[2.5rem] pb-[0.6875rem] max-md:px-0 max-md:pt-0 max-md:pb-0 {% if include.article %}[[data-vt-enter]_&]:bg-white [[data-vt-exit]_&]:bg-white{% elsif include.level == 2 %}z-30{% else %}max-md:bg-white z-30 md:before:content-[''] md:before:absolute md:before:inset-0 md:before:-z-10 md:before:pointer-events-none md:before:bg-[linear-gradient(to_bottom,rgba(255,255,255,1)_0%,rgba(255,255,255,0)_100%)] md:before:transition-opacity md:before:duration-200 [.teaser-active_&]:md:before:opacity-0{% endif %}">
+<header {% if include.article %}id="l3-header" {% endif %}class="relative flex-none md:absolute md:inset-x-0 md:top-0 pt-[2.1875rem] px-[2.5rem] pb-[0.6875rem] max-md:px-0 max-md:pt-0 max-md:pb-0 {% if include.article %}[[data-vt-enter]_&]:bg-white [[data-vt-exit]_&]:bg-white{% elsif include.level == 2 %}z-30 max-md:sticky max-md:top-0{% else %}max-md:bg-white z-30 max-md:sticky max-md:top-0 md:before:content-[''] md:before:absolute md:before:inset-0 md:before:-z-10 md:before:pointer-events-none md:before:bg-[linear-gradient(to_bottom,rgba(255,255,255,1)_0%,rgba(255,255,255,0)_100%)] md:before:transition-opacity md:before:duration-200 [.teaser-active_&]:md:before:opacity-0{% endif %}">
 
 {% if include.level != 3 or include.loading_bar %}
 <!-- Loading bar: LEVEL1 always; LEVEL2/About only when the origin page flagged the navigation -->

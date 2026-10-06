@@ -248,6 +248,9 @@
   .top-\[calc\(50\%-0\.8rem\)\] {
     top: calc(50% - 0.8rem);
   }
+  .top-\[var\(--header-h\,3\.1875rem\)\] {
+    top: var(--header-h,3.1875rem);
+  }
   .top-full {
     top: 100%;
   }
@@ -1128,6 +1131,15 @@
     .max-md\:pointer-events-auto {
       pointer-events: auto;
     }
+    .max-md\:fixed {
+      position: fixed;
+    }
+    .max-md\:sticky {
+      position: sticky;
+    }
+    .max-md\:top-0 {
+      top: 0px;
+    }
     .max-md\:top-\[calc\(50\%\)\] {
       top: calc(50%);
     }
@@ -1212,6 +1224,9 @@
     .max-md\:self-start {
       align-self: flex-start;
     }
+    .max-md\:overflow-x-clip {
+      overflow-x: clip;
+    }
     .max-md\:border-b {
       border-bottom-style: var(--tw-border-style);
       border-bottom-width: 1px;
@@ -1263,6 +1278,9 @@
     }
     .max-md\:pb-10 {
       padding-bottom: calc(var(--spacing) * 10);
+    }
+    .max-md\:pb-24 {
+      padding-bottom: calc(var(--spacing) * 24);
     }
     .max-md\:pb-32 {
       padding-bottom: calc(var(--spacing) * 32);
@@ -1325,6 +1343,9 @@
     .md\:hidden {
       display: none;
     }
+    .md\:h-svh {
+      height: 100svh;
+    }
     .md\:max-h-article-col {
       max-height: var(--spacing-article-col);
     }
@@ -1345,6 +1366,15 @@
     }
     .md\:self-center {
       align-self: center;
+    }
+    .md\:overflow-hidden {
+      overflow: hidden;
+    }
+    .md\:overflow-x-hidden {
+      overflow-x: hidden;
+    }
+    .md\:overflow-y-auto {
+      overflow-y: auto;
     }
     .md\:object-left {
       object-position: left;

@@ -4,7 +4,7 @@
     var scrollEl = document.getElementById('post-feed') || document.getElementById('main-content');
     if (scrollEl) {
       sessionStorage.setItem('scroll-id',  scrollEl.id);
-      sessionStorage.setItem('scroll-top', String(scrollEl.scrollTop));
+      sessionStorage.setItem('scroll-top', String(scrollEl.scrollTop || window.scrollY));
     }
     if (window.saveLevel2State) window.saveLevel2State(); // category.html only
     // Play the list-hover teaser's 200ms fade-out first, so the slide starts from the clean list

@@ -3,17 +3,19 @@
 <head>
   {% include head.html %}
 </head>
-<body class="h-svh flex flex-col overflow-hidden bg-white">
+<body class="md:h-svh flex flex-col md:overflow-hidden bg-white">
 
   <!-- Static page, LEVEL2-like: overlay navbar over a full-screen scrolling content area.
        No .vt-panel and no data-level="3": arriving from LEVEL3 the article panel slides down
        over this page, and no entry/exit animation plays in any other direction. -->
   {% include header-nav.html level=3 active_about=true loading_bar=true %}
+  {% include header-measure.html %}
 
-  <div class="flex-1 md:absolute md:inset-0 overflow-y-auto overflow-x-hidden scrollbar-hide bg-white px-[2.5rem] pb-[1.875rem] max-md:px-5" id="content-area">
+  <div class="flex-1 md:absolute md:inset-0 md:overflow-y-auto md:overflow-x-hidden max-md:overflow-x-clip scrollbar-hide bg-white px-[2.5rem] pb-[1.875rem] max-md:px-5" id="content-area">
 
-    <!-- Mobile: content fades out as it scrolls under the navbar -->
-    <div class="md:hidden sticky top-0 z-10 h-16 -mb-16 -mx-6 bg-[linear-gradient(to_bottom,rgba(255,255,255,1)_0%,rgba(255,255,255,0)_100%)] pointer-events-none"></div>
+    <!-- Mobile: content fades out as it scrolls under the (sticky) navbar; the document is
+         the scroller, so the fade pins just below the header (--header-h from header-measure) -->
+    <div class="md:hidden sticky top-[var(--header-h,3.1875rem)] z-10 h-16 -mb-16 -mx-6 bg-[linear-gradient(to_bottom,rgba(255,255,255,1)_0%,rgba(255,255,255,0)_100%)] pointer-events-none"></div>
 
     <!-- Section rows (label + text) built by JS from #content-source: fixed-width group centred
          horizontally; when the window shrinks, side space collapses first, then the text column -->
