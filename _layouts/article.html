@@ -446,9 +446,9 @@
             clone.classList.add('font-sabon', 'text-base', 'md:text-[1.125rem]', 'italic', 'leading-tight', 'md:w-[23.8rem]', 'max-w-full', 'md:ml-[-3.25rem]', 'mb-[-2rem]', 'max-md:mb-[-1.75rem]');
           } else if (clone.tagName === 'P') {
             // Body text: sans-serif at the About page's body size. Desktop paragraphs keep a
-            // 34rem measure (about 80 characters a line) against the column's left edge; media
-            // still spans the full 43.5rem column. Mobile paragraphs fill the column.
-            clone.classList.add('font-grotesque', 'text-[0.9rem]', 'max-md:text-[0.9rem]', 'leading-[1.8]', 'md:w-[34rem]', 'pl-[0rem]', 'pr-[0rem]', 'max-md:pl-0', 'max-md:pr-0');
+            // 34rem measure (about 80 characters a line), centred in the column like the media
+            // and left-aligned (ragged right) within it. Mobile paragraphs fill the column.
+            clone.classList.add('font-grotesque', 'text-[0.9rem]', 'max-md:text-[0.9rem]', 'leading-[1.8]', 'md:w-[34rem]', 'md:self-center', 'pl-[0rem]', 'pr-[0rem]', 'max-md:pl-0', 'max-md:pr-0');
             // Consecutive paragraphs sit 1.25rem apart (gap 3.5 - 2.25)
             if (column.lastElementChild && column.lastElementChild.tagName === 'P') {
               clone.classList.add('mt-[-2.25rem]', 'max-md:mt-[-1.25rem]');
