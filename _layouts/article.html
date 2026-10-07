@@ -42,7 +42,8 @@
          hairline and the About page's 4rem fade on that face. The face reaches 2px above the
          viewport top so no image row can peek over it at a fractional scroll position (a
          relative offset, not a negative margin: that would collapse through the zero-height
-         rail and push the title 2px down). -->
+         rail and push the title 2px down). The fade below takes the same -2px so it starts
+         right under the hairline. -->
     <div class="hidden max-md:block sticky top-0 z-30 h-0 -mx-edge">
       <div class="relative -top-0.5 bg-white pt-0.5">
         <div id="mobile-scroll-row2" class="flex items-center justify-between gap-4 px-edge pt-edge pb-3 border-b border-[#f0efed] opacity-0 pointer-events-none transition-opacity duration-200 [.is-scrolled_&]:opacity-100 [.is-scrolled_&]:pointer-events-auto">
@@ -52,7 +53,7 @@
           </a>
         </div>
       </div>
-      <div aria-hidden="true" class="h-16 pointer-events-none bg-[linear-gradient(to_bottom,rgba(255,255,255,1)_0%,rgba(255,255,255,0)_100%)] opacity-0 transition-opacity duration-200 [.is-scrolled_&]:opacity-100"></div>
+      <div aria-hidden="true" class="relative -top-0.5 h-16 pointer-events-none bg-[linear-gradient(to_bottom,rgba(255,255,255,1)_0%,rgba(255,255,255,0)_100%)] opacity-0 transition-opacity duration-200 [.is-scrolled_&]:opacity-100"></div>
     </div>
 
     <!-- Mobile only: article title/subtitle + close (X); lines 1.87rem apart (10% over 1.7rem).
