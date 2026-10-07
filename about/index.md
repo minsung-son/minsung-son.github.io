@@ -21,9 +21,9 @@ Kengo Kuma & Associates, Tokyo
 
 ## Education
 
-Columbia University GSAPP, M.Arch candidate
+Columbia University GSAPP, M.Arch candidate, 2026–
 
-University of Cambridge, B.A.
+University of Cambridge, B.A., 2020–2025
 
 ## Awards
 
