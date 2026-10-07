@@ -14,11 +14,13 @@
        The scroller keeps normal pointer events — pointer-events:none on a scroll container
        kills Safari's wheel/touch scrolling even over re-enabled children. Navbar clickability
        through the transparent strip comes from the z-40 toggle in the hover-zone script below.
-       Mobile: relative z-[1] lifts the panel above the sticky navbar, so scrolling slides the sheet
-       (top border and shadow with it) up over the navbar, as on desktop. -mt-4 pt-4 reaches the
-       panel 1rem above the sheet so its upward shadow lies inside the panel: the entry/exit
-       snapshot clips at the panel's box, and the shadow must slide with the sheet. -->
-  <div class="vt-panel max-md:relative max-md:z-[1] max-md:-mt-4 max-md:pt-4 md:absolute md:inset-0 md:overflow-y-auto md:overflow-x-hidden max-md:overflow-x-clip scrollbar-hide" id="content-area">
+       Mobile: relative (no z-index) paints the panel after the sticky navbar, so scrolling slides
+       the sheet (top border and shadow with it) up over the navbar, as on desktop; without a
+       z-index it makes no stacking context, so the title block (z-40) and the fixed title band
+       (z-30) layer against each other. -mt-4 pt-4 reaches the panel 1rem above the sheet so its
+       upward shadow lies inside the panel: the entry/exit snapshot clips at the panel's box,
+       and the shadow must slide with the sheet. -->
+  <div class="vt-panel max-md:relative max-md:-mt-4 max-md:pt-4 md:absolute md:inset-0 md:overflow-y-auto md:overflow-x-hidden max-md:overflow-x-clip scrollbar-hide" id="content-area">
   <div class="max-md:min-h-[calc(100svh-var(--header-h,3.1875rem))] max-md:mt-0 md:min-h-[calc(100%-4.4375rem)] md:mt-[4.4375rem] bg-white border-t border-[#f0efed] shadow-[0_-0.25rem_0.75rem_rgba(0,0,0,0.04)] transition-transform duration-300 ease-out pt-[1.5rem] px-[2.5rem] pb-[1.875rem] max-md:px-edge max-md:pt-0" id="article-sheet">
 
     <!-- × close (desktop): sticky zero-height rail — rides the sheet's top edge until it
@@ -33,27 +35,6 @@
          invisible until the in-sheet title + subtitle scroll out of view -->
     <div class="sticky top-[2.1875rem] z-50 h-0 max-md:hidden">
       <span id="nav-article-title" class="absolute top-0 left-0 font-sabon italic text-[0.9375rem] text-ink opacity-0 pointer-events-none transition-[opacity] duration-[250ms] ease-[ease]">{{ page.title }}</span>
-    </div>
-
-    <!-- Mobile title band: a zero-height sticky rail. Its white face rides the sheet's top edge
-         (white on white) and pins to the viewport top once the sheet has slid over the navbar,
-         hiding content that scrolls under it; the title block (z-40) passes over it. When the
-         title block has scrolled out, .is-scrolled on the sheet fades in the project title, ×,
-         hairline and the About page's 4rem fade on that face. The face reaches 2px above the
-         viewport top so no image row can peek over it at a fractional scroll position (a
-         relative offset, not a negative margin: that would collapse through the zero-height
-         rail and push the title 2px down). The fade below takes the same -2px so it starts
-         right under the hairline. -->
-    <div class="hidden max-md:block sticky top-0 z-30 h-0 -mx-edge">
-      <div class="relative -top-0.5 bg-white pt-0.5">
-        <div id="mobile-scroll-row2" class="flex items-center justify-between gap-4 px-edge pt-edge pb-3 border-b border-[#f0efed] opacity-0 pointer-events-none transition-opacity duration-200 [.is-scrolled_&]:opacity-100 [.is-scrolled_&]:pointer-events-auto">
-          <span class="font-sabon italic text-nav-mobile text-ink truncate min-w-0">{{ page.title }}</span>
-          <a id="mobile-scroll-close" href="{{ category_url }}" class="shrink-0 text-ink hover:opacity-70">
-            {% include icon-close.html px=12 %}
-          </a>
-        </div>
-      </div>
-      <div aria-hidden="true" class="relative -top-0.5 h-16 pointer-events-none bg-[linear-gradient(to_bottom,rgba(255,255,255,1)_0%,rgba(255,255,255,0)_100%)] opacity-0 transition-opacity duration-200 [.is-scrolled_&]:opacity-100"></div>
     </div>
 
     <!-- Mobile only: article title/subtitle + close (X); lines 1.87rem apart (10% over 1.7rem).
@@ -109,6 +90,24 @@
 
   </div><!-- /#article-sheet -->
   </div><!-- /#content-area -->
+
+  <!-- Mobile title band, fixed to the viewport top. (It was a sticky rail inside the sheet, which
+       jittered during iOS momentum scrolling; fixed elements stay put.) Transparent until the
+       sheet has slid over the navbar: .is-covered (the in-sheet title block's top has passed the
+       viewport top) turns on the white face, which hides content scrolling under it while the
+       title block (z-40) passes over it; .is-scrolled (the title block has left the viewport)
+       fades in the project title, ×, hairline and the About page's 4rem fade. -->
+  <div id="mobile-band" class="hidden max-md:block fixed inset-x-0 top-0 z-30 pointer-events-none">
+    <div class="[.is-covered_&]:bg-white [.is-covered_&]:pointer-events-auto">
+      <div id="mobile-scroll-row2" class="flex items-center justify-between gap-4 px-edge pt-edge pb-3 border-b border-[#f0efed] opacity-0 pointer-events-none transition-opacity duration-200 [.is-scrolled_&]:opacity-100 [.is-scrolled_&]:pointer-events-auto">
+        <span class="font-sabon italic text-nav-mobile text-ink truncate min-w-0">{{ page.title }}</span>
+        <a id="mobile-scroll-close" href="{{ category_url }}" class="shrink-0 text-ink hover:opacity-70">
+          {% include icon-close.html px=12 %}
+        </a>
+      </div>
+    </div>
+    <div aria-hidden="true" class="h-16 bg-[linear-gradient(to_bottom,rgba(255,255,255,1)_0%,rgba(255,255,255,0)_100%)] opacity-0 transition-opacity duration-200 [.is-scrolled_&]:opacity-100"></div>
+  </div>
 
   <!-- Enlarged view: full-screen project-wide slideshow over a 90% white veil; three equal
        click columns (prev / exit / next) with the slideshow hover cursors -->
@@ -559,19 +558,20 @@
       panel.scrollTop      = Math.max(0, y - top);
     });
 
-    // Mobile: once the in-sheet title block has scrolled out of the viewport, the sheet's pinned
-    // band fades in the project title, ×, hairline and fade (.is-scrolled on the sheet), and
-    // fades them out again when the title block comes back
+    // Mobile title band (#mobile-band): .is-covered once the in-sheet title block's top has passed
+    // the viewport top (the sheet now covers the navbar), .is-scrolled once the whole block has
+    // left the viewport. Thresholds 0 and 1 report both crossings. Runs at every width (the
+    // band is display:none on desktop): a page opened wide and then narrowed still gets it.
     (function () {
       var block = document.getElementById('mobile-title-block');
-      var sheet = document.getElementById('article-sheet');
-      if (!block || !sheet) return;
+      var band  = document.getElementById('mobile-band');
+      if (!block || !band) return;
 
-      // Runs at every width (the block is display:none on desktop, so the class is inert there):
-      // a page opened wide and then narrowed still gets its band
       var observer = new IntersectionObserver(function (entries) {
-        sheet.classList.toggle('is-scrolled', !entries[0].isIntersecting);
-      }, { threshold: 0 });
+        var e = entries[entries.length - 1];
+        band.classList.toggle('is-covered', e.boundingClientRect.top < 0);
+        band.classList.toggle('is-scrolled', !e.isIntersecting);
+      }, { threshold: [0, 1] });
 
       observer.observe(block);
     })();

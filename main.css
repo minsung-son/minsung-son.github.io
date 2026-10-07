@@ -155,6 +155,17 @@ html[data-vt-enter]::view-transition-new(l3-header) {
 ::view-transition-old(l3-header) {
   animation: vt-navbar-out 0.42s cubic-bezier(0.4, 0, 0.2, 1) both;
 }
+/* Mobile title band (fixed, outside the panel): on the way out it gets its own snapshot above
+   the sliding panel and fades out like the navbar, instead of vanishing with the old root */
+html[data-vt-exit] #mobile-band {
+  view-transition-name: l3-band;
+}
+::view-transition-group(l3-band) {
+  z-index: 2;
+}
+::view-transition-old(l3-band) {
+  animation: vt-navbar-out 0.42s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
 /* Instant traversals into LEVEL3 keep no navbar fade */
 html:not([data-vt-enter])::view-transition-new(l3-header) {
   animation: none;

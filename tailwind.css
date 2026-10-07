@@ -227,9 +227,6 @@
   .inset-x-0 {
     inset-inline: 0px;
   }
-  .-top-0\.5 {
-    top: calc(var(--spacing) * -0.5);
-  }
   .-top-px {
     top: -1px;
   }
@@ -743,9 +740,6 @@
   .py-\[calc\(0\.9em\*var\(--list-row-pad\)\)\] {
     padding-block: calc(0.9em * var(--list-row-pad));
   }
-  .pt-0\.5 {
-    padding-top: calc(var(--spacing) * 0.5);
-  }
   .pt-4 {
     padding-top: calc(var(--spacing) * 4);
   }
@@ -1172,9 +1166,6 @@
     .max-md\:bottom-\[1rem\] {
       bottom: 1rem;
     }
-    .max-md\:z-\[1\] {
-      z-index: 1;
-    }
     .max-md\:col-span-1 {
       grid-column: span 1 / span 1;
     }
@@ -1503,6 +1494,12 @@
   .\[\&\.is-active\]\:text-\[\#d7d7d7\].is-active {
     color: #d7d7d7;
   }
+  .is-covered .\[\.is-covered_\&\]\:pointer-events-auto {
+    pointer-events: auto;
+  }
+  .is-covered .\[\.is-covered_\&\]\:bg-white {
+    background-color: var(--color-white);
+  }
   .is-scrolled .\[\.is-scrolled_\&\]\:pointer-events-auto {
     pointer-events: auto;
   }
@@ -1657,6 +1654,15 @@ html[data-vt-enter]::view-transition-new(l3-header) {
   }
 }
 ::view-transition-old(l3-header) {
+  animation: vt-navbar-out 0.42s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+html[data-vt-exit] #mobile-band {
+  view-transition-name: l3-band;
+}
+::view-transition-group(l3-band) {
+  z-index: 2;
+}
+::view-transition-old(l3-band) {
   animation: vt-navbar-out 0.42s cubic-bezier(0.4, 0, 0.2, 1) both;
 }
 html:not([data-vt-enter])::view-transition-new(l3-header) {
