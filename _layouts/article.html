@@ -96,17 +96,17 @@
        sheet has slid over the navbar: .is-covered (the in-sheet title block's top has passed the
        viewport top) turns on the white face, which hides content scrolling under it while the
        title block (z-40) passes over it; .is-scrolled (the title block has left the viewport)
-       fades in the project title, ×, hairline and the About page's 4rem fade. -->
+       fades in the project title, ×, hairline and the About page's 4rem fade over 0.5s. -->
   <div id="mobile-band" class="hidden max-md:block fixed inset-x-0 top-0 z-30 pointer-events-none">
     <div class="[.is-covered_&]:bg-white [.is-covered_&]:pointer-events-auto">
-      <div id="mobile-scroll-row2" class="flex items-center justify-between gap-4 px-edge pt-edge pb-3 border-b border-[#f0efed] opacity-0 pointer-events-none transition-opacity duration-200 [.is-scrolled_&]:opacity-100 [.is-scrolled_&]:pointer-events-auto">
+      <div id="mobile-scroll-row2" class="flex items-center justify-between gap-4 px-edge pt-edge pb-3 border-b border-[#f0efed] opacity-0 pointer-events-none transition-opacity duration-500 ease-in-out [.is-scrolled_&]:opacity-100 [.is-scrolled_&]:pointer-events-auto">
         <span class="font-sabon italic text-nav-mobile text-ink truncate min-w-0">{{ page.title }}</span>
         <a id="mobile-scroll-close" href="{{ category_url }}" class="shrink-0 text-ink hover:opacity-70">
           {% include icon-close.html px=12 %}
         </a>
       </div>
     </div>
-    <div aria-hidden="true" class="h-16 bg-[linear-gradient(to_bottom,rgba(255,255,255,1)_0%,rgba(255,255,255,0)_100%)] opacity-0 transition-opacity duration-200 [.is-scrolled_&]:opacity-100"></div>
+    <div aria-hidden="true" class="h-16 bg-[linear-gradient(to_bottom,rgba(255,255,255,1)_0%,rgba(255,255,255,0)_100%)] opacity-0 transition-opacity duration-500 ease-in-out [.is-scrolled_&]:opacity-100"></div>
   </div>
 
   <!-- Enlarged view: full-screen project-wide slideshow over a 90% white veil; three equal
