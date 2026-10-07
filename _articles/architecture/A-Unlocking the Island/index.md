@@ -14,7 +14,7 @@ publication:
 programme: 
 supervised_by: Katherine Nolan, Alex Butterworth
 typology: Museum
-completed_as: Coursework
+completed_as: Design studio 2, University of Cambridge
 completed_at: 
 delivered_at: 
 client: 

@@ -11,7 +11,7 @@ co_author:
 supervised_by: Oscar Caballero
 programme: 
 typology: Object
-completed_as: Coursework
+completed_as: Core Studio 1, GSAPP
 completed_at: 
 delivered_at: 
 client: 

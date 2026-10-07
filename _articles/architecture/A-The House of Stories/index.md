@@ -15,7 +15,7 @@ publication:
 programme: 
 supervised_by: Richard Lavington, Sarah Hare
 typology: Library
-completed_as: Coursework
+completed_as: Design studio 3, University of Cambridge
 completed_at: 
 delivered_at: 
 client: 
