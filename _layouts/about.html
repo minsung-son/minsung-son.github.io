@@ -11,11 +11,11 @@
   {% include header-nav.html level=3 active_about=true loading_bar=true %}
   {% include header-measure.html %}
 
-  <div class="flex-1 md:absolute md:inset-0 md:overflow-y-auto md:overflow-x-hidden max-md:overflow-x-clip scrollbar-hide bg-white px-[2.5rem] pb-[1.875rem] max-md:px-5" id="content-area">
+  <div class="flex-1 md:absolute md:inset-0 md:overflow-y-auto md:overflow-x-hidden max-md:overflow-x-clip scrollbar-hide bg-white px-[2.5rem] pb-[1.875rem] max-md:px-edge" id="content-area">
 
     <!-- Mobile: content fades out as it scrolls under the (sticky) navbar; the document is
          the scroller, so the fade pins just below the header (--header-h from header-measure) -->
-    <div class="md:hidden sticky top-[var(--header-h,3.1875rem)] z-10 h-16 -mb-16 -mx-6 bg-[linear-gradient(to_bottom,rgba(255,255,255,1)_0%,rgba(255,255,255,0)_100%)] pointer-events-none"></div>
+    <div class="md:hidden sticky top-[var(--header-h,3.1875rem)] z-10 h-16 -mb-16 -mx-edge bg-[linear-gradient(to_bottom,rgba(255,255,255,1)_0%,rgba(255,255,255,0)_100%)] pointer-events-none"></div>
 
     <!-- Section rows (label + text) built by JS from #content-source: fixed-width group centred
          horizontally; when the window shrinks, side space collapses first, then the text column -->
@@ -52,9 +52,9 @@
         row.className = 'flex max-md:flex-col';
 
         var label = document.createElement('div');
-        // Mobile: inline section header styled like a LEVEL3 text heading; desktop keeps the
-        // fixed-width side label
-        label.className = 'w-[6.5625rem] shrink-0 font-sabon italic text-[0.8125rem] leading-[1.46] pb-13 text-ink max-md:w-full max-md:text-base max-md:leading-relaxed max-md:pb-3';
+        // Mobile: centred section header at the navbar size (the same as the site title), with
+        // 0.825rem below it; body 14.5px on a 24px line. Desktop keeps the fixed-width side label.
+        label.className = 'w-[6.5625rem] shrink-0 font-sabon italic text-[0.8125rem] leading-[1.46] pb-13 text-ink max-md:w-full max-md:text-nav-mobile max-md:leading-[1.5] max-md:text-center max-md:pb-[0.825rem]';
         label.textContent = node.textContent;
         row.appendChild(label);
 
@@ -65,7 +65,7 @@
         i++;
         while (i < children.length && children[i].tagName !== 'H2') {
           var p = document.createElement('div');
-          p.className = 'font-grotesque text-[0.8125rem] max-md:text-[0.85rem] text-ink leading-[1.5]';
+          p.className = 'font-grotesque text-[0.8125rem] max-md:text-[0.90625rem] text-ink leading-[1.5] max-md:leading-6';
           p.innerHTML = children[i].innerHTML;
           contentCell.appendChild(p);
           i++;

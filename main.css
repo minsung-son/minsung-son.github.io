@@ -22,6 +22,9 @@
      0.8rem base × 1.15 (see --list-base-mobile / --list-row-text-mobile in category.html) */
   --text-nav-mobile: 0.92rem;
 
+  /* Mobile screen-edge gutter (px-edge, -mx-edge): navbar, article sheet, list, About, home */
+  --spacing-edge: 1.875rem;
+
   /* LEVEL3 geometry: central column width (w-article-col, …) and hero max height (max-h-hero) */
   --spacing-article-col: 43.5rem;
   --spacing-hero: 34rem;

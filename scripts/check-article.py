@@ -14,7 +14,7 @@ IMAGE_EXT = (".jpg", ".jpeg", ".png", ".gif", ".webp", ".avif")
 VIDEO_EXT = (".mp4", ".mov", ".webm", ".m4v")
 CATEGORY_FIELD = {"architecture": "typology", "photography": "location",
                   "films": "type", "writing": "publication", "other": None}
-KNOWN_FIELDS = {"title", "subtitle", "date", "teaser", "hero_layout", "landing", "hidden",
+KNOWN_FIELDS = {"title", "subtitle", "standfirst", "date", "teaser", "hero_layout", "landing", "hidden",
                 "category", "author", "co_author", "supervised_by", "publication", "programme",
                 "typology", "completed_as", "completed_at", "delivered_at", "client", "area",
                 "location", "medium", "type", "topic", "duration", "awards", "collaborators"}
@@ -55,6 +55,8 @@ def check(folder):
     for f in files:
         p = os.path.join(folder, f)
         if os.path.isdir(p):
+            if f == "thumbs":  # grid thumbnails made by scripts/make-thumbs.sh
+                continue
             errors.append(f"nested folder '{f}' (media must sit directly next to index.md)")
         elif not f.lower().endswith(IMAGE_EXT + VIDEO_EXT):
             warns.append(f"unexpected file '{f}' (not an image/video)")

@@ -13,9 +13,11 @@
   <!-- Full-window scroller; the white sheet starts below the navbar and scrolls up OVER it.
        The scroller keeps normal pointer events — pointer-events:none on a scroll container
        kills Safari's wheel/touch scrolling even over re-enabled children. Navbar clickability
-       through the transparent strip comes from the z-40 toggle in the hover-zone script below. -->
-  <div class="vt-panel md:absolute md:inset-0 md:overflow-y-auto md:overflow-x-hidden max-md:overflow-x-clip scrollbar-hide" id="content-area">
-  <div class="max-md:min-h-[calc(100svh-var(--header-h,3.1875rem))] max-md:mt-0 md:min-h-[calc(100%-4.4375rem)] md:mt-[4.4375rem] bg-white border-t border-[#f0efed] shadow-[0_-0.25rem_0.75rem_rgba(0,0,0,0.04)] transition-transform duration-300 ease-out pt-[1.5rem] px-[2.5rem] pb-[1.875rem] max-md:px-5 max-md:pt-0" id="article-sheet">
+       through the transparent strip comes from the z-40 toggle in the hover-zone script below.
+       Mobile: -mt-px lays the sheet's top border on the sticky header's own hairline (one line at
+       rest; the border still leads the entry slide). -->
+  <div class="vt-panel max-md:-mt-px md:absolute md:inset-0 md:overflow-y-auto md:overflow-x-hidden max-md:overflow-x-clip scrollbar-hide" id="content-area">
+  <div class="max-md:min-h-[calc(100svh-var(--header-h,3.1875rem))] max-md:mt-0 md:min-h-[calc(100%-4.4375rem)] md:mt-[4.4375rem] bg-white border-t border-[#f0efed] shadow-[0_-0.25rem_0.75rem_rgba(0,0,0,0.04)] max-md:shadow-none transition-transform duration-300 ease-out pt-[1.5rem] px-[2.5rem] pb-[1.875rem] max-md:px-edge max-md:pt-0" id="article-sheet">
 
     <!-- × close (desktop): sticky zero-height rail — rides the sheet's top edge until it
          reaches the top of the window, then pins to the viewport corner -->
@@ -66,6 +68,14 @@
         {% include article-meta.html article_id=page.article_id %}
       </div>
 
+      {% if page.standfirst %}
+      <!-- Standfirst (front matter `standfirst`): the intro line between the metadata and the
+           body. Desktop: set like the in-body headings. Mobile: 1rem italic, left-aligned — the
+           in-body headings take the About style there, the standfirst does not — with 1.5rem
+           above the text (column gap 2.5rem - 1rem), twice the headings' gap. -->
+      <p id="article-standfirst" class="w-full text-ink font-sabon text-base md:text-[1.125rem] italic leading-tight md:w-[23.8rem] max-w-full md:ml-[-3.25rem] mb-[-2rem] max-md:mb-[-1rem]">{{ page.standfirst }}</p>
+      {% endif %}
+
       <!-- Hidden content source — JS flattens this into #article-hero / #article-column -->
       <div id="content-source" class="hidden" aria-hidden="true">
         {{ content }}
@@ -75,18 +85,6 @@
 
   </div><!-- /#article-sheet -->
   </div><!-- /#content-area -->
-
-  <!-- Mobile only: compact title + close pinned to the viewport top over a white fade, shown once
-       the title block scrolls out of view. Lives at root level, NOT inside the header: the
-       header's view-transition-name makes it a stacking context that would trap this z-40. -->
-  <div class="hidden max-md:block">
-    <div id="mobile-scroll-row2" class="hidden fixed top-0 left-0 right-0 z-40 opacity-0 transition-opacity duration-200 items-center justify-between gap-4 px-5 pt-4 pb-3 bg-white before:content-[''] before:absolute before:inset-x-0 before:top-full before:h-6 before:-z-10 before:pointer-events-none before:bg-[linear-gradient(to_bottom,rgba(255,255,255,1)_0%,rgba(255,255,255,0)_100%)] pointer-events-none">
-      <span class="font-sabon italic text-nav-mobile text-ink truncate min-w-0">{{ page.title }}</span>
-      <a id="mobile-scroll-close" href="{{ category_url }}" class="shrink-0 text-ink hover:opacity-70 pointer-events-auto">
-        {% include icon-close.html px=12 %}
-      </a>
-    </div>
-  </div>
 
   <!-- Enlarged view: full-screen project-wide slideshow over a 90% white veil; three equal
        click columns (prev / exit / next) with the slideshow hover cursors -->
@@ -442,13 +440,15 @@
           if (clone.tagName === 'H2') {
             // Desktop article-body heading: 18pt-equivalent and 3.25rem left of the body edge.
             // Its visible desktop bottom gap is 1.5rem, 75% of the previous 2rem.
-            // Mobile retains its original size, alignment, and spacing.
-            clone.classList.add('font-sabon', 'text-base', 'md:text-[1.125rem]', 'italic', 'leading-tight', 'md:w-[23.8rem]', 'max-w-full', 'md:ml-[-3.25rem]', 'mb-[-2rem]', 'max-md:mb-[-1.75rem]');
+            // Mobile matches the About section headings: nav size, centred, 0.825rem above the
+            // text (column gap 2.5rem - 1.675rem).
+            clone.classList.add('font-sabon', 'text-base', 'md:text-[1.125rem]', 'italic', 'leading-tight', 'md:w-[23.8rem]', 'max-w-full', 'md:ml-[-3.25rem]', 'mb-[-2rem]', 'max-md:text-nav-mobile', 'max-md:leading-[1.5]', 'max-md:text-center', 'max-md:mb-[-1.675rem]');
           } else if (clone.tagName === 'P') {
             // Body text: sans-serif at the About page's body size. Desktop paragraphs keep a
             // 34rem measure (about 80 characters a line), centred in the column like the media
-            // and left-aligned (ragged right) within it. Mobile paragraphs fill the column.
-            clone.classList.add('font-grotesque', 'text-[0.9rem]', 'max-md:text-[0.9rem]', 'leading-[1.8]', 'md:w-[34rem]', 'md:self-center', 'pl-[0rem]', 'pr-[0rem]', 'max-md:pl-0', 'max-md:pr-0');
+            // and left-aligned (ragged right) within it. Mobile paragraphs fill the column at
+            // 14.5px on a 24px line (art.yale.edu's rhythm, about 43 characters a line).
+            clone.classList.add('font-grotesque', 'text-[0.9rem]', 'max-md:text-[0.90625rem]', 'leading-[1.8]', 'max-md:leading-6', 'md:w-[34rem]', 'md:self-center', 'pl-[0rem]', 'pr-[0rem]', 'max-md:pl-0', 'max-md:pr-0');
             // Consecutive paragraphs sit 1.25rem apart (gap 3.5 - 2.25)
             if (column.lastElementChild && column.lastElementChild.tagName === 'P') {
               clone.classList.add('mt-[-2.25rem]', 'max-md:mt-[-1.25rem]');
@@ -498,10 +498,14 @@
 
       var hovering = false;
 
+      // Desktop only: on mobile the header is sticky with its own hairline, and a nudged sheet
+      // would open a gap under it (a tap fires mouseenter there too)
+      var desktop = window.matchMedia('(min-width: 48rem)');
+
       function update() {
         var atTop = (scroller.scrollTop || window.scrollY) === 0;
         header.classList.toggle('z-40', atTop);
-        sheet.classList.toggle('translate-y-[0.375rem]', hovering && atTop);
+        sheet.classList.toggle('translate-y-[0.375rem]', hovering && atTop && desktop.matches);
       }
 
       header.addEventListener('mouseenter', function () { hovering = true;  update(); });
@@ -513,64 +517,39 @@
 
     // Mobile exit: the document is the scroller, so before the old state is captured, freeze
     // the current view into a viewport-sized panel — the slide-down snapshot must show what
-    // the reader is looking at, not the top of a page-tall element.
+    // the reader is looking at, not the top of a page-tall element. The panel is pinned below
+    // the sticky header (which has its own snapshot and fades out), never under it.
     window.addEventListener('pageswap', function (e) {
       if (!e.viewTransition || window.matchMedia('(min-width: 48rem)').matches) return;
-      var panel = document.getElementById('content-area');
+      var panel  = document.getElementById('content-area');
+      var header = document.getElementById('l3-header');
       if (!panel) return;
       var y   = window.scrollY;
       var top = panel.getBoundingClientRect().top + y; // panel's offset in the document
+      var pin = Math.max(0, top - y, header ? header.getBoundingClientRect().bottom : 0);
       document.body.style.minHeight = document.documentElement.scrollHeight + 'px';
       panel.style.position = 'fixed';
-      panel.style.top      = Math.max(0, top - y) + 'px';
+      panel.style.top      = pin + 'px';
       panel.style.left     = '0';
       panel.style.right    = '0';
       panel.style.bottom   = '0';
       panel.style.overflow = 'hidden';
-      panel.scrollTop      = Math.max(0, y - top);
+      panel.scrollTop      = Math.max(0, pin - (top - y)); // keeps every line where it was
     });
 
-    // Mobile: show the compact fixed title once the in-page title block scrolls out of view —
-    // by then the sheet has scrolled over the navbar, so the overlay fades in over content only
+    // Mobile: the sticky header swaps Row 1 for the project title (.is-scrolled, see
+    // header-nav.html) once the in-sheet title has passed fully under it, and back again on the
+    // way up. The rootMargin trims the header off the top of the viewport.
     (function () {
-      var mobileH1  = document.getElementById('mobile-article-title');
-      var scrollRow = document.getElementById('mobile-scroll-row2');
-      if (!mobileH1 || !scrollRow) return;
-
-      var hideTimer = null;
-      var showTimer = null;
-
-      function showScrollRow() {
-        scrollRow.classList.remove('hidden');
-        scrollRow.classList.add('flex');
-        scrollRow.getBoundingClientRect(); // force reflow
-        scrollRow.classList.remove('opacity-0');
-      }
-
-      function hideScrollRow() {
-        scrollRow.classList.add('opacity-0');
-        hideTimer = setTimeout(function () {
-          scrollRow.classList.add('hidden');
-          scrollRow.classList.remove('flex');
-          hideTimer = null;
-        }, 200);
-      }
+      var mobileH1 = document.getElementById('mobile-article-title');
+      var header   = document.getElementById('l3-header');
+      if (!mobileH1 || !header || window.matchMedia('(min-width: 48rem)').matches) return;
 
       var observer = new IntersectionObserver(function (entries) {
-        if (entries[0].isIntersecting) {
-          if (showTimer) { clearTimeout(showTimer); showTimer = null; }
-          if (hideTimer) { clearTimeout(hideTimer); hideTimer = null; }
-          hideScrollRow();
-        } else if (!showTimer) {
-          if (hideTimer) { clearTimeout(hideTimer); hideTimer = null; }
-          showTimer = setTimeout(function () {
-            showTimer = null;
-            showScrollRow();
-          }, 60);
-        }
+        header.classList.toggle('is-scrolled', !entries[0].isIntersecting);
       }, {
-        root:      window.matchMedia('(min-width: 48rem)').matches ? document.getElementById('content-area') : null, // mobile: the document scrolls
-        threshold: 0
+        rootMargin: '-' + Math.round(header.getBoundingClientRect().height) + 'px 0px 0px 0px',
+        threshold:  0
       });
 
       observer.observe(mobileH1);

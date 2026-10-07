@@ -4,12 +4,15 @@
   - level=1|2|3 — right slot: 1 = slide title + counter, 2 = selected category, 3 = empty.
   - article=true — LEVEL3 shell: id="l3-header" (own view-transition group; backed by a
     white→transparent eased gradient only while data-vt-enter/-exit is set, so the navbar's
-    fade has no hard bottom edge over the grid), no permanent z-index (the sheet paints over it;
-    article.html toggles z-40 while the sheet is at rest), no gradient.
+    fade has no hard bottom edge over the grid). Desktop: no permanent z-index (the sheet paints
+    over it; article.html toggles z-40 while the sheet is at rest). Mobile: sticky, solid white,
+    own hairline, like the Work/About headers; once the in-sheet title has passed under it,
+    article.html adds .is-scrolled and Row 1 gives way to the project title + × with the About
+    page's 4rem fade below the line.
   - row2 — pre-captured mobile Row-2 markup, rendered after Row 1.
   - active_about, loading_bar — set by the About page.
 {% endcomment %}
-<header {% if include.article %}id="l3-header" {% endif %}class="relative flex-none md:absolute md:inset-x-0 md:top-0 pt-[2.1875rem] px-[2.5rem] pb-[0.6875rem] max-md:px-0 max-md:pt-0 max-md:pb-0 {% if include.article %}before:content-[''] before:absolute before:inset-x-0 before:top-0 before:h-[10.5rem] before:-z-10 before:pointer-events-none before:opacity-0 [[data-vt-enter]_&]:before:opacity-100 [[data-vt-exit]_&]:before:opacity-100 before:bg-[linear-gradient(to_bottom,#fff_0,#fff_3.5rem,rgba(255,255,255,.96)_4.2rem,rgba(255,255,255,.88)_4.9rem,rgba(255,255,255,.76)_5.6rem,rgba(255,255,255,.62)_6.3rem,rgba(255,255,255,.47)_7rem,rgba(255,255,255,.33)_7.7rem,rgba(255,255,255,.21)_8.4rem,rgba(255,255,255,.11)_9.1rem,rgba(255,255,255,.04)_9.8rem,rgba(255,255,255,0)_10.5rem)]{% elsif include.level == 2 %}z-30 max-md:sticky max-md:top-0{% else %}max-md:bg-white z-30 max-md:sticky max-md:top-0 md:before:content-[''] md:before:absolute md:before:inset-0 md:before:-z-10 md:before:pointer-events-none md:before:bg-[linear-gradient(to_bottom,rgba(255,255,255,1)_0%,rgba(255,255,255,0)_100%)] md:before:transition-opacity md:before:duration-200 [.teaser-active_&]:md:before:opacity-0{% endif %}">
+<header {% if include.article %}id="l3-header" {% endif %}class="relative flex-none md:absolute md:inset-x-0 md:top-0 pt-[2.1875rem] px-[2.5rem] pb-[0.6875rem] max-md:px-0 max-md:pt-0 max-md:pb-0 {% if include.article %}before:content-[''] before:absolute before:inset-x-0 before:top-0 before:h-[10.5rem] before:-z-10 before:pointer-events-none before:opacity-0 [[data-vt-enter]_&]:before:opacity-100 [[data-vt-exit]_&]:before:opacity-100 before:bg-[linear-gradient(to_bottom,#fff_0,#fff_3.5rem,rgba(255,255,255,.96)_4.2rem,rgba(255,255,255,.88)_4.9rem,rgba(255,255,255,.76)_5.6rem,rgba(255,255,255,.62)_6.3rem,rgba(255,255,255,.47)_7rem,rgba(255,255,255,.33)_7.7rem,rgba(255,255,255,.21)_8.4rem,rgba(255,255,255,.11)_9.1rem,rgba(255,255,255,.04)_9.8rem,rgba(255,255,255,0)_10.5rem)] max-md:sticky max-md:top-0 max-md:z-40 max-md:bg-white{% elsif include.level == 2 %}z-30 max-md:sticky max-md:top-0{% else %}max-md:bg-white z-30 max-md:sticky max-md:top-0 md:before:content-[''] md:before:absolute md:before:inset-0 md:before:-z-10 md:before:pointer-events-none md:before:bg-[linear-gradient(to_bottom,rgba(255,255,255,1)_0%,rgba(255,255,255,0)_100%)] md:before:transition-opacity md:before:duration-200 [.teaser-active_&]:md:before:opacity-0{% endif %}">
 
 {% if include.level != 3 or include.loading_bar %}
 <!-- Loading bar: LEVEL1 always; LEVEL2/About only when the origin page flagged the navigation -->
@@ -56,7 +59,7 @@
 {% endif %}
 {% endif %}
 
-<nav class="relative flex items-start h-[1.5625rem] max-md:h-auto max-md:items-center max-md:px-5 max-md:pt-4 max-md:pb-2.5 max-md:border-b {% if include.level == 2 %}max-md:bg-white max-md:transition-colors max-md:duration-200 [.teaser-active_&]:max-md:bg-transparent {% endif %}{% if include.article %}max-md:border-transparent{% else %}border-[#f0efed] max-md:transition-colors max-md:duration-200 [.teaser-active_&]:max-md:border-black/40 [.teaser-dark_&]:max-md:!border-white/40{% endif %}">
+<nav class="relative flex items-start h-[1.5625rem] max-md:h-auto max-md:items-center max-md:px-edge max-md:pt-edge max-md:pb-3 max-md:border-b {% if include.level == 2 %}max-md:bg-white max-md:transition-colors max-md:duration-200 [.teaser-active_&]:max-md:bg-transparent {% endif %}{% if include.article %}border-[#f0efed]{% else %}border-[#f0efed] max-md:transition-colors max-md:duration-200 [.teaser-active_&]:max-md:border-black/40 [.teaser-dark_&]:max-md:!border-white/40{% endif %}">
   {% comment %} title w-24 + Work ml-22 matches the LEVEL2 aside w-8 + mr-22 + grid pl-16, so Work's left edge lines up with the grid {% endcomment %}
   <a href="{{ '/' | relative_url }}" class="font-sabon italic text-nav max-md:text-nav-mobile text-ink transition duration-200 hover:text-mist [.teaser-dark_&]:!text-white md:w-24 md:shrink-0 max-md:whitespace-nowrap max-md:shrink-0">{{ site.title }}</a>
 
@@ -91,4 +94,16 @@
 </nav>
 
 {{ include.row2 }}
+{% if include.article %}
+<!-- Mobile .is-scrolled state (article.html): the project title + × cover Row 1 (bottom-px keeps
+     the hairline; only the text cross-fades, the white face never changes), and the About
+     page's 4rem white fade appears below the line -->
+<div id="mobile-scroll-row2" class="hidden max-md:flex absolute inset-x-0 top-0 bottom-px items-center justify-between gap-4 px-edge pt-edge pb-3 bg-white opacity-0 pointer-events-none transition-opacity duration-200 [.is-scrolled_&]:opacity-100 [.is-scrolled_&]:pointer-events-auto">
+  <span class="font-sabon italic text-nav-mobile text-ink truncate min-w-0">{{ page.title }}</span>
+  <a id="mobile-scroll-close" href="{{ category_url }}" class="shrink-0 text-ink hover:opacity-70">
+    {% include icon-close.html px=12 %}
+  </a>
+</div>
+<div aria-hidden="true" class="hidden max-md:block absolute inset-x-0 top-full h-16 pointer-events-none bg-[linear-gradient(to_bottom,rgba(255,255,255,1)_0%,rgba(255,255,255,0)_100%)] opacity-0 transition-opacity duration-200 [.is-scrolled_&]:opacity-100"></div>
+{% endif %}
 </header>

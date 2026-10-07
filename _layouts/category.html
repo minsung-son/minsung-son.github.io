@@ -12,7 +12,7 @@
          below Row 1 so content scrolls under it; a white fade at 2x row height stands in for
          an opaque background. -->
     <div class="hidden max-md:block absolute top-full inset-x-0 before:content-[''] before:absolute before:inset-x-0 before:top-0 before:h-24 before:-z-10 before:pointer-events-none before:bg-[linear-gradient(to_bottom,rgba(255,255,255,1)_0%,rgba(255,255,255,0)_100%)]">
-      <div id="mobile-cat-row2" onclick="toggleMobileCatMenu()" class="relative z-30 flex items-center justify-between px-5 py-3 pointer-events-auto cursor-pointer">
+      <div id="mobile-cat-row2" onclick="toggleMobileCatMenu()" class="relative z-30 flex items-center justify-between px-edge py-3 pointer-events-auto cursor-pointer">
         <span id="mobile-cat-label" class="font-sabon italic text-nav-mobile text-ink [.teaser-dark_&]:!text-white truncate [transition:opacity_500ms_ease,color_200ms_ease]"></span>
         <button id="mobile-cat-toggle" type="button" aria-label="Categories" aria-expanded="false"
                 class="shrink-0 text-ink hover:text-mist [.teaser-dark_&]:!text-white transition-colors duration-200 bg-transparent border-0 p-0 cursor-pointer pointer-events-auto">
@@ -20,7 +20,7 @@
         </button>
       </div>
       <!-- White fade on a pseudo so a list-row teaser can fade it independently of the menu's own fade -->
-      <div id="mobile-cat-menu" class="hidden opacity-0 transition-opacity duration-500 absolute inset-x-0 top-0 z-20 flex-col items-start gap-0 px-5 pt-3 pb-24 pointer-events-none before:content-[''] before:absolute before:inset-0 before:-z-10 before:pointer-events-none before:bg-[linear-gradient(to_bottom,rgba(255,255,255,1)_0%,rgba(255,255,255,0.92)_55%,rgba(255,255,255,0)_100%)] before:transition-opacity before:duration-200 [.teaser-active_&]:before:opacity-0">
+      <div id="mobile-cat-menu" class="hidden opacity-0 transition-opacity duration-500 absolute inset-x-0 top-0 z-20 flex-col items-start gap-0 px-edge pt-3 pb-24 pointer-events-none before:content-[''] before:absolute before:inset-0 before:-z-10 before:pointer-events-none before:bg-[linear-gradient(to_bottom,rgba(255,255,255,1)_0%,rgba(255,255,255,0.92)_55%,rgba(255,255,255,0)_100%)] before:transition-opacity before:duration-200 [.teaser-active_&]:before:opacity-0">
         <!-- Close hit-strip over the initial Row-2 band; the relative (positioned) items
              hit-test above it, so item clicks still select while everything else closes -->
         <div onclick="toggleMobileCatMenu()" class="absolute inset-x-0 top-0 h-12 pointer-events-auto cursor-pointer"></div>
@@ -112,14 +112,15 @@
           --col-year:  2.5fr;
           --col-pub:   4.48fr;
         }
-        /* Mobile rows: tighter vertical padding (py = 0.9em * pad) */
+        /* Mobile rows: py = 0.9em * pad, with a little more air than the text alone would give */
         @media (width < 48rem) {
-          #view-list { --list-row-pad: 1; --list-row-text: var(--list-row-text-mobile); }
+          #view-list { --list-row-pad: 1.3; --list-row-text: var(--list-row-text-mobile); }
         }
       </style>
-      <div id="view-list" class="hidden pt-[10.125rem] max-md:pt-[7rem] md:pl-16 pb-16 max-md:pb-32 max-md:px-5">
-        <!-- Columns: Index / Title / Year / Category-metadata; sort headers are desktop-only -->
-        <div id="list-grid" class="grid max-w-full grid-cols-[minmax(max-content,var(--col-index))_minmax(0,var(--col-title))_minmax(max-content,var(--col-year))_minmax(0,var(--col-pub))] max-md:grid-cols-[minmax(0,1fr)_max-content] text-[length:var(--list-base-mobile)]/[1.4] md:text-[calc(var(--text-nav)/1.15*var(--list-scale))]/[1.4]">
+      <div id="view-list" class="hidden pt-[10.125rem] max-md:pt-[7rem] md:pl-16 pb-16 max-md:pb-32 max-md:px-edge">
+        <!-- Columns: Index / Title / Year / Category-metadata; sort headers are desktop-only and
+             mobile rows show the title alone -->
+        <div id="list-grid" class="grid max-w-full grid-cols-[minmax(max-content,var(--col-index))_minmax(0,var(--col-title))_minmax(max-content,var(--col-year))_minmax(0,var(--col-pub))] max-md:grid-cols-[minmax(0,1fr)] text-[length:var(--list-base-mobile)]/[1.4] md:text-[calc(var(--text-nav)/1.15*var(--list-scale))]/[1.4]">
           <div class="grid grid-cols-subgrid col-span-4 max-md:hidden">
             <div data-col="0" onclick="sortList(0)" class="sort-th font-grotesque text-ink transition-colors duration-200 [.teaser-dark_&]:!text-white text-[length:var(--list-th-text)] pb-[0.7em] pr-[0.56em] text-left font-normal cursor-pointer select-none whitespace-nowrap overflow-hidden text-ellipsis max-md:hidden"><span class="sort-ind">{% include icon-arrow.html class="inline-block h-[0.8em] w-auto ml-[0.5rem]" %}</span></div>
             <div data-col="1" onclick="sortList(1)" class="sort-th font-grotesque text-ink transition-colors duration-200 [.teaser-dark_&]:!text-white text-[length:var(--list-th-text)] pb-[0.7em] pr-[0.56em] text-left font-normal cursor-pointer select-none whitespace-nowrap overflow-hidden text-ellipsis max-md:pr-4"><span class="sort-label">Project</span><span class="sort-ind ml-[0.25em]">{% include icon-arrow.html class="inline-block h-[0.8em] w-auto" %}</span></div>
@@ -131,11 +132,11 @@
             {% if article.external_url %}{% assign link_url = article.external_url %}{% else %}{% assign link_url = article.url | relative_url %}{% endif %}
             <div data-category="{{ article.category }}"
                 {% if article.teaser %}data-teaser="{{ article.url | relative_url }}{{ article.teaser }}"{% endif %}
-                class="grid grid-cols-subgrid col-span-4 max-md:col-span-2 list-row group cursor-pointer pointer-events-none max-md:pointer-events-auto py-[calc(0.9em*var(--list-row-pad))] border-t border-stone-100 transition-colors duration-200 [.teaser-active_&]:border-black/40 [.teaser-dark_&]:!border-white/40"
+                class="grid grid-cols-subgrid col-span-4 max-md:col-span-1 list-row group cursor-pointer pointer-events-none max-md:pointer-events-auto py-[calc(0.9em*var(--list-row-pad))] border-t border-stone-100 transition-colors duration-200 [.teaser-active_&]:border-black/40 [.teaser-dark_&]:!border-white/40"
                 onclick="goTo('{{ link_url }}')">
               <div data-val="{{ article.article_id }}" class="font-sabon italic text-[length:var(--list-row-text)] text-ink group-[.is-hover]:text-mist [.teaser-dark_&]:!text-white transition-colors duration-200 pr-[0.43em] tabular-nums pointer-events-auto whitespace-nowrap overflow-hidden text-ellipsis max-md:hidden">{{ article.article_id | prepend: "000" | slice: -3, 3 }}</div>
-              <div data-val="{{ article.title | downcase }}" class="font-sabon italic text-[length:var(--list-row-text)] text-ink group-[.is-hover]:text-mist [.teaser-dark_&]:!text-white transition-colors duration-200 pr-[0.43em] pointer-events-auto min-w-0 overflow-hidden text-ellipsis whitespace-nowrap max-md:pr-4">{{ article.title }}</div>
-              <div data-val="{{ article.date | date: '%Y%m%d' }}" class="font-sabon italic text-[length:var(--list-row-text)] text-ink group-[.is-hover]:text-mist [.teaser-dark_&]:!text-white transition-colors duration-200 pr-[0.43em] tabular-nums pointer-events-auto whitespace-nowrap overflow-hidden text-ellipsis max-md:pr-0">{{ article.date | date: "%Y" }}</div>
+              <div data-val="{{ article.title | downcase }}" class="font-sabon italic text-[length:var(--list-row-text)] text-ink group-[.is-hover]:text-mist [.teaser-dark_&]:!text-white transition-colors duration-200 pr-[0.43em] pointer-events-auto min-w-0 overflow-hidden text-ellipsis whitespace-nowrap max-md:pr-0">{{ article.title }}</div>
+              <div data-val="{{ article.date | date: '%Y%m%d' }}" class="font-sabon italic text-[length:var(--list-row-text)] text-ink group-[.is-hover]:text-mist [.teaser-dark_&]:!text-white transition-colors duration-200 pr-[0.43em] tabular-nums pointer-events-auto whitespace-nowrap overflow-hidden text-ellipsis max-md:hidden">{{ article.date | date: "%Y" }}</div>
               {% case article.category %}
                 {% when 'architecture' %}{% assign col4_meta = article.typology %}
                 {% when 'photography' %}{% assign col4_meta = article.location %}

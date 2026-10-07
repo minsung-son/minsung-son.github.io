@@ -38,6 +38,7 @@ fi
 common_top="---
 title: $TITLE
 subtitle: 
+standfirst: 
 date: $DATE
 teaser: $TEASER
 hero_layout: $HERO

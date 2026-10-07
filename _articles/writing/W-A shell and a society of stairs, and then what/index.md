@@ -3,6 +3,7 @@
 # title, date and publication are mandatory (publication is the 4th column in the list view).
 title: A shell and a society of stairs—and then what?
 subtitle: Building study, V&A East, O’Donnell + Tuomey
+standfirst: The new V&A East surprises and delights, but fails to go far enough for those it claims to serve
 date: 2026-03-02
 teaser: 20260423 V&A.webp
 hero_layout: 3
@@ -17,8 +18,6 @@ topic:
 awards: 
 collaborators: 
 ---
-
-## The new V&A East surprises and delights, but fails to go far enough for those it claims to serve
 
 Outside the new V&A East museum in Stratford waterfront, a passerby likens its form to a scuttling crab. Architect Eimear Hanratty of O’Donnell + Tuomey, the practice behind the project, opts for more cultural metaphors: drooping sleeves in a Vermeer, a classic Balenciaga dress. Someone even mentions a John Lewis toaster. I’m yet to figure out what that was all about.
 

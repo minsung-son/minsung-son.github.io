@@ -57,6 +57,7 @@ location: Cambridge, UK
 |---------------|--------------------------------------------------------------|--------------------------------------------------------------|
 | `title`       | Article title                                                | FATAL                                                        |
 | `subtitle`    | Shown under the title                                        | Simply omitted                                               |
+| `standfirst`  | An intro line in italics between the metadata table and the body (e.g. a writing piece's standfirst). Use this, not a `##` heading, for an intro | Simply omitted                                               |
 | `date`        | Full date (`YYYY-MM-DD`) used for sorting and project IDs. Only the year is displayed. | FATAL                                      |
 | `teaser`      | The image representing the article on the landing page and in the Work grid (the grid also shows every image used in the article's media blocks, and nothing else from the folder) | Falls back to the first image in the folder<br>If no images at all, FATAL |
 | `hero_layout` | `1`, `2`, or `3` (as per draft)                              | Defaults to `1`                                              |

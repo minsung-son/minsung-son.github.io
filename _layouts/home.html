@@ -8,7 +8,7 @@
   {% capture header_row2 %}
     <!-- Row 2 (mobile only): "1/14 Title" — tap enters the current article -->
     <div class="hidden max-md:block">
-      <div class="flex items-baseline gap-2 px-5 py-3 cursor-enter" onclick="goToCurrentArticle()">
+      <div class="flex items-baseline gap-2 px-edge py-3 cursor-enter" onclick="goToCurrentArticle()">
         <span id="mobile-counter" class="font-sabon italic text-nav-mobile text-ink shrink-0 whitespace-nowrap"></span>
         <span id="mobile-nav-title" class="font-sabon italic text-nav-mobile text-ink truncate min-w-0"></span>
       </div>
@@ -17,7 +17,7 @@
   {% include header-nav.html level=1 row2=header_row2 %}
 
   <!-- Full-window at md; navbar is overlaid on top, no header-height compensation -->
-  <div class="flex-1 relative md:absolute md:inset-0 overflow-hidden pt-[1.5rem] md:pt-0 px-[3rem] max-md:px-5 pb-[1.875rem] md:pb-0" id="content-area">
+  <div class="flex-1 relative md:absolute md:inset-0 overflow-hidden pt-[1.5rem] md:pt-0 px-[3rem] max-md:px-edge pb-[1.875rem] md:pb-0" id="content-area">
 
     <main class="relative w-full h-full overflow-hidden" id="post-feed">
 
@@ -33,7 +33,7 @@
           <!-- Centred in the content area, shifted up a fixed offset (the -0.8rem). Mobile: the
                header (rows 1+2) is in flow, so a plain 50% centres on the remaining content area. -->
           <div class="absolute top-[calc(50%-0.8rem)] max-md:top-[calc(50%)] left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 cursor-enter" onclick="event.stopPropagation(); goToCurrentArticle();">
-            <img src="{{ article.url | relative_url }}{{ article.teaser }}" alt="{{ article.title }}" class="max-w-[min(59.0625rem,calc(100vw_-_6rem))] max-md:max-w-[calc(100vw_-_3rem)] max-h-[min(26.5625rem,calc(100svh_-_11.875rem))] w-auto h-auto block">
+            <img src="{{ article.url | relative_url }}{{ article.teaser }}" alt="{{ article.title }}" class="max-w-[min(59.0625rem,calc(100vw_-_6rem))] max-md:max-w-[calc(100vw_-_3.75rem)] max-h-[min(26.5625rem,calc(100svh_-_11.875rem))] w-auto h-auto block">
           </div>
         </div>
         {% endif %}
