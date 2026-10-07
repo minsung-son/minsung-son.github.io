@@ -1372,6 +1372,9 @@
     .md\:w-\[23\.8rem\] {
       width: 23.8rem;
     }
+    .md\:w-\[34rem\] {
+      width: 34rem;
+    }
     .md\:shrink-0 {
       flex-shrink: 0;
     }
