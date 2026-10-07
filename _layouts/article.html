@@ -17,7 +17,7 @@
        Mobile: -mt-px lays the sheet's top border on the sticky header's own hairline (one line at
        rest; the border still leads the entry slide). -->
   <div class="vt-panel max-md:-mt-px md:absolute md:inset-0 md:overflow-y-auto md:overflow-x-hidden max-md:overflow-x-clip scrollbar-hide" id="content-area">
-  <div class="max-md:min-h-[calc(100svh-var(--header-h,3.1875rem))] max-md:mt-0 md:min-h-[calc(100%-4.4375rem)] md:mt-[4.4375rem] bg-white border-t border-[#f0efed] shadow-[0_-0.25rem_0.75rem_rgba(0,0,0,0.04)] max-md:shadow-none transition-transform duration-300 ease-out pt-[1.5rem] px-[2.5rem] pb-[1.875rem] max-md:px-edge max-md:pt-0" id="article-sheet">
+  <div class="max-md:min-h-[calc(100svh-var(--header-h,3.1875rem))] max-md:mt-0 md:min-h-[calc(100%-4.4375rem)] md:mt-[4.4375rem] bg-white border-t border-[#f0efed] shadow-[0_-0.25rem_0.75rem_rgba(0,0,0,0.04)] transition-transform duration-300 ease-out pt-[1.5rem] px-[2.5rem] pb-[1.875rem] max-md:px-edge max-md:pt-0" id="article-sheet">
 
     <!-- × close (desktop): sticky zero-height rail — rides the sheet's top edge until it
          reaches the top of the window, then pins to the viewport corner -->
@@ -33,13 +33,13 @@
       <span id="nav-article-title" class="absolute top-0 left-0 font-sabon italic text-[0.9375rem] text-ink opacity-0 pointer-events-none transition-[opacity] duration-[250ms] ease-[ease]">{{ page.title }}</span>
     </div>
 
-    <!-- Mobile only: article title/subtitle + close (X) -->
+    <!-- Mobile only: article title/subtitle + close (X); lines 1.87rem apart (10% over 1.7rem) -->
     <div class="hidden max-md:block">
       <div class="flex items-start justify-between gap-8 pt-5 pb-3">
         <div class="min-w-0">
-          <h1 id="mobile-article-title" class="font-sabon italic text-[1.4rem] text-ink leading-[1.7rem]">{{ page.title }}</h1>
+          <h1 id="mobile-article-title" class="font-sabon italic text-[1.4rem] text-ink leading-[1.87rem]">{{ page.title }}</h1>
           {% if page.subtitle %}
-          <h2 class="font-sabon italic text-[1.4rem] text-ink leading-[1.7rem]">{{ page.subtitle }}</h2>
+          <h2 class="font-sabon italic text-[1.4rem] text-ink leading-[1.87rem]">{{ page.subtitle }}</h2>
           {% endif %}
         </div>
         <a id="mobile-article-close" href="{{ category_url }}" class="shrink-0 mt-1 text-ink hover:opacity-70">
@@ -71,9 +71,9 @@
       {% if page.standfirst %}
       <!-- Standfirst (front matter `standfirst`): the intro line between the metadata and the
            body. Desktop: set like the in-body headings. Mobile: 1rem italic, left-aligned — the
-           in-body headings take the About style there, the standfirst does not — with 1.5rem
-           above the text (column gap 2.5rem - 1rem), twice the headings' gap. -->
-      <p id="article-standfirst" class="w-full text-ink font-sabon text-base md:text-[1.125rem] italic leading-tight md:w-[23.8rem] max-w-full md:ml-[-3.25rem] mb-[-2rem] max-md:mb-[-1rem]">{{ page.standfirst }}</p>
+           in-body headings take the About style there, the standfirst does not — centred at 80%
+           of the body width, with 1.5rem above the text (column gap 2.5rem - 1rem). -->
+      <p id="article-standfirst" class="w-full text-ink font-sabon text-base md:text-[1.125rem] italic leading-tight md:w-[23.8rem] max-w-full md:ml-[-3.25rem] mb-[-2rem] max-md:mb-[-1rem] max-md:w-[80%] max-md:self-center max-md:text-center">{{ page.standfirst }}</p>
       {% endif %}
 
       <!-- Hidden content source — JS flattens this into #article-hero / #article-column -->

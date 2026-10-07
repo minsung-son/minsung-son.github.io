@@ -20,14 +20,16 @@
         </button>
       </div>
       <!-- White fade on a pseudo so a list-row teaser can fade it independently of the menu's own fade -->
-      <div id="mobile-cat-menu" class="hidden opacity-0 transition-opacity duration-500 absolute inset-x-0 top-0 z-20 flex-col items-start gap-0 px-edge pt-3 pb-24 pointer-events-none before:content-[''] before:absolute before:inset-0 before:-z-10 before:pointer-events-none before:bg-[linear-gradient(to_bottom,rgba(255,255,255,1)_0%,rgba(255,255,255,0.92)_55%,rgba(255,255,255,0)_100%)] before:transition-opacity before:duration-200 [.teaser-active_&]:before:opacity-0">
-        <!-- Close hit-strip over the initial Row-2 band; the relative (positioned) items
+      <div id="mobile-cat-menu" class="hidden opacity-0 transition-opacity duration-500 absolute inset-x-0 top-0 z-20 flex-col items-start gap-0 px-edge pt-[0.6465rem] pb-24 pointer-events-none before:content-[''] before:absolute before:inset-0 before:-z-10 before:pointer-events-none before:bg-[linear-gradient(to_bottom,rgba(255,255,255,1)_0%,rgba(255,255,255,0.92)_55%,rgba(255,255,255,0)_100%)] before:transition-opacity before:duration-200 [.teaser-active_&]:before:opacity-0">
+        <!-- Items sit on a 1.725 line (15% over the 1.5 of Row 2) for easier taps; pt is 0.75rem
+             minus half the extra leading, so 'All work' still lands on the Row-2 label.
+             Close hit-strip over the initial Row-2 band; the relative (positioned) items
              hit-test above it, so item clicks still select while everything else closes -->
         <div onclick="toggleMobileCatMenu()" class="absolute inset-x-0 top-0 h-12 pointer-events-auto cursor-pointer"></div>
         {% assign menu_cats = "all,architecture,photography,films,writing,other" | split: "," %}
         {% for cat in menu_cats %}
         {% if cat == "all" %}{% assign cat_label = "All work" %}{% else %}{% assign cat_label = cat | capitalize %}{% endif %}
-        <button type="button" data-cat="{{ cat }}" onclick="setCategory('{{ cat }}'); toggleMobileCatMenu();" class="relative font-sabon italic text-nav-mobile text-ink hover:text-mist [.teaser-dark_&]:!text-white transition-colors duration-200 text-left bg-transparent border-0 p-0 cursor-pointer pointer-events-auto">{{ cat_label }}</button>
+        <button type="button" data-cat="{{ cat }}" onclick="setCategory('{{ cat }}'); toggleMobileCatMenu();" class="relative font-sabon italic text-nav-mobile leading-[1.725] text-ink hover:text-mist [.teaser-dark_&]:!text-white transition-colors duration-200 text-left bg-transparent border-0 p-0 cursor-pointer pointer-events-auto">{{ cat_label }}</button>
         {% endfor %}
       </div>
     </div>

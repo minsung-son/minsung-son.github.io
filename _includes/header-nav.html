@@ -95,6 +95,11 @@
 
 {{ include.row2 }}
 {% if include.article %}
+<!-- Mobile at rest: the article sheet's upward shadow above the hairline (the sticky header is
+     opaque, so the sheet's own box-shadow cannot show through it): the same 0 -0.25rem 0.75rem
+     4% black, as stops. -z-10 keeps it under Row 1's text; the opaque .is-scrolled title row
+     covers it. -->
+<div aria-hidden="true" class="hidden max-md:block absolute inset-x-0 bottom-px h-[1.125rem] -z-10 pointer-events-none bg-[linear-gradient(to_top,rgba(0,0,0,0.03)_0,rgba(0,0,0,0.025)_0.125rem,rgba(0,0,0,0.02)_0.25rem,rgba(0,0,0,0.015)_0.375rem,rgba(0,0,0,0.01)_0.5rem,rgba(0,0,0,0.0063)_0.625rem,rgba(0,0,0,0.0036)_0.75rem,rgba(0,0,0,0.0019)_0.875rem,rgba(0,0,0,0.0009)_1rem,rgba(0,0,0,0)_1.125rem)]"></div>
 <!-- Mobile .is-scrolled state (article.html): the project title + × cover Row 1 (bottom-px keeps
      the hairline; only the text cross-fades, the white face never changes), and the About
      page's 4rem white fade appears below the line -->
