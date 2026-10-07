@@ -40,9 +40,11 @@
          hiding content that scrolls under it; the title block (z-40) passes over it. When the
          title block has scrolled out, .is-scrolled on the sheet fades in the project title, ×,
          hairline and the About page's 4rem fade on that face. The face reaches 2px above the
-         viewport top so no image row can peek over it at a fractional scroll position. -->
+         viewport top so no image row can peek over it at a fractional scroll position (a
+         relative offset, not a negative margin: that would collapse through the zero-height
+         rail and push the title 2px down). -->
     <div class="hidden max-md:block sticky top-0 z-30 h-0 -mx-edge">
-      <div class="bg-white -mt-0.5 pt-0.5">
+      <div class="relative -top-0.5 bg-white pt-0.5">
         <div id="mobile-scroll-row2" class="flex items-center justify-between gap-4 px-edge pt-edge pb-3 border-b border-[#f0efed] opacity-0 pointer-events-none transition-opacity duration-200 [.is-scrolled_&]:opacity-100 [.is-scrolled_&]:pointer-events-auto">
           <span class="font-sabon italic text-nav-mobile text-ink truncate min-w-0">{{ page.title }}</span>
           <a id="mobile-scroll-close" href="{{ category_url }}" class="shrink-0 text-ink hover:opacity-70">
