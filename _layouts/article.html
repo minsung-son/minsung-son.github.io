@@ -78,7 +78,7 @@
            body. Desktop: set like the in-body headings. Mobile: 1rem, left-aligned — the
            in-body headings take the About style there, the standfirst does not — centred at 80%
            of the body width, with 1.5rem above the text (column gap 2.5rem - 1rem). -->
-      <p id="article-standfirst" class="w-full text-ink font-sabon text-base md:text-[1.125rem] leading-tight md:w-[23.8rem] max-w-full md:ml-[-3.25rem] mb-[-2rem] max-md:mb-[-1rem] max-md:w-[80%] max-md:self-center max-md:text-center">{{ page.standfirst }}</p>
+      <p id="article-standfirst" class="w-full text-ink font-sabon text-base md:text-[1.125rem] leading-tight md:w-[23.8rem] max-w-full md:self-center md:text-center mb-[-2rem] max-md:mb-[-1rem] max-md:w-[80%] max-md:self-center max-md:text-center">{{ page.standfirst }}</p>
       {% endif %}
 
       <!-- Hidden content source — JS flattens this into #article-hero / #article-column -->
@@ -457,15 +457,15 @@
 
         } else {
           // Normal text: paragraphs and ## headings, one direct child each, full column width —
-          // headings at the column's left edge, body paragraphs indented against them
+          // headings centred, body paragraphs as a centred 34rem block
           var clone = node.cloneNode(true);
           clone.classList.add('w-full', 'text-ink');
           if (clone.tagName === 'H2') {
-            // Desktop article-body heading: 18pt-equivalent and 3.25rem left of the body edge.
+            // Desktop article-body heading: 18pt-equivalent, centred in the column like the standfirst.
             // Its visible desktop bottom gap is 1.5rem, 75% of the previous 2rem.
             // Mobile matches the About section headings: nav size, centred, 0.825rem above the
             // text (column gap 2.5rem - 1.675rem).
-            clone.classList.add('font-sabon', 'text-base', 'md:text-[1.125rem]', 'leading-tight', 'md:w-[23.8rem]', 'max-w-full', 'md:ml-[-3.25rem]', 'mb-[-2rem]', 'max-md:text-nav-mobile', 'max-md:leading-[1.5]', 'max-md:text-center', 'max-md:mb-[-1.675rem]');
+            clone.classList.add('font-sabon', 'text-base', 'md:text-[1.125rem]', 'leading-tight', 'md:w-[23.8rem]', 'max-w-full', 'md:self-center', 'md:text-center', 'mb-[-2rem]', 'max-md:text-nav-mobile', 'max-md:leading-[1.5]', 'max-md:text-center', 'max-md:mb-[-1.675rem]');
           } else if (clone.tagName === 'P') {
             // Body text: sans-serif at the About page's body size. Desktop paragraphs keep a
             // 34rem measure (about 80 characters a line), centred in the column like the media
