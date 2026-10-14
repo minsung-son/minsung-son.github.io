@@ -195,9 +195,10 @@
   <!-- Floating index+title label for grid-view hover; white under mix-blend-difference inverts
        whatever is behind it. absolute + pageX/pageY, not fixed + clientX/clientY: Safari
        misplaces fixed elements against mouse coordinates when the page is zoomed -->
-  <div id="grid-hover-label" class="absolute pointer-events-none z-50 hidden flex items-baseline gap-2 font-sabon italic text-[0.9375rem] text-white mix-blend-difference whitespace-nowrap">
+  <div id="grid-hover-label" class="absolute pointer-events-none z-50 hidden flex flex-col items-center text-center font-sabon text-[0.9375rem] text-white mix-blend-difference whitespace-nowrap">
     <span id="grid-hover-index"></span>
     <span id="grid-hover-title"></span>
+    <span id="grid-hover-category" class="italic"></span>
   </div>
 
 <!-- Mobile: while Row 2 is expanded, this invisible layer sits above the content but below
@@ -639,12 +640,13 @@
       listGrid.addEventListener('mouseleave', deactivate);
     })();
 
-    // Grid hover → floating label; under "All work" the navbar's right slot previews the
+    // Grid hover → floating label (index, title, category in italic: three centred lines); under "All work" the navbar's right slot previews the
     // hovered project's category, otherwise it stays on the selected category
     (function () {
       var labelEl    = document.getElementById('grid-hover-label');
       var labelIndex = document.getElementById('grid-hover-index');
       var labelTitle = document.getElementById('grid-hover-title');
+      var labelCat   = document.getElementById('grid-hover-category');
       var navTitle   = document.getElementById('nav-title');
 
       function restoreNavTitle() {
@@ -679,6 +681,7 @@
           activeItem = item;
           labelIndex.textContent = item.dataset.index || '';
           labelTitle.textContent = item.dataset.title || '';
+          labelCat.textContent   = catLabels[item.dataset.category] || item.dataset.category || '';
           labelEl.classList.remove('hidden');
           if (currentCat === 'all') {
             navTitle.textContent = catLabels[item.dataset.category] || item.dataset.category;
