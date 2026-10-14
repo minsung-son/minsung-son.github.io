@@ -59,33 +59,33 @@
 
 <nav class="relative flex items-start h-[1.5625rem] max-md:h-auto max-md:items-center max-md:px-edge max-md:pt-edge max-md:pb-3 max-md:border-b {% if include.level == 2 %}max-md:bg-white max-md:transition-colors max-md:duration-200 [.teaser-active_&]:max-md:bg-transparent {% endif %}{% if include.article %}max-md:border-transparent{% else %}border-[#f0efed] max-md:transition-colors max-md:duration-200 [.teaser-active_&]:max-md:border-black/40 [.teaser-dark_&]:max-md:!border-white/40{% endif %}">
   {% comment %} title w-24 + Work ml-22 matches the LEVEL2 aside w-8 + mr-22 + grid pl-16, so Work's left edge lines up with the grid {% endcomment %}
-  <a href="{{ '/' | relative_url }}" class="font-sabon italic text-nav max-md:text-nav-mobile text-ink transition duration-200 hover:text-mist [.teaser-dark_&]:!text-white md:w-24 md:shrink-0 max-md:whitespace-nowrap max-md:shrink-0">{{ site.title }}</a>
+  <a href="{{ '/' | relative_url }}" class="font-sabon text-nav max-md:text-nav-mobile text-ink transition duration-200 hover:text-mist [.teaser-dark_&]:!text-white md:w-24 md:shrink-0 max-md:whitespace-nowrap max-md:shrink-0">{{ site.title }}</a>
 
   {% comment %} Mobile: Work/About right-cluster on Row 1; the current section is greyed out (mist) — Work on LEVEL2/3, About on the About page, neither on LEVEL1. Desktop colours unchanged. {% endcomment %}
   {% if include.level == 2 %}
-  <button id="nav-work-link" type="button" onclick="setCategory('all')" class="font-sabon italic text-nav max-md:text-nav-mobile text-mist transition duration-200 [.teaser-dark_&]:!text-white bg-transparent border-0 p-0 cursor-pointer ml-22 max-md:ml-auto">Work</button>
+  <button id="nav-work-link" type="button" onclick="setCategory('all')" class="font-sabon text-nav max-md:text-nav-mobile text-mist transition duration-200 [.teaser-dark_&]:!text-white bg-transparent border-0 p-0 cursor-pointer ml-22 max-md:ml-auto">Work</button>
   {% else %}
-  <a id="nav-work-link" href="{{ '/category/all/' | relative_url }}" class="font-sabon italic text-nav max-md:text-nav-mobile text-ink transition hover:text-mist ml-22 max-md:ml-auto{% if include.article %} max-md:text-mist{% endif %}">Work</a>
+  <a id="nav-work-link" href="{{ '/category/all/' | relative_url }}" class="font-sabon text-nav max-md:text-nav-mobile text-ink transition hover:text-mist ml-22 max-md:ml-auto{% if include.article %} max-md:text-mist{% endif %}">Work</a>
   {% endif %}
-  <a id="nav-about-link" href="{{ '/about/' | relative_url }}" class="js-about-link font-sabon italic text-nav max-md:text-nav-mobile transition duration-200 [.teaser-dark_&]:!text-white ml-[1rem] max-md:ml-4 {% if include.active_about %}text-mist{% else %}text-ink hover:text-mist{% endif %}">About</a>
+  <a id="nav-about-link" href="{{ '/about/' | relative_url }}" class="js-about-link font-sabon text-nav max-md:text-nav-mobile transition duration-200 [.teaser-dark_&]:!text-white ml-[1rem] max-md:ml-4 {% if include.active_about %}text-mist{% else %}text-ink hover:text-mist{% endif %}">About</a>
 
   {% if include.level == 1 %}
   <span class="cursor-enter transition hover:text-mist text-nav text-ink flex items-baseline gap-2 ml-auto max-md:hidden" onclick="goToCurrentArticle()">
     {% comment %} Counter first, title last: the title then sits at the right edge exactly like "003 Title" on the article page, so it doesn't move when the slide is opened {% endcomment %}
-    <span id="nav-counter" class="font-sabon italic"></span>
-    <span id="nav-title" class="font-sabon italic"></span>
+    <span id="nav-counter" class="font-sabon"></span>
+    <span id="nav-title" class="font-sabon"></span>
   </span>
   {% elsif include.level == 2 %}
   <span class="text-nav text-ink transition-colors duration-200 [.teaser-dark_&]:!text-white flex items-baseline gap-2 ml-auto max-md:hidden">
-    <span id="nav-index" class="font-sabon italic"></span>
-    <span id="nav-title" class="font-sabon italic"></span>
+    <span id="nav-index" class="font-sabon"></span>
+    <span id="nav-title" class="font-sabon"></span>
   </span>
   {% elsif include.article %}
   <!-- LEVEL3: project ID + title in the LEVEL2 right-slot spot; the sheet covers it on scroll -->
   {% if page.article_id and page.article_id != 0 %}
   <span class="text-nav text-ink flex items-baseline gap-2 ml-auto max-md:hidden">
-    <span class="font-sabon italic">{{ page.article_id | prepend: "000" | slice: -3, 3 }}</span>
-    <span class="font-sabon italic">{{ page.title }}</span>
+    <span class="font-sabon">{{ page.article_id | prepend: "000" | slice: -3, 3 }}</span>
+    <span class="font-sabon">{{ page.title }}</span>
   </span>
   {% endif %}
   {% endif %}
