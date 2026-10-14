@@ -1386,6 +1386,9 @@
     .md\:h-svh {
       height: 100svh;
     }
+    .md\:max-h-\[min\(29\.21875rem\,calc\(100svh_-_11\.875rem\)\)\] {
+      max-height: min(29.21875rem, calc(100svh - 11.875rem));
+    }
     .md\:max-h-article-col {
       max-height: var(--spacing-article-col);
     }

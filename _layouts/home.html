@@ -33,7 +33,7 @@
           <!-- Centred in the content area, shifted up a fixed offset (the -0.8rem). Mobile: the
                header (rows 1+2) is in flow, so a plain 50% centres on the remaining content area. -->
           <div class="absolute top-[calc(50%-0.8rem)] max-md:top-[calc(50%)] left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 cursor-enter" onclick="event.stopPropagation(); goToCurrentArticle();">
-            <img src="{{ article.url | relative_url }}{{ article.teaser }}" alt="{{ article.title }}" class="max-w-[min(59.0625rem,calc(100vw_-_6rem))] max-md:max-w-[calc(100vw_-_3.75rem)] max-h-[min(26.5625rem,calc(100svh_-_11.875rem))] w-auto h-auto block">
+            <img src="{{ article.url | relative_url }}{{ article.teaser }}" alt="{{ article.title }}" class="max-w-[min(59.0625rem,calc(100vw_-_6rem))] max-md:max-w-[calc(100vw_-_3.75rem)] max-h-[min(26.5625rem,calc(100svh_-_11.875rem))] md:max-h-[min(29.21875rem,calc(100svh_-_11.875rem))] w-auto h-auto block">
           </div>
         </div>
         {% endif %}
