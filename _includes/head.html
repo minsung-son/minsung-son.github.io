@@ -69,6 +69,9 @@
         html.removeAttribute('data-vt-active');
         done();
       }
+      // data-vt-last stays on the page: a debugging aid that records whether this page's
+      // arrival ran a view transition ("fade") or not ("none")
+      html.setAttribute('data-vt-last', e.viewTransition ? 'fade' : 'none');
       if (e.viewTransition) {
         html.setAttribute('data-vt-active', '');
         e.viewTransition.finished.then(clear, clear);
