@@ -50,11 +50,24 @@
   // transition. The flag expires after 3s so an abandoned navigation cannot leave it behind.
   (function () {
     var html = document.documentElement;
+    var fromArticle = false;
     var flag = sessionStorage.getItem('vt-from-article');
     if (flag) {
       sessionStorage.removeItem('vt-from-article');
-      if (Date.now() - parseInt(flag, 10) < 3000) html.setAttribute('data-vt-from-article', '');
+      fromArticle = Date.now() - parseInt(flag, 10) < 3000;
     }
+    // Belt and braces: a fresh navigation whose referrer is one of our article pages is an
+    // article exit too (× uses location.replace, the navbar links are plain navigations), even
+    // if the article page that sent us here was an older cached copy without the flag
+    if (!fromArticle) {
+      try {
+        var ref = document.referrer ? new URL(document.referrer) : null;
+        var nav = performance.getEntriesByType('navigation')[0];
+        if (ref && ref.host === location.host && ref.pathname.indexOf('/articles/') === 0 &&
+            nav && nav.type === 'navigate') fromArticle = true;
+      } catch (err) {}
+    }
+    if (fromArticle) html.setAttribute('data-vt-from-article', '');
     // data-vt-active marks the inbound transition while it runs; window.vtReady resolves once it
     // has finished (or at once when there is none), so entry animations (the Work grid's
     // staggered thumbnail fade) can wait for the teardown instead of overlapping it — Safari
