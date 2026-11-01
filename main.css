@@ -50,14 +50,15 @@
   }
 }
 
-/* Wide desktops (overrides the damped curve above from the 1512px reference up): every size on
-   the site is rem-based, so scaling the root font size linearly with the viewport keeps the
-   proportions of the owner's 14" MacBook (1512 CSS px wide) on larger monitors (a 2560px monitor
-   renders 1.69× — the same layout, not a small page in a wide field). Breakpoints are unaffected
-   (media queries use the initial 16px). Both curves give 16px at 1512px, so there is no jump. */
+/* Wide desktops (overrides the damped curve above from the 1512px reference up): the root font
+   follows davidchipperfield.com's desktop curve, font-size = min(0.7rem + 0.45vw, 1.8rem)
+   (18px at 1512px there), rescaled so it is 16px at 1512px here: 9.956px + 0.4vw, capped at
+   25.6px. A 2560px monitor renders at 1.26×, a 1728px 16" laptop at 1.05×. Every size on the
+   site is rem-based, so the whole layout follows; the fixed-column Work grid scales with the
+   viewport on its own, as on the reference site. Both curves give 16px at 1512px (no jump). */
 @media (min-width: 1512px) {
   html {
-    font-size: calc(100vw * 16 / 1512); /* 16px at 1512px; a px×vw product would be invalid */
+    font-size: min(calc(9.956px + 0.4vw), 25.6px);
   }
 }
 
