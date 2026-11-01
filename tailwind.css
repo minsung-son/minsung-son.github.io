@@ -1717,6 +1717,12 @@ html:not([data-vt-enter])::view-transition-new(l3-header) {
 html[data-vt-enter]::view-transition-new(content-area) {
   animation-name: vt-panel-in;
 }
+@media (width >= 48rem) {
+  html[data-ua-safari]::view-transition-group(content-area), html[data-ua-safari]::view-transition-old(content-area), html[data-ua-safari]::view-transition-new(content-area), html[data-ua-safari]::view-transition-old(l3-header), html[data-ua-safari]::view-transition-new(l3-header) {
+    animation-delay: 150ms;
+    animation-fill-mode: both;
+  }
+}
 @property --tw-translate-x {
   syntax: "*";
   inherits: false;

@@ -85,6 +85,7 @@
       rec.reveal = now(); rec.vt = !!e.viewTransition; rec.readyState = document.readyState;
       rec.fontsAtReveal = document.fonts ? document.fonts.status : '?'; rec.imgsAtReveal = imgs();
       if (window.__gridCells) rec.cellsAtReveal = window.__gridCells();
+      try { rec.rootName = getComputedStyle(document.documentElement).viewTransitionName; } catch (err) {}
       if (document.fonts) document.fonts.ready.then(function () { rec.fontsReady = now(); });
       var gaps = [], last = performance.now(), frames = 0, stop = false;
       function tick(t) { frames++; var g = t - last; if (g > 34) gaps.push(Math.round(last) + '+' + Math.round(g)); last = t; if (!stop) requestAnimationFrame(tick); }
@@ -102,6 +103,14 @@
 </script>
 <!-- Cross-document view transitions: LEVEL1/2 ↔ LEVEL3 slide, default crossfade elsewhere (main.css) -->
 <style>@view-transition { navigation: auto; }</style>
+<script>
+  // Safari gets a short hold before the slide transitions (main.css, data-ua-safari): see there
+  try {
+    var ua = navigator.userAgent;
+    if (/AppleWebKit/.test(ua) && /Safari\//.test(ua) && !/Chrome|Chromium|CriOS|Edg|OPR|FxiOS/.test(ua))
+      document.documentElement.setAttribute('data-ua-safari', '');
+  } catch (err) {}
+</script>
 {% unless page.layout == 'article' %}
 <script>
   // Non-article pages: every navigation that is not the LEVEL3 slide plays the browser's

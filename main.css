@@ -235,3 +235,20 @@ html:not([data-vt-enter])::view-transition-new(l3-header) {
 html[data-vt-enter]::view-transition-new(content-area) {
   animation-name: vt-panel-in;
 }
+
+/* Safari, desktop: the arriving page's first frame is expensive (the Work grid or an article's
+   hero at 2560×1440@2x takes 60–180ms to produce), and the slide's clock starts at that frame,
+   so the panel would already be that far along when the next frame appears — a visible lurch.
+   Hold the panel (and the navbar fades) in their start state for that long first; the slide
+   then begins on a frame that is actually presented. Chrome composites the live page cheaply
+   and keeps the immediate start. */
+@media (width >= 48rem) {
+  html[data-ua-safari]::view-transition-group(content-area),
+  html[data-ua-safari]::view-transition-old(content-area),
+  html[data-ua-safari]::view-transition-new(content-area),
+  html[data-ua-safari]::view-transition-old(l3-header),
+  html[data-ua-safari]::view-transition-new(l3-header) {
+    animation-delay: 150ms;
+    animation-fill-mode: both;
+  }
+}
