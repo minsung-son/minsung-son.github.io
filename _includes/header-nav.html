@@ -57,7 +57,7 @@
 {% endif %}
 {% endif %}
 
-<nav class="relative flex items-start h-[1.5625rem] max-md:h-auto max-md:items-center max-md:px-edge max-md:pt-edge max-md:pb-3 max-md:border-b {% if include.level == 2 %}max-md:bg-white max-md:transition-colors max-md:duration-200 [.teaser-active_&]:max-md:bg-transparent {% endif %}{% if include.article %}max-md:border-transparent{% else %}border-[#f0efed] max-md:transition-colors max-md:duration-200 [.teaser-active_&]:max-md:border-black/40 [.teaser-dark_&]:max-md:!border-white/40{% endif %}">
+<nav class="relative flex items-start h-[1.5625rem] max-md:h-auto max-md:items-center max-md:px-edge max-md:pt-edge-top max-md:pb-3 max-md:border-b {% if include.level == 2 %}max-md:bg-white max-md:transition-colors max-md:duration-200 [.teaser-active_&]:max-md:bg-transparent {% endif %}{% if include.article %}max-md:border-transparent{% else %}border-[#f0efed] max-md:transition-colors max-md:duration-200 [.teaser-active_&]:max-md:border-black/40 [.teaser-dark_&]:max-md:!border-white/40{% endif %}">
   {% comment %} title w-24 + Work ml-22 matches the LEVEL2 aside w-8 + mr-22 + grid pl-16, so Work's left edge lines up with the grid {% endcomment %}
   <a href="{{ '/' | relative_url }}" class="font-sabon text-nav max-md:text-nav-mobile text-ink transition duration-200 hover:text-mist [.teaser-dark_&]:!text-white md:w-24 md:shrink-0 max-md:whitespace-nowrap max-md:shrink-0">{{ site.title }}</a>
 

@@ -36,6 +36,7 @@
     --text-nav: 0.9375rem;
     --text-nav-mobile: 0.92rem;
     --spacing-edge: 1.875rem;
+    --spacing-edge-top: 0.9375rem;
     --spacing-article-col: 43.5rem;
     --spacing-hero: 34rem;
   }
@@ -765,8 +766,8 @@
   .pt-\[12rem\] {
     padding-top: 12rem;
   }
-  .pt-edge {
-    padding-top: var(--spacing-edge);
+  .pt-edge-top {
+    padding-top: var(--spacing-edge-top);
   }
   .pr-\[0\.43em\] {
     padding-right: 0.43em;
@@ -1301,8 +1302,8 @@
     .max-md\:pt-\[7rem\] {
       padding-top: 7rem;
     }
-    .max-md\:pt-edge {
-      padding-top: var(--spacing-edge);
+    .max-md\:pt-edge-top {
+      padding-top: var(--spacing-edge-top);
     }
     .max-md\:pr-0 {
       padding-right: 0px;

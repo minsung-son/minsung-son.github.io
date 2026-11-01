@@ -24,6 +24,8 @@
 
   /* Mobile screen-edge gutter (px-edge, -mx-edge): navbar, article sheet, list, About, home */
   --spacing-edge: 1.875rem;
+  /* Mobile top gutter above the navbar row and the article title band: half the edge gutter */
+  --spacing-edge-top: 0.9375rem;
 
   /* LEVEL3 geometry: central column width (w-article-col, …) and hero max height (max-h-hero) */
   --spacing-article-col: 43.5rem;
