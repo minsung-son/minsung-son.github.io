@@ -70,7 +70,9 @@
     function imgs() { var a = document.images, c = 0; for (var i = 0; i < a.length; i++) if (a[i].complete) c++; return c + '/' + a.length; }
     function save() {
       try { sessionStorage.setItem('vt-telemetry', JSON.stringify(rec)); } catch (err) {}
-      if (!debug || !document.body) return;
+      // The overlay is inserted only once the transition is over: a DOM insertion mid-transition
+      // would itself add a layout inside the slide
+      if (!debug || !document.body || !(rec.finished || rec.end)) return;
       var el = document.getElementById('vt-debug');
       if (!el) {
         el = document.createElement('pre'); el.id = 'vt-debug';
@@ -82,6 +84,7 @@
     window.addEventListener('pagereveal', function (e) {
       rec.reveal = now(); rec.vt = !!e.viewTransition; rec.readyState = document.readyState;
       rec.fontsAtReveal = document.fonts ? document.fonts.status : '?'; rec.imgsAtReveal = imgs();
+      if (window.__gridCells) rec.cellsAtReveal = window.__gridCells();
       if (document.fonts) document.fonts.ready.then(function () { rec.fontsReady = now(); });
       var gaps = [], last = performance.now(), frames = 0, stop = false;
       function tick(t) { frames++; var g = t - last; if (g > 34) gaps.push(Math.round(last) + '+' + Math.round(g)); last = t; if (!stop) requestAnimationFrame(tick); }

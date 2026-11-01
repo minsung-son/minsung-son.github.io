@@ -495,16 +495,50 @@
   var restoringState = !!rtState;
 
   // Return from an article: the article page pre-warmed (fetched + decoded) the thumbnails that
-  // were on screen (level2-state.visible). Load those eagerly now, before the first paint, so they
-  // are painted in the slide-down's first frame instead of popping in a few frames later — the
-  // lazy-loading decision is otherwise deferred past layout, and that late repaint froze Safari's
-  // slide for ~150ms (see the vtdebug telemetry in head.html).
+  // were on screen (level2-state.visible). Safari decodes an image synchronously on the main
+  // thread the first time it is painted, and a first paint that lands inside the slide-down
+  // freezes the slide (the vtdebug telemetry showed one 150–180ms stall at the first frame). So
+  // a cell takes part in the first frame only when its thumbnail is already decoded before that
+  // frame — decode() settles at once for a pre-warmed thumbnail still in the memory cache — and
+  // every other cell stays hidden until the transition is over (head.html: window.vtReady),
+  // then fades in. Warm cache: the whole grid sits behind the slide, as before. Cold cache: the
+  // slide stays smooth and the missing cells appear after it.
+  var returnReveal = null;
   if (rtState && rtState.visible && rtState.visible.length) {
     var warm = {};
     rtState.visible.forEach(function (src) { warm[src] = true; });
-    document.querySelectorAll('#view-grid img').forEach(function (img) {
-      if (warm[img.getAttribute('src')]) img.loading = 'eager';
+    var rtItems = Array.from(document.querySelectorAll('#view-grid .grid-item'));
+    var firstFrame = false, shown = 0, held = [];
+    requestAnimationFrame(function () { firstFrame = true; });
+    rtItems.forEach(function (item) {
+      var img = item.querySelector('img');
+      if (!img || !warm[img.getAttribute('src')]) return;
+      img.loading = 'eager';
+      if (!img.decode) return;
+      img.decode().then(function () {
+        if (firstFrame) return; // decoded too late for the first frame: appears after the slide
+        item.style.opacity = '1';
+        shown++;
+        var i = held.indexOf(item);
+        if (i !== -1) held.splice(i, 1);
+      }, function () {});
     });
+    // vtdebug telemetry (head.html): cells painted in the first frame / all cells
+    window.__gridCells = function () { return shown + '/' + rtItems.length; };
+    returnReveal = function () {
+      rtItems.forEach(function (item) {
+        item.style.transition = 'none';
+        item.style.opacity    = '0';
+        held.push(item);
+      });
+      (window.vtReady || Promise.resolve()).then(function () {
+        held.forEach(function (item) {
+          item.style.transition = 'opacity ' + FADE_MS + 'ms ease';
+          item.style.opacity    = '1';
+        });
+        held = [];
+      });
+    };
   }
 
   // bfcache returns keep everything natively — drop the unused reload flag
@@ -553,6 +587,10 @@
       item.style.opacity    = '0';
     });
     (window.vtReady || Promise.resolve()).then(triggerGridFadeIn);
+  } else if (returnReveal) {
+    // Return from an article (see above): hide the cells now; the decode callbacks show the
+    // ready ones before the first frame, the rest fade in after the slide
+    returnReveal();
   }
   gridInitialized = true;
   restoringState = false;

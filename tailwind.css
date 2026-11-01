@@ -1632,6 +1632,14 @@ html[data-vt-enter]::view-transition-new(root) {
     opacity: 0;
   }
 }
+@media (width >= 48rem) {
+  html[data-vt-exit], html[data-vt-from-article], html[data-vt-enter] {
+    view-transition-name: none;
+  }
+  html[data-vt-from-article]::view-transition-old(root) {
+    opacity: 0;
+  }
+}
 html[data-vt-enter] .vt-panel, html[data-vt-exit] .vt-panel {
   view-transition-name: content-area;
   contain: layout;

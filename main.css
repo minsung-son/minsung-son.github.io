@@ -131,6 +131,29 @@ html[data-vt-enter]::view-transition-new(root) {
   to   { opacity: 0; }
 }
 
+/* Desktop: leave the document root out of the slide transitions. WebKit (Safari 26) does not
+   host a captured destination root as live layers: it re-paints the whole arriving page into a
+   fresh device-scale snapshot on every frame of the transition, decoding images synchronously
+   on the main thread while it does so. At 2560×1440@2x that made each frame cost 15–50ms and
+   the first one (the Work grid's thumbnails) 150ms+, so the slide froze and jumped. Without a
+   root capture the arriving page is composited normally beneath the ::view-transition overlay
+   and only the panel/navbar snapshots animate on top. Exit: no root on either side (the
+   article leaving, the page the × returns to). Entry: the arriving article keeps no root
+   either; the origin's static root snapshot still covers it until the panel has slid in.
+   Mobile keeps the root captures (a phone viewport is cheap to re-paint). */
+@media (width >= 48rem) {
+  html[data-vt-exit],
+  html[data-vt-from-article],
+  html[data-vt-enter] {
+    view-transition-name: none;
+  }
+  /* If the other side still captured a root (an older cached page), keep that snapshot out
+     of sight instead of letting it cover the live page */
+  html[data-vt-from-article]::view-transition-old(root) {
+    opacity: 0;
+  }
+}
+
 /* Panel is named only while a transition can capture it — unnamed traversals stay instant */
 html[data-vt-enter] .vt-panel,
 html[data-vt-exit] .vt-panel {
