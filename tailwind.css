@@ -1044,6 +1044,9 @@
     --tw-ease: var(--ease-out);
     transition-timing-function: var(--ease-out);
   }
+  .will-change-transform {
+    will-change: transform;
+  }
   .select-none {
     -webkit-user-select: none;
     user-select: none;

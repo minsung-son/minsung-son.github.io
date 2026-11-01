@@ -87,17 +87,17 @@ module ArticleBody
   end
 
   def single_image_html(url, caption_attr, size = nil)
-    "<div class=\"article-img-wrap\"#{caption_attr}><img src=\"#{url}\"#{dim_attr(size)} alt=\"\"></div>"
+    "<div class=\"article-img-wrap\"#{caption_attr}><img decoding=\"async\" src=\"#{url}\"#{dim_attr(size)} alt=\"\"></div>"
   end
 
   def slideshow_html(urls, caption_attr, id, sizes = [])
     # Invisible sizer: keeps frame height locked to first image's aspect ratio
-    sizer = "<img src=\"#{urls[0]}\"#{dim_attr(sizes[0])} alt=\"\" aria-hidden=\"true\" " \
+    sizer = "<img decoding=\"async\" src=\"#{urls[0]}\"#{dim_attr(sizes[0])} alt=\"\" aria-hidden=\"true\" " \
             'class="block w-full h-auto invisible pointer-events-none">'
 
     slides = urls.map.with_index do |url, i|
       hidden_class = i.zero? ? '' : 'hidden'
-      "<img src=\"#{url}\"#{dim_attr(sizes[i])} alt=\"\" class=\"ss-slide absolute inset-0 w-full h-full object-contain #{hidden_class}\">"
+      "<img decoding=\"async\" src=\"#{url}\"#{dim_attr(sizes[i])} alt=\"\" class=\"ss-slide absolute inset-0 w-full h-full object-contain #{hidden_class}\">"
     end.join("\n")
 
     # Widest slide's per-slideshow aspect ratio; a hero slideshow's fixed-height frame is w = h * this

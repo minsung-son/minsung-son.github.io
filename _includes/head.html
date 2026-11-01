@@ -4,6 +4,17 @@
 <link rel="preconnect" href="https://use.typekit.net" crossorigin>
 <!-- Latin fonts: plain CSS kit, loads immediately -->
 <link rel="stylesheet" href="https://use.typekit.net/iqu5sby.css">
+<!-- Start the Latin web-font loads now, while the document is still parsing, instead of at the first
+     layout: the first paint — and the first frame of any inbound view transition — then already has
+     the fonts, so there is no invisible-text period followed by a document-wide re-layout 50–100ms
+     into the transition (the vtdebug telemetry showed fonts still "loading" at pagereveal) -->
+<script>
+  (function () {
+    if (!document.fonts || !document.fonts.load) return;
+    ['1em linotype-sabon', 'italic 1em linotype-sabon', '1em monotype-grotesque', 'italic 1em monotype-grotesque']
+      .forEach(function (f) { try { document.fonts.load(f).catch(function () {}); } catch (err) {} });
+  })();
+</script>
 <!-- CJK font (sandoll-myeongjoneo1): JS kit, required for dynamic subsetting. Loaded only
      AFTER any cross-document view transition has finished: the kit inserts a stylesheet when it
      arrives, and Safari rebuilds styles on that, which restarts a running transition from the
@@ -38,6 +49,45 @@
      the first paint: without this, the slide began over a half-built page and the content
      popped in mid-slide. Supported in Chrome 124+ and Safari 18.2+; ignored elsewhere. -->
 <link rel="expect" href="#page-end" blocking="render">
+<script>
+  // Transition telemetry (debugging aid, no visible effect unless the URL contains "vtdebug"):
+  // records how this page's inbound view transition rendered — reveal/ready/finished times,
+  // requestAnimationFrame gaps over 34ms (main-thread stalls), font and image readiness — in
+  // sessionStorage['vt-telemetry'], and with ?vtdebug=1 prints it in a corner overlay.
+  (function () {
+    var rec = { page: location.pathname, vp: innerWidth + 'x' + innerHeight + '@' + devicePixelRatio,
+                ua: (navigator.userAgent.match(/(Version\/[\d.]+ Safari|Chrome\/[\d.]+|Firefox\/[\d.]+)/) || [''])[0] };
+    function now() { return Math.round(performance.now()); }
+    function imgs() { var a = document.images, c = 0; for (var i = 0; i < a.length; i++) if (a[i].complete) c++; return c + '/' + a.length; }
+    function save() {
+      try { sessionStorage.setItem('vt-telemetry', JSON.stringify(rec)); } catch (err) {}
+      if (location.search.indexOf('vtdebug') === -1 || !document.body) return;
+      var el = document.getElementById('vt-debug');
+      if (!el) {
+        el = document.createElement('pre'); el.id = 'vt-debug';
+        el.style.cssText = 'position:fixed;left:0;bottom:0;z-index:9999;margin:0;padding:8px 10px;background:rgba(0,0,0,.82);color:#9f9;font:11px/1.45 ui-monospace,Menlo,monospace;white-space:pre-wrap;max-width:min(70vw,40rem);pointer-events:none';
+        document.body.appendChild(el);
+      }
+      el.textContent = JSON.stringify(rec, null, 1).replace(/[{}"]/g, '');
+    }
+    window.addEventListener('pagereveal', function (e) {
+      rec.reveal = now(); rec.vt = !!e.viewTransition; rec.readyState = document.readyState;
+      rec.fontsAtReveal = document.fonts ? document.fonts.status : '?'; rec.imgsAtReveal = imgs();
+      if (document.fonts) document.fonts.ready.then(function () { rec.fontsReady = now(); });
+      var gaps = [], last = performance.now(), frames = 0, stop = false;
+      function tick(t) { frames++; var g = t - last; if (g > 34) gaps.push(Math.round(last) + '+' + Math.round(g)); last = t; if (!stop) requestAnimationFrame(tick); }
+      requestAnimationFrame(tick);
+      function done(tag) { stop = true; rec[tag] = now(); rec.frames = frames; rec.gaps = gaps.length ? gaps.join(' ') : 'none'; rec.imgsAtEnd = imgs(); save(); }
+      if (e.viewTransition) {
+        e.viewTransition.ready.then(function () { rec.ready = now(); rec.fontsAtReady = document.fonts ? document.fonts.status : '?'; rec.imgsAtReady = imgs(); }, function () { rec.ready = 'rejected'; });
+        e.viewTransition.finished.then(function () { done('finished'); }, function () { done('finished'); });
+      } else {
+        setTimeout(function () { done('end'); }, 800);
+      }
+    });
+    window.addEventListener('load', function () { rec.load = now(); rec.imgsAtLoad = imgs(); save(); });
+  })();
+</script>
 <!-- Cross-document view transitions: LEVEL1/2 ↔ LEVEL3 slide, default crossfade elsewhere (main.css) -->
 <style>@view-transition { navigation: auto; }</style>
 {% unless page.layout == 'article' %}

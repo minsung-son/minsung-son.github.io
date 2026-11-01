@@ -494,6 +494,19 @@
   // cells still waiting on their stagger delay
   var restoringState = !!rtState;
 
+  // Return from an article: the article page pre-warmed (fetched + decoded) the thumbnails that
+  // were on screen (level2-state.visible). Load those eagerly now, before the first paint, so they
+  // are painted in the slide-down's first frame instead of popping in a few frames later — the
+  // lazy-loading decision is otherwise deferred past layout, and that late repaint froze Safari's
+  // slide for ~150ms (see the vtdebug telemetry in head.html).
+  if (rtState && rtState.visible && rtState.visible.length) {
+    var warm = {};
+    rtState.visible.forEach(function (src) { warm[src] = true; });
+    document.querySelectorAll('#view-grid img').forEach(function (img) {
+      if (warm[img.getAttribute('src')]) img.loading = 'eager';
+    });
+  }
+
   // bfcache returns keep everything natively — drop the unused reload flag
   window.addEventListener('pageshow', function () {
     sessionStorage.removeItem('level2-return');
