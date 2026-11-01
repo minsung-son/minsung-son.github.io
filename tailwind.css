@@ -1572,6 +1572,11 @@
     opacity: 100%;
   }
 }
+@media (min-width: 1512px) {
+  html {
+    font-size: calc(16px * 100vw / 1512);
+  }
+}
 @layer base {
   html {
     font-synthesis-style: none;
