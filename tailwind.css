@@ -1572,11 +1572,6 @@
     opacity: 100%;
   }
 }
-@media (min-width: 1512px) {
-  html {
-    font-size: calc(16px * 100vw / 1512);
-  }
-}
 @layer base {
   html {
     font-synthesis-style: none;
@@ -1585,6 +1580,11 @@
 @media (width >= 48rem) {
   html {
     font-size: clamp( calc(12.8px + 3.2px * 1256 / 1512), calc(12.8px + 100vw * 3.2 / 1512), calc(12.8px + 3.2px * 1768 / 1512) );
+  }
+}
+@media (min-width: 1512px) {
+  html {
+    font-size: calc(16px * 100vw / 1512);
   }
 }
 @media (width < 48rem) {

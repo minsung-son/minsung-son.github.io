@@ -32,16 +32,6 @@
   --spacing-hero: 34rem;
 }
 
-/* Wide desktops: every size on the site is rem-based, so scaling the root font size with the
-   viewport keeps the proportions of the owner's 14" MacBook (1512 CSS px wide) on larger
-   monitors (a 2560px monitor renders 1.69× — same layout, not a small page in a wide field).
-   Breakpoints are unaffected (media queries use the initial 16px). Below 1512px nothing changes. */
-@media (min-width: 1512px) {
-  html {
-    font-size: calc(16px * 100vw / 1512);
-  }
-}
-
 /* The Sandoll faces ship no italic: disable synthesis so Hangul stays upright in italic runs */
 @layer base {
   html {
@@ -57,6 +47,17 @@
       calc(12.8px + 100vw * 3.2 / 1512),
       calc(12.8px + 3.2px * 1768 / 1512)
     );
+  }
+}
+
+/* Wide desktops (overrides the damped curve above from the 1512px reference up): every size on
+   the site is rem-based, so scaling the root font size linearly with the viewport keeps the
+   proportions of the owner's 14" MacBook (1512 CSS px wide) on larger monitors (a 2560px monitor
+   renders 1.69× — the same layout, not a small page in a wide field). Breakpoints are unaffected
+   (media queries use the initial 16px). Both curves give 16px at 1512px, so there is no jump. */
+@media (min-width: 1512px) {
+  html {
+    font-size: calc(16px * 100vw / 1512);
   }
 }
 
