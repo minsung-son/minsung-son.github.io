@@ -53,15 +53,24 @@
   // Transition telemetry (debugging aid, no visible effect unless the URL contains "vtdebug"):
   // records how this page's inbound view transition rendered — reveal/ready/finished times,
   // requestAnimationFrame gaps over 34ms (main-thread stalls), font and image readiness — in
-  // sessionStorage['vt-telemetry'], and with ?vtdebug=1 prints it in a corner overlay.
+  // sessionStorage['vt-telemetry'], and after a visit with ?vtdebug=1 prints it in a corner overlay.
   (function () {
     var rec = { page: location.pathname, vp: innerWidth + 'x' + innerHeight + '@' + devicePixelRatio,
                 ua: (navigator.userAgent.match(/(Version\/[\d.]+ Safari|Chrome\/[\d.]+|Firefox\/[\d.]+)/) || [''])[0] };
+    // The flag sticks for the tab (sessionStorage): the article × returns via location.replace(referrer)
+    // and WebKit strips the query from the referrer, so ?vtdebug=1 would otherwise be lost there.
+    // ?vtdebug=0 turns it off again.
+    var debug = false;
+    try {
+      if (/[?&]vtdebug=0/.test(location.search)) sessionStorage.removeItem('vt-debug');
+      else if (location.search.indexOf('vtdebug') !== -1) sessionStorage.setItem('vt-debug', '1');
+      debug = sessionStorage.getItem('vt-debug') === '1';
+    } catch (err) {}
     function now() { return Math.round(performance.now()); }
     function imgs() { var a = document.images, c = 0; for (var i = 0; i < a.length; i++) if (a[i].complete) c++; return c + '/' + a.length; }
     function save() {
       try { sessionStorage.setItem('vt-telemetry', JSON.stringify(rec)); } catch (err) {}
-      if (location.search.indexOf('vtdebug') === -1 || !document.body) return;
+      if (!debug || !document.body) return;
       var el = document.getElementById('vt-debug');
       if (!el) {
         el = document.createElement('pre'); el.id = 'vt-debug';
