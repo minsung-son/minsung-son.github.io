@@ -55,9 +55,26 @@
       sessionStorage.removeItem('vt-from-article');
       if (Date.now() - parseInt(flag, 10) < 3000) html.setAttribute('data-vt-from-article', '');
     }
+    // data-vt-active marks the inbound transition while it runs; window.vtReady resolves once it
+    // has finished (or at once when there is none), so entry animations (the Work grid's
+    // staggered thumbnail fade) can wait for the teardown instead of overlapping it — Safari
+    // flickered the loading thumbnails when both ran together.
+    var done;
+    window.vtReady = new Promise(function (r) { done = r; });
+    var hasReveal = ('onpagereveal' in window) || (typeof PageRevealEvent !== 'undefined');
+    if (!hasReveal) done();
     window.addEventListener('pagereveal', function (e) {
-      function clear() { html.removeAttribute('data-vt-from-article'); }
-      if (e.viewTransition) e.viewTransition.finished.then(clear, clear); else clear();
+      function clear() {
+        html.removeAttribute('data-vt-from-article');
+        html.removeAttribute('data-vt-active');
+        done();
+      }
+      if (e.viewTransition) {
+        html.setAttribute('data-vt-active', '');
+        e.viewTransition.finished.then(clear, clear);
+      } else {
+        clear();
+      }
       setTimeout(clear, 1500);
     });
   })();

@@ -531,7 +531,16 @@
     applySort();
   }
   updateSortIndicators();
-  if (!restoringState) triggerGridFadeIn(); // round-trip restore: cells appear in place
+  if (!restoringState) {
+    // Entry: hide the cells now (before first paint) and start the staggered fade only after the
+    // inbound view transition has finished (head.html: window.vtReady) — overlapping the two made
+    // Safari flicker the still-loading thumbnails. Round-trip restore: cells appear in place.
+    document.querySelectorAll('#view-grid .grid-item').forEach(function (item) {
+      item.style.transition = 'none';
+      item.style.opacity    = '0';
+    });
+    (window.vtReady || Promise.resolve()).then(triggerGridFadeIn);
+  }
   gridInitialized = true;
   restoringState = false;
 
