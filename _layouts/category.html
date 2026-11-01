@@ -502,19 +502,22 @@
   // frame — decode() settles at once for a pre-warmed thumbnail still in the memory cache — and
   // every other cell stays hidden until the transition is over (head.html: window.vtReady),
   // then fades in. Warm cache: the whole grid sits behind the slide, as before. Cold cache: the
-  // slide stays smooth and the missing cells appear after it.
+  // slide stays smooth and the missing cells appear after it. Safari only (data-ua-safari,
+  // head.html): Chrome decodes off the main thread and paints each thumbnail as it becomes
+  // ready, and its decode() settles only after the first frame, so there the cells just stay.
   var returnReveal = null;
   if (rtState && rtState.visible && rtState.visible.length) {
     var warm = {};
     rtState.visible.forEach(function (src) { warm[src] = true; });
     var rtItems = Array.from(document.querySelectorAll('#view-grid .grid-item'));
+    var gate = document.documentElement.hasAttribute('data-ua-safari');
     var firstFrame = false, shown = 0, held = [];
-    requestAnimationFrame(function () { firstFrame = true; });
+    if (gate) requestAnimationFrame(function () { firstFrame = true; });
     rtItems.forEach(function (item) {
       var img = item.querySelector('img');
       if (!img || !warm[img.getAttribute('src')]) return;
       img.loading = 'eager';
-      if (!img.decode) return;
+      if (!gate || !img.decode) return;
       img.decode().then(function () {
         if (firstFrame) return; // decoded too late for the first frame: appears after the slide
         item.style.opacity = '1';
@@ -523,22 +526,24 @@
         if (i !== -1) held.splice(i, 1);
       }, function () {});
     });
-    // vtdebug telemetry (head.html): cells painted in the first frame / all cells
-    window.__gridCells = function () { return shown + '/' + rtItems.length; };
-    returnReveal = function () {
-      rtItems.forEach(function (item) {
-        item.style.transition = 'none';
-        item.style.opacity    = '0';
-        held.push(item);
-      });
-      (window.vtReady || Promise.resolve()).then(function () {
-        held.forEach(function (item) {
-          item.style.transition = 'opacity ' + FADE_MS + 'ms ease';
-          item.style.opacity    = '1';
+    if (gate) {
+      // vtdebug telemetry (head.html): cells painted in the first frame / all cells
+      window.__gridCells = function () { return shown + '/' + rtItems.length; };
+      returnReveal = function () {
+        rtItems.forEach(function (item) {
+          item.style.transition = 'none';
+          item.style.opacity    = '0';
+          held.push(item);
         });
-        held = [];
-      });
-    };
+        (window.vtReady || Promise.resolve()).then(function () {
+          held.forEach(function (item) {
+            item.style.transition = 'opacity ' + FADE_MS + 'ms ease';
+            item.style.opacity    = '1';
+          });
+          held = [];
+        });
+      };
+    }
   }
 
   // bfcache returns keep everything natively — drop the unused reload flag
