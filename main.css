@@ -57,7 +57,7 @@
    (media queries use the initial 16px). Both curves give 16px at 1512px, so there is no jump. */
 @media (min-width: 1512px) {
   html {
-    font-size: calc(16px * 100vw / 1512);
+    font-size: calc(100vw * 16 / 1512); /* 16px at 1512px; a px×vw product would be invalid */
   }
 }
 

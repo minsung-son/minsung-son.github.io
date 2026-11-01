@@ -1584,7 +1584,7 @@
 }
 @media (min-width: 1512px) {
   html {
-    font-size: calc(16px * 100vw / 1512);
+    font-size: calc(100vw * 16 / 1512);
   }
 }
 @media (width < 48rem) {
