@@ -1606,7 +1606,7 @@
 ::view-transition {
   pointer-events: none;
 }
-::view-transition-old(root), ::view-transition-new(root) {
+html[data-level="3"]::view-transition-old(root), html[data-level="3"]::view-transition-new(root), html[data-vt-from-article]::view-transition-old(root), html[data-vt-from-article]::view-transition-new(root) {
   animation: none;
   mix-blend-mode: normal;
 }

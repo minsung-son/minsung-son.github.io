@@ -38,23 +38,29 @@
      the first paint: without this, the slide began over a half-built page and the content
      popped in mid-slide. Supported in Chrome 124+ and Safari 18.2+; ignored elsewhere. -->
 <link rel="expect" href="#page-end" blocking="render">
-<!-- Cross-document view transitions (LEVEL1/2 ↔ LEVEL3 slide, main.css) -->
+<!-- Cross-document view transitions: LEVEL1/2 ↔ LEVEL3 slide, default crossfade elsewhere (main.css) -->
 <style>@view-transition { navigation: auto; }</style>
 {% unless page.layout == 'article' %}
 <script>
-  // Leaving a non-article page for another non-article page (home/Work/About in any
-  // combination) has no slide to play, so skip the root-only transition on the way out: left
-  // alone, its 250ms teardown lands as a hitch in the destination's fade-in (grid thumbnails,
-  // About sections). Decided here on the outgoing page — skipping in pageswap drops the inbound
-  // transition too. Any navigation INTO an article keeps its slide. (Never decide this on the
-  // incoming page: navigation.activation.from is unreliable on bfcache returns in Safari.)
-  window.addEventListener('pageswap', function (e) {
-    var to = e.activation && e.activation.entry;
-    if (!e.viewTransition || !to) return;
-    try {
-      if (new URL(to.url, location.href).pathname.indexOf('/articles/') !== 0) e.viewTransition.skipTransition();
-    } catch (err) {}
-  });
+  // Non-article pages: every navigation that is not the LEVEL3 slide plays the browser's
+  // default root crossfade (0.25s, like davidchipperfield.com). Arriving from an article's ×
+  // must NOT crossfade (the panel slides down over this page instead), so the article flags
+  // the exit in sessionStorage during pageswap and this page raises data-vt-from-article
+  // before its first paint; main.css then keeps the root snapshots static for that one
+  // transition. The flag expires after 3s so an abandoned navigation cannot leave it behind.
+  (function () {
+    var html = document.documentElement;
+    var flag = sessionStorage.getItem('vt-from-article');
+    if (flag) {
+      sessionStorage.removeItem('vt-from-article');
+      if (Date.now() - parseInt(flag, 10) < 3000) html.setAttribute('data-vt-from-article', '');
+    }
+    window.addEventListener('pagereveal', function (e) {
+      function clear() { html.removeAttribute('data-vt-from-article'); }
+      if (e.viewTransition) e.viewTransition.finished.then(clear, clear); else clear();
+      setTimeout(clear, 1500);
+    });
+  })();
 </script>
 {% endunless %}
 <script>
@@ -79,8 +85,12 @@
     window.addEventListener('pageswap', function (e) {
       // Drop the entry flag before bfcache snapshots this page, or a later return replays it
       html.removeAttribute('data-vt-enter');
-      // White-back the navbar for the old-state capture so it can fade out (vt-navbar-out)
-      if (e.viewTransition) html.setAttribute('data-vt-exit', '');
+      // White-back the navbar for the old-state capture so it can fade out (vt-navbar-out),
+      // and tell the destination not to crossfade under the slide-down (see the block above)
+      if (e.viewTransition) {
+        html.setAttribute('data-vt-exit', '');
+        sessionStorage.setItem('vt-from-article', String(Date.now()));
+      }
     });
   })();
 

@@ -83,16 +83,23 @@
   }
 }
 
-/* LEVEL3 entry/exit slide (cross-document View Transitions). The @view-transition opt-in itself
-   lives in head.html, emitted per page (every page except home). */
+/* Cross-document View Transitions. The @view-transition opt-in lives in head.html on every page.
+   Two kinds: the LEVEL3 entry/exit slide (below), and, for every other navigation (home ↔ Work ↔
+   About, and traversals between them), the browser's default root crossfade (0.25s), as on
+   davidchipperfield.com. */
 
-/* Let input pass through to the live page during the 0.42s transition */
+/* Let input pass through to the live page during a transition */
 ::view-transition {
   pointer-events: none;
 }
 
-::view-transition-old(root),
-::view-transition-new(root) {
+/* Slide transitions keep both root snapshots static: into LEVEL3 (entry slide, and instant
+   traversals), and onto the page an article's × returns to (data-vt-from-article, head.html),
+   where the panel slides down over the destination instead of crossfading */
+html[data-level="3"]::view-transition-old(root),
+html[data-level="3"]::view-transition-new(root),
+html[data-vt-from-article]::view-transition-old(root),
+html[data-vt-from-article]::view-transition-new(root) {
   animation: none;
   mix-blend-mode: normal;
 }
