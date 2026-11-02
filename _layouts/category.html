@@ -195,7 +195,7 @@
   <!-- Floating index+title label for grid-view hover; white under mix-blend-difference inverts
        whatever is behind it. absolute + pageX/pageY, not fixed + clientX/clientY: Safari
        misplaces fixed elements against mouse coordinates when the page is zoomed -->
-  <div id="grid-hover-label" class="absolute pointer-events-none z-50 hidden flex flex-col items-center text-center font-sabon text-[0.9375rem] text-white mix-blend-difference whitespace-nowrap">
+  <div id="grid-hover-label" class="absolute pointer-events-none z-50 flex flex-col items-center text-center font-sabon text-[0.9375rem] text-white mix-blend-difference whitespace-nowrap opacity-0 transition-opacity duration-200 ease-out">
     <span id="grid-hover-index"></span>
     <span id="grid-hover-title"></span>
     <span id="grid-hover-category" class="italic"></span>
@@ -721,10 +721,23 @@
       // Once a grid item is clicked the label stays hidden while the exit transition plays;
       // pageshow unfreezes for bfcache returns
       var frozen = false;
+      // Fade the label in and out (200ms, the site's hover speed) instead of toggling display;
+      // on a click it disappears at once so the exit transition never captures a half-faded label
+      function showLabel() { labelEl.classList.add('opacity-100'); }
+      function hideLabel(instant) {
+        if (instant) {
+          labelEl.classList.add('transition-none');
+          labelEl.classList.remove('opacity-100');
+          labelEl.getBoundingClientRect(); // apply the jump before the transition comes back
+          labelEl.classList.remove('transition-none');
+        } else {
+          labelEl.classList.remove('opacity-100');
+        }
+      }
       document.addEventListener('click', function (e) {
         if (e.target.closest && e.target.closest('a.grid-item')) {
           frozen = true;
-          labelEl.classList.add('hidden');
+          hideLabel(true);
         }
       }, true);
       window.addEventListener('pageshow', function () { frozen = false; restoreNavTitle(); });
@@ -736,9 +749,15 @@
 
       mainContent.addEventListener('mousemove', function (e) {
         if (frozen) return;
+        // The label follows the cursor on every move, so it also tracks it while fading out
+        // after the pointer has left an image. 1.5rem cursor offset, resolved to px so it tracks
+        // the fluid root
+        var remPx = parseFloat(getComputedStyle(document.documentElement).fontSize);
+        labelEl.style.left = (e.pageX + 1.5 * remPx) + 'px';
+        labelEl.style.top  = e.pageY + 'px';
         var img = e.target.closest ? e.target.closest('.grid-item img') : null;
         if (!img || img.classList.contains('grayscale')) {
-          if (activeItem) { activeItem = null; labelEl.classList.add('hidden'); restoreNavTitle(); }
+          if (activeItem) { activeItem = null; hideLabel(false); restoreNavTitle(); }
           return;
         }
         var item = img.closest('.grid-item');
@@ -747,20 +766,16 @@
           labelIndex.textContent = item.dataset.index || '';
           labelTitle.textContent = item.dataset.title || '';
           labelCat.textContent   = catLabels[item.dataset.category] || item.dataset.category || '';
-          labelEl.classList.remove('hidden');
+          showLabel();
           if (currentCat === 'all') {
             navTitle.textContent = catLabels[item.dataset.category] || item.dataset.category;
           }
         }
-        // 1.5rem cursor offset, resolved to px so it tracks the fluid root
-        var remPx = parseFloat(getComputedStyle(document.documentElement).fontSize);
-        labelEl.style.left = (e.pageX + 1.5 * remPx) + 'px';
-        labelEl.style.top  = e.pageY + 'px';
       });
 
       mainContent.addEventListener('mouseleave', function () {
         activeItem = null;
-        if (!frozen) { labelEl.classList.add('hidden'); restoreNavTitle(); }
+        if (!frozen) { hideLabel(false); restoreNavTitle(); }
       });
     })();
 
