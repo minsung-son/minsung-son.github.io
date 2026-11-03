@@ -632,28 +632,6 @@
       var activeRow  = null;
       var currentSrc = '';  // teaser currently on the front layer
       var front      = 0;   // index into imgs of the visible layer
-      var teaserDark = {};  // src -> is the image dark on average? (cached)
-
-      // Average luminance over a 32x32 downsample; below mid-grey flips to white text (teaser-dark)
-      function classifyTeaser(src, cb) {
-        if (src in teaserDark) { cb(teaserDark[src]); return; }
-        var probe = new Image();
-        probe.onload = function() {
-          var s = 32, c = document.createElement('canvas');
-          c.width = s; c.height = s;
-          var ctx = c.getContext('2d');
-          ctx.drawImage(probe, 0, 0, s, s);
-          var d = ctx.getImageData(0, 0, s, s).data;
-          var sum = 0;
-          for (var i = 0; i < d.length; i += 4) {
-            sum += 0.2126 * d[i] + 0.7152 * d[i + 1] + 0.0722 * d[i + 2];
-          }
-          teaserDark[src] = sum / (d.length / 4) < 128;
-          cb(teaserDark[src]);
-        };
-        probe.onerror = function() { teaserDark[src] = false; cb(false); };
-        probe.src = src;
-      }
 
       // Direct teaser switches crossfade the two layers; entering/leaving fades the container
       function showTeaser(src) {
@@ -670,12 +648,8 @@
             imgs[front].src = src;
           }
         }
-        document.body.classList.add('teaser-active');
-        classifyTeaser(src, function(dark) {
-          if (currentSrc === src && document.body.classList.contains('teaser-active')) {
-            document.body.classList.toggle('teaser-dark', dark);
-          }
-        });
+        // Over any teaser the page text turns white (teaser-dark), whatever the image's brightness
+        document.body.classList.add('teaser-active', 'teaser-dark');
       }
 
       function hideTeaser() {
