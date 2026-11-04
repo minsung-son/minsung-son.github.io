@@ -32,8 +32,8 @@
              data-url="{{ link_url }}">
           <!-- Centred in the content area, shifted up a fixed offset (the -0.8rem). Mobile: the
                header (rows 1+2) is in flow, so a plain 50% centres on the remaining content area. -->
-          <div class="absolute top-[calc(50%-0.8rem)] max-md:top-[calc(50%)] left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 cursor-enter will-change-transform" onclick="event.stopPropagation(); goToCurrentArticle();">
-            <img src="{{ article.url | relative_url }}{{ article.teaser }}" alt="{{ article.title }}" decoding="async" class="max-w-[min(59.0625rem,calc(100vw_-_6rem))] max-md:max-w-[calc(100vw_-_3.75rem)] max-h-[min(26.5625rem,calc(100svh_-_11.875rem))] md:max-h-[min(29.21875rem,calc(100svh_-_11.875rem))] w-auto h-auto block">
+          <div class="absolute top-[calc(50%-0.8rem)] max-md:top-[calc(50%)] left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 cursor-enter will-change-transform max-md:pointer-events-none" onclick="event.stopPropagation(); goToCurrentArticle();">
+            <img src="{{ article.url | relative_url }}{{ article.teaser }}" alt="{{ article.title }}" decoding="async" class="max-w-[min(59.0625rem,calc(100vw_-_6rem))] max-md:max-w-[calc(100vw_-_3.75rem)] max-h-[min(26.5625rem,calc(100svh_-_11.875rem))] md:max-h-[min(32.140625rem,calc(100svh_-_11.875rem))] w-auto h-auto block">
           </div>
         </div>
         {% endif %}
@@ -42,9 +42,12 @@
 
     </main>
 
-    <!-- Two-zone click overlay: left = prev, right = next -->
+    <!-- Click overlay. Desktop: two zones, left = prev, right = next (the image itself opens the
+         article). Mobile: three equal zones across the full screen width, left = prev, middle =
+         open the article, right = next (the image lets taps through); swipes also turn slides. -->
     <div class="absolute inset-0 z-10 flex">
       <div class="cursor-prev flex-1" onclick="slidePrev()"></div>
+      <div class="cursor-enter flex-1 hidden max-md:block" onclick="goToCurrentArticle()"></div>
       <div class="cursor-next flex-1" onclick="slideNext()"></div>
     </div>
 
@@ -109,6 +112,24 @@
 
   function slidePrev() { showIndex(currentIndex - 1); }
   function slideNext() { showIndex(currentIndex + 1); }
+
+  // Mobile: a horizontal swipe turns the slides (left = next, right = previous). A moved touch
+  // fires no click, so a swipe never also triggers the tap zone under it.
+  (function () {
+    var area = document.getElementById('content-area');
+    var x0 = null, y0 = 0;
+    area.addEventListener('touchstart', function (e) {
+      if (e.touches.length !== 1 || !window.matchMedia('(width < 48rem)').matches) { x0 = null; return; }
+      x0 = e.touches[0].clientX; y0 = e.touches[0].clientY;
+    }, { passive: true });
+    area.addEventListener('touchend', function (e) {
+      if (x0 === null) return;
+      var dx = e.changedTouches[0].clientX - x0, dy = e.changedTouches[0].clientY - y0;
+      x0 = null;
+      if (Math.abs(dx) < 40 || Math.abs(dx) < Math.abs(dy) * 1.5) return;
+      if (dx < 0) slideNext(); else slidePrev();
+    }, { passive: true });
+  })();
 
   // Arrow keys mirror the left/right click zones
   window.addEventListener('keydown', function (e) {
