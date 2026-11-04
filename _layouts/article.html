@@ -44,7 +44,7 @@
         <div class="min-w-0">
           <h1 id="mobile-article-title" class="font-sabon text-[1.4rem] text-ink leading-[1.87rem]">{{ page.title }}</h1>
           {% if page.subtitle %}
-          <h2 class="font-sabon italic text-[1.4rem] text-ink leading-[1.87rem]">{{ page.subtitle }}</h2>
+          <h2 class="font-sabon text-[1.4rem] text-mist leading-[1.87rem]">{{ page.subtitle }}</h2>
           {% endif %}
         </div>
         <a id="mobile-article-close" href="{{ category_url }}" class="shrink-0 mt-1 text-ink hover:opacity-70">
@@ -56,7 +56,7 @@
     <!-- Title (desktop only): full sheet width, left edge -->
     <h1 id="article-title" class="w-full mt-[0.5rem] font-sabon text-[1.66rem] text-ink leading-snug max-md:hidden">{{ page.title }}</h1>
     {% if page.subtitle %}
-    <h2 id="article-subtitle" class="w-full font-sabon italic text-[1.66rem] text-ink leading-snug mt-[-0.375rem] max-md:hidden">{{ page.subtitle }}</h2>
+    <h2 id="article-subtitle" class="w-full font-sabon text-[1.66rem] text-mist leading-snug mt-[-0.375rem] max-md:hidden">{{ page.subtitle }}</h2>
     {% endif %}
 
     <!-- Hero: the article's first media block (moved here by the flatten script below), arranged
@@ -109,11 +109,11 @@
     <div aria-hidden="true" class="h-16 bg-[linear-gradient(to_bottom,rgba(255,255,255,1)_0%,rgba(255,255,255,0)_100%)] opacity-0 transition-opacity duration-500 ease-in-out [.is-scrolled_&]:opacity-100"></div>
   </div>
 
-  <!-- Enlarged view: full-screen project-wide slideshow over a 90% white veil; three equal
+  <!-- Enlarged view: full-screen project-wide slideshow over a solid white ground; three equal
        click columns (prev / exit / next) with the slideshow hover cursors -->
   <div id="lightbox" class="fixed inset-0 z-[60] hidden">
-    <div class="absolute inset-0 bg-white/90"></div>
-    <img id="lightbox-img" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-auto w-auto max-h-[70vh] max-w-[70vw] block" src="" alt="">
+    <div class="absolute inset-0 bg-white"></div>
+    <img id="lightbox-img" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-auto w-auto max-h-[77vh] max-w-[77vw] block" src="" alt="">
     <div class="absolute inset-0 flex">
       <div class="cursor-prev flex-1" onclick="lightboxNav(-1)"></div>
       <div class="cursor-exit flex-1" onclick="closeLightbox()"></div>
@@ -211,17 +211,37 @@
       if (best) { e.preventDefault(); ssNav(best.id, dir); }
     });
 
+    // Decode a slide once (the promise is kept): a hidden <img> is fetched but not decoded, and
+    // un-hiding it before its decode finished painted one empty frame (a flash on first view)
+    function ssDecode(img) {
+      if (!img || !img.decode) return Promise.resolve();
+      if (!img._decoded) img._decoded = img.decode().catch(function () {});
+      return img._decoded;
+    }
+
+    // The current slide stays up until the target is decoded, then they swap in one frame.
+    // Repeated taps keep advancing the target (wrap.dataset.ssTarget); only the latest is shown.
     function ssNav(id, dir) {
-      var slides = Array.from(document.querySelectorAll('#' + id + ' .ss-slide'));
-      var curr   = slides.findIndex(function (s) { return !s.classList.contains('hidden'); });
-      slides[curr].classList.add('hidden');
-      var next = (curr + dir + slides.length) % slides.length;
-      slides[next].classList.remove('hidden');
-      var counter = document.querySelector('#' + id + ' .ss-counter');
-      if (counter) counter.textContent = (next + 1) + '/' + slides.length;
-      var mirror = document.querySelector('[data-ss-counter-for="' + id + '"]');
-      if (mirror) mirror.textContent = (next + 1) + '/' + slides.length;
-      ssPositionCounter(document.getElementById(id));
+      var wrap   = document.getElementById(id);
+      var slides = Array.from(wrap.querySelectorAll('.ss-slide'));
+      var n      = slides.length;
+      var shown  = slides.findIndex(function (s) { return !s.classList.contains('hidden'); });
+      var from   = wrap.dataset.ssTarget !== undefined ? parseInt(wrap.dataset.ssTarget, 10) : shown;
+      var next   = (from + dir + n) % n;
+      wrap.dataset.ssTarget = String(next);
+      ssDecode(slides[next]).then(function () {
+        if (wrap.dataset.ssTarget !== String(next)) return;
+        delete wrap.dataset.ssTarget;
+        slides.forEach(function (s, k) { s.classList.toggle('hidden', k !== next); });
+        var counter = wrap.querySelector('.ss-counter');
+        if (counter) counter.textContent = (next + 1) + '/' + n;
+        var mirror = document.querySelector('[data-ss-counter-for="' + id + '"]');
+        if (mirror) mirror.textContent = (next + 1) + '/' + n;
+        ssPositionCounter(wrap);
+        // Warm the neighbours so the next tap swaps at once
+        ssDecode(slides[(next + 1) % n]);
+        ssDecode(slides[(next - 1 + n) % n]);
+      });
     }
 
     // The counter sits beside the visible slide, not the reserved frame: the slide's
@@ -261,8 +281,6 @@
 
       // Caption below a media block; `extra` sets width/alignment for its context, and in
       // #article-column pulls the caption back to 0.9rem below its media (gap 3.5 - 2.6).
-      // Mobile: a slideshow's counter (mirror span, kept in sync by ssNav) rides the caption
-      // line — after the caption text, or alone in the caption's place when there is none.
       // Caption text is not passed through Markdown, so safely support its most useful inline
       // convention here: text wrapped in single asterisks becomes italic.
       function appendCaptionText(element, text) {
@@ -279,20 +297,21 @@
       }
 
       function placeCaption(parent, captionText, extra, wrap) {
+        // Mobile: a slideshow's counter (mirror, kept in sync by ssNav) sits above the image's
+        // top-left corner, not in the caption line
         var counter = wrap ? wrap.querySelector('.ss-counter') : null;
-        if (captionText === null && !counter) return;
-        var caption = document.createElement('div');
-        caption.className = 'font-grotesque text-xs text-ink leading-[1.6] ' + extra
-          + (captionText === null ? ' md:hidden' : '');
-        if (captionText !== null) appendCaptionText(caption, captionText);
-        if (counter) {
-          var mirror = document.createElement('span');
-          mirror.className = 'md:hidden font-sabon whitespace-nowrap';
+        var frame   = wrap ? wrap.querySelector('.ss-frame') : null;
+        if (counter && frame) {
+          var mirror = document.createElement('div');
+          mirror.className = 'md:hidden font-sabon text-xs text-ink leading-[1.6] whitespace-nowrap mb-1.5';
           mirror.dataset.ssCounterFor = wrap.id;
           mirror.textContent = counter.textContent;
-          if (captionText !== null) mirror.classList.add('ml-2');
-          caption.appendChild(mirror);
+          wrap.insertBefore(mirror, frame);
         }
+        if (captionText === null) return;
+        var caption = document.createElement('div');
+        caption.className = 'font-grotesque text-xs text-ink leading-[1.6] ' + extra;
+        appendCaptionText(caption, captionText);
         parent.appendChild(caption);
       }
 
@@ -329,10 +348,23 @@
         );
       }
 
-      // Shared slideshow prep, hero and column alike: left-aligned slides on mobile, lightbox
-      // wiring, and the desktop beside-the-slide counter
+      // Shared slideshow prep, hero and column alike: lightbox wiring and the desktop
+      // beside-the-slide counter. Mobile: every slide takes the full width; the frame is as
+      // tall as the tallest slide at that width (--ss-min-ar, from the build-time width/height
+      // attributes), so the content below never moves, and shorter slides sit at the top with
+      // white space underneath.
       function prepSlideshow(wrap) {
-        wrap.querySelectorAll('.ss-slide').forEach(function (s) { s.classList.add('max-md:object-left'); });
+        var minAr = Infinity;
+        wrap.querySelectorAll('.ss-slide').forEach(function (s) {
+          s.classList.add('max-md:object-top');
+          var w = parseFloat(s.getAttribute('width')), h = parseFloat(s.getAttribute('height'));
+          if (w && h) minAr = Math.min(minAr, w / h);
+        });
+        if (isFinite(minAr)) wrap.style.setProperty('--ss-min-ar', minAr.toFixed(4));
+        var sizer = wrap.querySelector('img[aria-hidden]');
+        if (sizer) sizer.classList.add('max-md:hidden');
+        var frame = wrap.querySelector('.ss-frame');
+        if (frame) frame.classList.add('max-md:aspect-[var(--ss-min-ar,0.8)]');
         wireSlideshowLightbox(wrap);
         var counter = wrap.querySelector('.ss-counter');
         if (counter) counterBeside(counter);
@@ -381,7 +413,7 @@
 
           prepSlideshow(wrap);
           wrap.classList.add('relative', 'max-w-full',
-            'w-[min(calc(var(--spacing-hero)*var(--ss-max-ar,1.5)),100%)]');
+            'w-[min(calc(var(--spacing-hero)*var(--ss-max-ar,1.5)),100%)]', 'max-md:w-full');
           hero.appendChild(wrap);
         }
 
@@ -421,12 +453,7 @@
             var sizer = wrap.querySelector('img[aria-hidden]');
             if (sizer) sizer.classList.add('md:max-h-article-col', 'max-md:max-h-hero');
 
-            // Mobile: the tap zones cover only the widest slide, not the full frame —
-            // left-anchored, width resolved from the frame height via --ss-max-ar
-            var zones = wrap.querySelector('.cursor-prev');
-            if (zones && zones.parentElement) {
-              zones.parentElement.classList.add('max-md:right-auto', 'max-md:w-auto', 'max-md:max-w-full', 'max-md:aspect-[var(--ss-max-ar,1.5)]');
-            }
+            // Mobile: slides are full width (prepSlideshow), so the tap zones cover the whole frame
             prepSlideshow(wrap);
             wrap.classList.add('relative', 'self-center', 'w-full');
           }

@@ -73,15 +73,38 @@
     document.getElementById('mobile-nav-title').textContent = title;
   }
 
+  // Decode a teaser once (the promise is kept): a hidden <img> is fetched but not decoded, and
+  // un-hiding it before its decode finishes painted one empty frame — the flash on the first
+  // pass through the slides, most visible on phones
+  function decodeEntry(entry) {
+    var img = entry && entry.querySelector('img');
+    if (!img || !img.decode) return Promise.resolve();
+    if (!img._decoded) img._decoded = img.decode().catch(function () {});
+    return img._decoded;
+  }
+
+  // The previous slide stays up until the next one is decoded, then they swap in one frame.
+  // Fast clicks keep advancing currentIndex; only the latest target is shown.
+  var showToken = 0;
   function showIndex(i) {
     var filtered = getFiltered();
-    allEntries.forEach(function (e) { e.classList.add('hidden'); });
-    if (!filtered.length) { updateNav(null, 0); return; }
+    if (!filtered.length) {
+      allEntries.forEach(function (e) { e.classList.add('hidden'); });
+      updateNav(null, 0); return;
+    }
     var n = filtered.length;
     currentIndex = ((i % n) + n) % n;
     var entry = filtered[currentIndex];
-    entry.classList.remove('hidden');
-    updateNav(entry, n);
+    var token = ++showToken;
+    decodeEntry(entry).then(function () {
+      if (token !== showToken) return;
+      allEntries.forEach(function (e) { if (e !== entry) e.classList.add('hidden'); });
+      entry.classList.remove('hidden');
+      updateNav(entry, n);
+      // Warm the neighbours so the next tap swaps at once
+      decodeEntry(filtered[(currentIndex + 1) % n]);
+      decodeEntry(filtered[(currentIndex - 1 + n) % n]);
+    });
   }
 
   function slidePrev() { showIndex(currentIndex - 1); }
