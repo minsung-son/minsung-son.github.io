@@ -70,6 +70,40 @@
   }
 }
 
+/* Mobile: article media sit at half the page gutter (0.9375rem from the screen edges) while text
+   keeps the full gutter. The sheet's mobile padding is one gutter per side, so media may use
+   100vw minus one gutter in total, shifted left by half a gutter. Slideshows and Vimeo embeds take
+   that whole width, single images too (no height cap); local videos keep their height cap. */
+@media (width < 48rem) {
+  #article-hero > .article-img-wrap,
+  #article-hero > .article-video-wrap,
+  #article-column > .article-img-wrap,
+  #article-column > .article-video-wrap {
+    align-self: flex-start;
+    margin-left: calc(var(--spacing-edge) / -2);
+    max-width: calc(100vw - var(--spacing-edge));
+  }
+  #article-hero > .article-img-wrap > img,
+  #article-column > .article-img-wrap > img,
+  #article-hero > .article-video-wrap > video,
+  #article-column > .article-video-wrap > video {
+    max-width: calc(100vw - var(--spacing-edge));
+  }
+  /* Single images too: full media width, no height cap (as the slideshows) */
+  #article-hero > .article-img-wrap:not([id]) > img,
+  #article-column > .article-img-wrap:not([id]) > img {
+    width: calc(100vw - var(--spacing-edge));
+    height: auto;
+    max-height: none;
+  }
+  #article-hero > .article-img-wrap[id],
+  #article-column > .article-img-wrap[id],
+  #article-hero > .article-video-wrap:not(:has(video)),
+  #article-column > .article-video-wrap:not(:has(video)) {
+    width: calc(100vw - var(--spacing-edge));
+  }
+}
+
 @utility scrollbar-hide {
   scrollbar-width: none;
   &::-webkit-scrollbar {

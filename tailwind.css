@@ -1250,8 +1250,8 @@
     .max-md\:max-w-\[80\%\] {
       max-width: 80%;
     }
-    .max-md\:max-w-\[calc\(100vw_-_3\.75rem\)\] {
-      max-width: calc(100vw - 3.75rem);
+    .max-md\:max-w-\[calc\(100vw_-_var\(--spacing-edge\)\)\] {
+      max-width: calc(100vw - var(--spacing-edge));
     }
     .max-md\:shrink-0 {
       flex-shrink: 0;
@@ -1295,6 +1295,9 @@
     }
     .max-md\:px-0\.5 {
       padding-inline: calc(var(--spacing) * 0.5);
+    }
+    .max-md\:px-\[calc\(var\(--spacing-edge\)\/2\)\] {
+      padding-inline: calc(var(--spacing-edge) / 2);
     }
     .max-md\:px-edge {
       padding-inline: var(--spacing-edge);
@@ -1599,6 +1602,22 @@
 @media (width < 48rem) {
   :root {
     --spacing-hero: 26rem;
+  }
+  #article-hero > .article-img-wrap, #article-hero > .article-video-wrap, #article-column > .article-img-wrap, #article-column > .article-video-wrap {
+    align-self: flex-start;
+    margin-left: calc(var(--spacing-edge) / -2);
+    max-width: calc(100vw - var(--spacing-edge));
+  }
+  #article-hero > .article-img-wrap > img, #article-column > .article-img-wrap > img, #article-hero > .article-video-wrap > video, #article-column > .article-video-wrap > video {
+    max-width: calc(100vw - var(--spacing-edge));
+  }
+  #article-hero > .article-img-wrap:not([id]) > img, #article-column > .article-img-wrap:not([id]) > img {
+    width: calc(100vw - var(--spacing-edge));
+    height: auto;
+    max-height: none;
+  }
+  #article-hero > .article-img-wrap[id], #article-column > .article-img-wrap[id], #article-hero > .article-video-wrap:not(:has(video)), #article-column > .article-video-wrap:not(:has(video)) {
+    width: calc(100vw - var(--spacing-edge));
   }
 }
 @media (hover: hover) and (pointer: fine) {
