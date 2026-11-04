@@ -22,7 +22,7 @@
      0.8rem base × 1.15 (see --list-base-mobile / --list-row-text-mobile in category.html) */
   --text-nav-mobile: 0.92rem;
 
-  /* Mobile screen-edge gutter (px-edge, -mx-edge): navbar, article sheet, list, About, home */
+  /* Screen-edge gutter (px-edge, -mx-edge): navbar, article sheet, list, About, home; 0.9375rem on mobile (below) */
   --spacing-edge: 1.875rem;
   /* Mobile top gutter above the navbar row and the article title band: half the edge gutter */
   --spacing-edge-top: 0.9375rem;
@@ -63,36 +63,43 @@
   }
 }
 
-/* Mobile: LEVEL3 media height cap (hero and non-hero media alike) */
+/* Mobile: LEVEL3 media height cap (hero and non-hero media alike), and one 0.9375rem screen-edge
+   gutter for everything (navbar, text, captions, metadata, media), equal to the navbar's top gutter */
 @media (width < 48rem) {
   :root {
     --spacing-hero: 26rem;
+    --spacing-edge: 0.9375rem;
   }
 }
 
-/* Mobile: article media sit at half the page gutter (0.9375rem from the screen edges) while text
-   keeps the full gutter. The sheet's mobile padding is one gutter per side, so media may use
-   100vw minus one gutter in total, shifted left by half a gutter. Slideshows and Vimeo embeds take
-   that whole width, single images too (no height cap); local videos keep their height cap. */
+/* Mobile: article body text (paragraphs, in-body headings, lists, quotes) keeps the former
+   1.875rem side margin; everything else sits on the 0.9375rem gutter */
+@media (width < 48rem) {
+  #article-column > :is(p, h2, h3, h4, ul, ol, blockquote) {
+    padding-inline: calc(1.875rem - var(--spacing-edge));
+  }
+}
+
+/* Mobile: article media span the column, gutter to gutter, left-aligned. Slideshows and Vimeo
+   embeds take that whole width, single images too (no height cap); local videos keep their cap. */
 @media (width < 48rem) {
   #article-hero > .article-img-wrap,
   #article-hero > .article-video-wrap,
   #article-column > .article-img-wrap,
   #article-column > .article-video-wrap {
     align-self: flex-start;
-    margin-left: calc(var(--spacing-edge) / -2);
-    max-width: calc(100vw - var(--spacing-edge));
+    max-width: calc(100vw - 2 * var(--spacing-edge));
   }
   #article-hero > .article-img-wrap > img,
   #article-column > .article-img-wrap > img,
   #article-hero > .article-video-wrap > video,
   #article-column > .article-video-wrap > video {
-    max-width: calc(100vw - var(--spacing-edge));
+    max-width: calc(100vw - 2 * var(--spacing-edge));
   }
   /* Single images too: full media width, no height cap (as the slideshows) */
   #article-hero > .article-img-wrap:not([id]) > img,
   #article-column > .article-img-wrap:not([id]) > img {
-    width: calc(100vw - var(--spacing-edge));
+    width: calc(100vw - 2 * var(--spacing-edge));
     height: auto;
     max-height: none;
   }
@@ -100,7 +107,7 @@
   #article-column > .article-img-wrap[id],
   #article-hero > .article-video-wrap:not(:has(video)),
   #article-column > .article-video-wrap:not(:has(video)) {
-    width: calc(100vw - var(--spacing-edge));
+    width: calc(100vw - 2 * var(--spacing-edge));
   }
 }
 
