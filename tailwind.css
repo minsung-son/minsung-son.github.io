@@ -1326,17 +1326,17 @@
     .max-md\:pb-3 {
       padding-bottom: calc(var(--spacing) * 3);
     }
-    .max-md\:pb-10 {
-      padding-bottom: calc(var(--spacing) * 10);
-    }
     .max-md\:pb-24 {
       padding-bottom: calc(var(--spacing) * 24);
     }
     .max-md\:pb-32 {
       padding-bottom: calc(var(--spacing) * 32);
     }
-    .max-md\:pb-\[0\.825rem\] {
-      padding-bottom: 0.825rem;
+    .max-md\:pb-\[1\.65rem\] {
+      padding-bottom: 1.65rem;
+    }
+    .max-md\:pb-\[3\.45rem\] {
+      padding-bottom: 3.45rem;
     }
     .max-md\:pl-0 {
       padding-left: 0px;

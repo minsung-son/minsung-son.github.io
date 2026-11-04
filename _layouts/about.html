@@ -55,13 +55,13 @@
         var label = document.createElement('div');
         // Mobile: centred section header at the navbar size (the same as the site title), with
         // 0.825rem below it; body 14.5px on a 24px line. Desktop keeps the fixed-width side label.
-        label.className = 'w-[6.5625rem] shrink-0 font-sabon text-[0.8125rem] leading-[1.46] pb-13 text-ink max-md:w-full max-md:text-nav-mobile max-md:leading-[1.5] max-md:text-center max-md:pb-[0.825rem]';
+        label.className = 'w-[6.5625rem] shrink-0 font-sabon text-[0.8125rem] leading-[1.46] pb-13 text-ink max-md:w-full max-md:text-nav-mobile max-md:leading-[1.5] max-md:text-center max-md:pb-[1.65rem]';
         label.textContent = node.textContent;
         row.appendChild(label);
 
         var contentCell = document.createElement('div');
         // Only the Biography section keeps paragraph gaps; list-like sections stack tight
-        contentCell.className = 'flex-1 min-w-0 flex flex-col pb-13 max-md:w-full max-md:pb-10'
+        contentCell.className = 'flex-1 min-w-0 flex flex-col pb-13 max-md:w-full max-md:pb-[3.45rem]'
           + (node.textContent === 'Biography' ? ' gap-4' : '');
         i++;
         while (i < children.length && children[i].tagName !== 'H2') {
