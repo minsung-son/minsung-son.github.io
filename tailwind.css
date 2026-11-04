@@ -577,8 +577,8 @@
   .resize {
     resize: both;
   }
-  .grid-cols-4 {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+  .grid-cols-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
   .grid-cols-\[minmax\(max-content\,var\(--col-index\)\)_minmax\(0\,var\(--col-title\)\)_minmax\(max-content\,var\(--col-year\)\)_minmax\(0\,var\(--col-pub\)\)\] {
     grid-template-columns: minmax(max-content,var(--col-index)) minmax(0,var(--col-title)) minmax(max-content,var(--col-year)) minmax(0,var(--col-pub));
