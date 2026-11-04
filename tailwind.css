@@ -343,12 +343,6 @@
   .mt-1\.5 {
     margin-top: calc(var(--spacing) * 1.5);
   }
-  .mt-\[-0\.085rem\] {
-    margin-top: -0.085rem;
-  }
-  .mt-\[-0\.104rem\] {
-    margin-top: -0.104rem;
-  }
   .mt-\[-2\.6rem\] {
     margin-top: -2.6rem;
   }
@@ -357,6 +351,12 @@
   }
   .mt-\[0\.5rem\] {
     margin-top: 0.5rem;
+  }
+  .mt-\[0\.015rem\] {
+    margin-top: 0.015rem;
+  }
+  .mt-\[0rem\] {
+    margin-top: 0rem;
   }
   .mt-\[3\.5rem\] {
     margin-top: 3.5rem;
