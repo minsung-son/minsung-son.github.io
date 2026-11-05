@@ -111,7 +111,7 @@ module ArticleBody
                   "<div class=\"cursor-next flex-1\" onclick=\"ssNav('#{id}',1)\"></div>" \
                   '</div>'
 
-    counter = "<div class=\"ss-counter font-sabon mt-1.5 text-[1rem] text-ink\">1/#{urls.length}</div>"
+    counter = "<div class=\"ss-counter font-sabon italic mt-1.5 text-[1rem] text-ink\">1/#{urls.length}</div>"
 
     # overflow-clip, never overflow-hidden: hidden makes the frame a scroll container whose
     # fluid-rem 1px overflow Safari latches scroll gestures onto

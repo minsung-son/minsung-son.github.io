@@ -305,7 +305,7 @@
         if (counter && frame) {
           var mirror = document.createElement('div');
           // back on the text gutter (the wrap sits at the 15px media gutter, see main.css)
-          mirror.className = 'md:hidden font-sabon text-[1rem] text-ink leading-[1.4] whitespace-nowrap mb-1.5 ml-[calc(var(--spacing-edge)_-_var(--media-edge))]';
+          mirror.className = 'md:hidden font-sabon italic text-[1rem] text-ink leading-[1.4] whitespace-nowrap mb-1.5 ml-[calc(var(--spacing-edge)_-_var(--media-edge))]';
           mirror.dataset.ssCounterFor = wrap.id;
           mirror.textContent = counter.textContent;
           wrap.insertBefore(mirror, frame);
